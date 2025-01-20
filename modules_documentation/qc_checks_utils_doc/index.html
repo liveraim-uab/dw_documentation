@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../img/favicon.ico">
+
+    
+    <title>Quality Control utils - WP1</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../../css/base.min.css" rel="stylesheet">
+    <link href="../../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="../..">WP1</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="../..">Home</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../dataflow/">Overview</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../liveraim_data_warehouse_specifications/">LIVERAIM Data Warehouse Specifications</a>
+                    </li>
+                
+                
+                
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Modules documentation <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="../file_reading_utils_doc/">File Reading utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../data_processing_utils_doc/">Preprocessing utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../cohort_utils_doc/">Cohort utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../biomarker_utils_doc/">Biomkarker utils</a>
+</li>
+
+                        
+                            
+<li class="active">
+    <a href="./">Quality Control utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../file_exporting_utils_doc/">File Exporting utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../sql_exporting_utils_doc/">SQL Exporting utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../configuration_module/">Configuration module</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../quick_start_guide/">Quick Start Guide</a>
+                    </li>
+                
+                
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="../biomarker_utils_doc/">
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="next" href="../file_exporting_utils_doc/">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#qc_checks_utils-documentation">qc_checks_utils Documentation</a></li>
+            <li class="second-level"><a href="#overview">Overview</a></li>
+                
+            <li class="second-level"><a href="#general-structure">General Structure</a></li>
+                
+            <li class="second-level"><a href="#checkers-description">Checkers description</a></li>
+                
+                <li class="third-level"><a href="#generalchecker">GeneralChecker</a></li>
+                <li class="third-level"><a href="#nonnumericchecker">NonNumericChecker</a></li>
+                <li class="third-level"><a href="#nanchecker">NaNChecker</a></li>
+                <li class="third-level"><a href="#conversionchecker">ConversionChecker</a></li>
+                <li class="third-level"><a href="#consistancychecker">ConsistancyChecker</a></li>
+                <li class="third-level"><a href="#outlierschecker">OutliersChecker</a></li>
+                <li class="third-level"><a href="#qcchecker">QCChecker</a></li>
+            <li class="second-level"><a href="#output-description">Output Description</a></li>
+                
+            <li class="second-level"><a href="#usage-in-main-execution">Usage in main execution</a></li>
+                
+            <li class="second-level"><a href="#other-complementary-functions">Other complementary functions</a></li>
+                
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h1 id="qc_checks_utils-documentation"><code>qc_checks_utils</code> Documentation<a class="headerlink" href="#qc_checks_utils-documentation" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The <code>qc_checks_utils</code> module is responsible for performing the various quality control and validation checks that are conducted before, during, and after data processing. The module also handles the export of the quality controls records and logs the relevant alerts in the execution log.</p>
+<p>The module includes the following checks:</p>
+<ul>
+<li><strong>Non-numeric value detection</strong>: Detects the presence of non numeric values (<code>-inf</code>, <code>inf</code>). </li>
+<li><strong>NaN analysis</strong>: Analizes the presence of <code>NaN</code> values (missings) in both raw_data and homogeneous_data.</li>
+<li><strong>Conversion validation</strong>: Checks if the transformation and formatting of variables has been done properly.</li>
+<li><strong>Data consistency checks</strong>: Checks if the final data structure fits the one specified in the metadata (<code>var_data</code>, <code>level_data</code>, <code>panel_metadata</code>). </li>
+</ul>
+<p>Each of these checks is managed by a class ('checker' from now on) designed specifically for that purpose. A final object, <code>QCChecker</code>, is responsible for coordinating all the aforementioned classes and functionalities.</p>
+<p>Quality control is performed on a Cohort object, utilizing its attributes to conduct the various checks. For more information about this class, refer to the <a href="../cohort_utils_doc/">cohort_utils</a> section.</p>
+<h2 id="general-structure">General Structure<a class="headerlink" href="#general-structure" title="Permanent link">&para;</a></h2>
+<p>The module has the following general structure, based on the following classes:</p>
+<ul>
+<li><code>GeneralChecker</code>: This class serves as a base template for all other "checker" classes. It requires a <code>Cohort</code> object as a parameter for initialization and sets the common attributes that all checker classes need, such as the cohort name, raw data, homogeneous data, among others.</li>
+</ul>
+<p>Specific Checker Classes:</p>
+<ul>
+<li><a href="#nonnumericchecker"><code>NonNumericChecker</code></a>: Responsible for checking the presence of non-numeric values in the numeric variables of the cohort's homogeneous data. Inherits from <code>GeneralChecker</code>.</li>
+<li><a href="#nanchecker"><code>NaNChecker</code></a>: Analyzes the presence of NaN values in both raw and homogeneous data and records the differences between them. Inherits from <code>GeneralChecker</code>.</li>
+<li><a href="#conversionchecker"><code>ConversionChecker</code></a>: Checks for errors that may have occurred during the conversion of numeric and categorical variables in the homogenization process. Inherits from <code>GeneralChecker</code>.</li>
+<li>
+<p><a href="#consistancychecker"><code>ConsistencyChecker</code></a>: Reviews the consistency of the final data by comparing it with the structure of the original metadata defined in the configuration files. Inherits from <code>GeneralChecker</code>.</p>
+</li>
+<li>
+<p><a href="#qcchecker"><code>QCChecker</code></a>: This class centralizes all quality control (QC) checks by integrating the specific checker classes. It coordinates the execution of all checks and exports the results. Inherits from <code>GeneralChecker</code>.</p>
+</li>
+</ul>
+<h2 id="checkers-description">Checkers description<a class="headerlink" href="#checkers-description" title="Permanent link">&para;</a></h2>
+<h3 id="generalchecker"><strong><code>GeneralChecker</code></strong><a class="headerlink" href="#generalchecker" title="Permanent link">&para;</a></h3>
+<h4 id="description">Description:<a class="headerlink" href="#description" title="Permanent link">&para;</a></h4>
+<p>The <code>GeneralChecker</code> class serves as a general template for all the "checker" classes in the quality control module. It acts as the base class (or parent class) from which all other specific checker classes inherit. It provides a common structure and essential attributes (extracted from the <code>Cohort</code> class) for performing quality control checks on data.</p>
+<h4 id="attributes">Attributes:<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong><code>name</code> (str)</strong>: The name of the cohort being checked.</li>
+<li><strong><code>raw_data</code> (pandas.DataFrame)</strong>: A DataFrame containing the raw data from the cohort. This is the original, unprocessed dataset.</li>
+<li><strong><code>homogeneous_data</code> (pandas.DataFrame)</strong>: A DataFrame containing the homogenized data from the cohort. This dataset has undergone processing and formatting to unify formats and values. See section <a href="../../dataflow/"><code>Dataflow</code></a> for an overview of this process. Check section <a href="../data_processing_utils_doc/"><code>data_processing_util</code></a> and <a href="../cohort_utils_doc/"><code>cohort_utils</code></a></li>
+<li><strong><code>var_data_json</code> (dict)</strong>: A dictionary containing metadata about the variables used to create the database. This metadata is also used in quality control checks.</li>
+<li><strong><code>level_data_json</code> (dict)</strong>: A dictionary containing metadata about variable levels, which is also used for quality control checks.</li>
+<li><strong><code>var_translate_dict</code> (dict)</strong>: A dictionary used to translate the original variable names to the common variable names used in the homogenized dataset.</li>
+<li><strong><code>selected_variables</code> (list)</strong>: A list of the selected (or core) variables of the cohort.</li>
+<li><strong><code>selected_variables_homogenized</code> (list)</strong>: A list of the selected variables, translated to the common format used in the homogenized dataset.</li>
+<li><strong><code>alpha</code> (float)</strong>: A parameter used as a threshold for detecting discrepancies in numerical conversions. Ideally, any difference greater than 0 should be reported. However, as some rounding errors are introduced while performin datatype adjustment and conversions, small differences between the expected and the real value can be due to this errors. If a discrepancy is bigger than alpha it is reported. Otherwise it is ignored. </li>
+<li><strong><code>exporting_exceptions</code> (tuple)</strong>: A tuple containing common exceptions that might occur during the data export process. This includes <code>FileNotFoundError</code>, <code>PermissionError</code>, <code>OSError</code>, among others.</li>
+</ul>
+<h4 id="methods">Methods:<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h4>
+<p>The <code>GeneralChecker</code> class does not define specific methods, as its main purpose is to provide common structure and attributes for the derived classes. The specific methods for quality control checks are implemented in the subclasses.</p>
+<h4 id="usage">Usage:<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h4>
+<p><code>GeneralChecker</code> is used as a base class for all other checker classes in the module. </p>
+<h4 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h4>
+<p>This class does not generate any logs.</p>
+<h3 id="nonnumericchecker"><strong><code>NonNumericChecker</code></strong><a class="headerlink" href="#nonnumericchecker" title="Permanent link">&para;</a></h3>
+<h4 id="description_1">Description:<a class="headerlink" href="#description_1" title="Permanent link">&para;</a></h4>
+<p>The <code>NonNumericChecker</code> class is used to check, report, and export information about non-numeric values (such as <code>-inf</code> and <code>inf</code>) in the cohort <code>homogeneous_data</code>. This class inherits from <code>GeneralChecker</code> and handles the detection of non-numeric values in the numeric variables of the homogenized data. Non-numeric values (such as <code>-inf</code> and <code>inf</code>) behave differently than <code>NaN</code> values, so they are detected and managed separately.</p>
+<h4 id="attributes_1">Attributes:<a class="headerlink" href="#attributes_1" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Attributes inherited from <code>GeneralChecker</code></strong>: All attributes from the <code>GeneralChecker</code> class.</li>
+<li><strong><code>non_numeric_record</code> (pandas.DataFrame)</strong>: A DataFrame containing the count of non-numeric values for each numeric variable in the homogenized data of the cohort.</li>
+</ul>
+<h4 id="methods_1">Methods:<a class="headerlink" href="#methods_1" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p><strong><code>check_non_numeric_values()</code></strong>: This method checks for non-numeric values (e.g., <code>-inf</code>, <code>inf</code>, but not <code>NaN</code>) in every numeric variable (all the variables whose final datatype is in <code>main_config.NUMERIC_TYPES</code>) in the homogenized data. If non-numeric values are found, they are recorded in a list of errors and returned as a DataFrame.</p>
+<ul>
+<li><strong>Return</strong>: <ul>
+<li><code>error_df</code> (pandas.DataFrame) - A DataFrame containing the count of non-numeric values for each numeric variable.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>export_qc_data(export_path: str)</code></strong>: This method exports the non-numeric values check results to a specified path. It exports the <code>non_numeric_record</code> DataFrame as a CSV file.</p>
+<ul>
+<li><strong>Returns</strong>: <ul>
+<li><code>None</code></li>
+</ul>
+</li>
+<li><strong>Arguments</strong>:<ul>
+<li><code>export_path</code> (str): The file path where the check record will be exported.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="logs_1">Logs<a class="headerlink" href="#logs_1" title="Permanent link">&para;</a></h4>
+<ul>
+<li>In method <code>check_non_numeric_values</code>: <ul>
+<li>If a variable being analyzed does not appear in the data, a warning is logged.</li>
+<li>If a numeric variable (column) in the raw_data contains at lest one non_numeric value, a warning is logged. </li>
+</ul>
+</li>
+<li>In method <code>export_qc_data</code>: If there is any error while exporting generated data, an Error is logged. </li>
+</ul>
+<h3 id="nanchecker"><strong><code>NaNChecker</code></strong><a class="headerlink" href="#nanchecker" title="Permanent link">&para;</a></h3>
+<h4 id="description_2">Description:<a class="headerlink" href="#description_2" title="Permanent link">&para;</a></h4>
+<p>The <code>NaNChecker</code> class is responsible for analyzing the presence of <code>NaN</code> values in both the raw data (<code>raw_data</code>) and the homogenized data (<code>homogeneous_data</code>) of a cohort. This class inherits from <code>GeneralChecker</code> and provides functionality to check, compare, and export information about missing (<code>NaN</code>) values. It also compares the <code>NaN</code> counts between the raw and homogenized data to detect any discrepancies that might have occurred during data processing.</p>
+<h4 id="attributes_2">Attributes:<a class="headerlink" href="#attributes_2" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Attributes inherited from <code>GeneralChecker</code></strong>: All attributes from the <code>GeneralChecker</code> class.</li>
+<li><strong><code>raw_nan_record_df</code> (pandas.DataFrame)</strong>: A DataFrame containing the count of <code>NaN</code> values for each selected variable in the raw data.</li>
+<li><strong><code>raw_nan_record_dict</code> (dict)</strong>: A dictionary containing the count of <code>NaN</code> values for each selected variable in the raw data.</li>
+<li><strong><code>homogeneous_nan_record_df</code> (pandas.DataFrame)</strong>: A DataFrame containing the count of <code>NaN</code> values for each selected variable in the homogenized data.</li>
+<li><strong><code>homogeneous_nan_record_dict</code> (dict)</strong>: A dictionary containing the count of <code>NaN</code> values for each selected variable in the homogenized data.</li>
+<li><strong><code>nan_diff_record_dict</code> (dict)</strong>: A dictionary that stores the differences in <code>NaN</code> counts between the raw and homogenized data for each variable.</li>
+</ul>
+<h4 id="methods_2">Methods:<a class="headerlink" href="#methods_2" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p><strong><code>get_df_nan_record(df: pandas.DataFrame, column_list: list = None) -&gt; tuple[pandas.DataFrame, dict]</code></strong>: 
+  This method analyzes a DataFrame and returns both a DataFrame and a dictionary containing the <code>NaN</code> counts for each specified column in column_list(or all columns if no column list is provided).</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>df</code> (pandas.DataFrame): The DataFrame to be analyzed for <code>NaN</code> values.</li>
+<li><code>column_list</code> (list, optional): A list of column names to check for <code>NaN</code> values. If not provided, all columns in the DataFrame are checked.</li>
+</ul>
+</li>
+<li><strong>Return</strong>: <ul>
+<li><code>nan_record_df</code> (pandas.DataFrame): A DataFrame containing the count of <code>NaN</code> values for each column in the DataFrame.</li>
+<li><code>nan_record</code> (dict): A dictionary containing the same information as <code>nan_record_df</code>, with column names as keys and <code>NaN</code> counts as values.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>log_nan_record() -&gt; dict</code></strong>: 
+  This method compares the <code>NaN</code> counts between the raw data and the homogenized data to check for any discrepancies. It logs discrepancies in <code>NaN</code> counts and returns a dictionary with the differences for each variable.</p>
+<ul>
+<li><strong>Return</strong>: <ul>
+<li><code>nan_check_dict</code> (dict): A dictionary containing the difference in <code>NaN</code> counts between the raw and homogenized data for each variable.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>export_qc_data(export_path: str)</code></strong>: 
+  This method exports the <code>NaN</code> check results to the specified path. It exports the <code>raw_nan_record_df</code>, <code>homogeneous_nan_record_df</code>, and <code>nan_diff_record_dict</code> as CSV files or JSON files as appropriate.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>export_path</code> (str): The file path where the check records will be exported.</li>
+</ul>
+</li>
+<li><strong>Return</strong>:<ul>
+<li><code>None</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="logs_2">Logs:<a class="headerlink" href="#logs_2" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p>In method <code>get_df_nan_record</code>:</p>
+<ul>
+<li>If a column in the provided column list is not a subset of the columns in the DataFrame, a warning is logged indicating the missing variables.</li>
+<li>If there is an error while calculating the percentage of <code>NaN</code> values, an error is logged.</li>
+</ul>
+</li>
+<li>
+<p>In method <code>log_nan_record</code>:</p>
+<ul>
+<li>If there is a mismatch in the <code>NaN</code> counts for a variable between the raw and homogenized data, an error is logged with details of the discrepancy.</li>
+<li>If no discrepancies are found, an info log confirms that the <code>NaN</code> counts were successfully checked.</li>
+</ul>
+</li>
+<li>
+<p>In method <code>export_qc_data</code>:</p>
+<ul>
+<li>If there is any error while exporting the generated <code>NaN</code> check records, an error is logged with details about the exception.</li>
+</ul>
+</li>
+</ul>
+<h3 id="conversionchecker"><strong><code>ConversionChecker</code></strong><a class="headerlink" href="#conversionchecker" title="Permanent link">&para;</a></h3>
+<h4 id="description_3">Description:<a class="headerlink" href="#description_3" title="Permanent link">&para;</a></h4>
+<p>The <code>ConversionChecker</code> class is responsible for performing conversion checks in the cohort data. This class verifies if both numerical and categorical variables have been properly formatted during data processing. It inherits from <code>GeneralChecker</code>. Checks for discrepancies in numerical values (comparing means between the raw and homogenized data) and in categorical values (comparing category counts between the raw and homogenized data). It also allows exporting the results of these checks.</p>
+<h4 id="attributes_3">Attributes:<a class="headerlink" href="#attributes_3" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Attributes inherited from <code>GeneralChecker</code></strong>: All attributes from the <code>GeneralChecker</code> class.</li>
+<li><strong><code>mean_diff_dict</code> (dict)</strong>: A dictionary containing the difference between means for each numerical variable in the raw data and the homogenized data.</li>
+<li><strong><code>label_count_dict</code> (dict)</strong>: contains the count of each level for every categorical variable. It also includes the count of not missing data of that specific variable. Its structure is as follows:<pre><code>{
+    "variable1": {
+        "label_count": {
+            "label1": &lt;int&gt;,
+            "label2": &lt;int&gt;,
+            ...
+        },
+        "notna_count": &lt;int&gt;
+    }
+    ...
+},
+</code></pre>
+</li>
+</ul>
+<h4 id="methods_3">Methods:<a class="headerlink" href="#methods_3" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p><strong><code>check_numeric_conversion(var: str, mean_diff_dict: dict) -&gt; tuple[bool, float]</code></strong>: 
+  This method checks if the mean of a numerical variable in the raw data matches the mean in the homogenized data, taking into account any conversion factors. If the difference exceeds a specified threshold (<code>alpha</code>) it logs an error.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>var</code> (str): The name of the numerical variable to check.</li>
+<li><code>mean_diff_dict</code> (dict): A dictionary to store the mean differences for each variable.</li>
+</ul>
+</li>
+<li><strong>Return</strong>: <ul>
+<li><code>Tuple</code>:<ul>
+<li><code>means_check</code> (bool): <code>True</code> if no significant discrepancies are found, <code>False</code> otherwise.</li>
+<li><code>mean_diff</code> (float): The difference in the means between the raw data and the homogenized data. 
+<br><br></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>check_category_conversion(var: str) -&gt; tuple[bool, dict, int]</code></strong>: 
+  This method checks if the category counts for a categorical variable match between the raw data and the homogenized data, considering the specific variable mapping. If discrepancies are found, it logs a warning.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>var</code> (str): The name of the categorical variable to check.</li>
+</ul>
+</li>
+<li><strong>Return</strong>: <ul>
+<li><code>category_check</code> (bool): <code>True</code> if no discrepancies are found, <code>False</code>  otherwise.
+<br><br></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>check_format_conversion() -&gt; dict</code></strong>: 
+  This method centralizes the format conversion checks for both numerical and categorical variables. It calls the appropriate check methods for each variable and updates the <code>mean_diff_dict</code> with the results of the numerical checks.</p>
+<ul>
+<li><strong>Return</strong>: <ul>
+<li><code>mean_diff_dict</code> (dict): A dictionary containing the mean differences between the raw and homogenized data for all numerical variables.
+<br><br></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>export_qc_data(export_path: str)</code></strong>: 
+  This method exports the results of the conversion checks to the specified path. It exports the <code>mean_diff_dict</code> as a JSON file.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>export_path</code> (str): The file path where the check records will be exported.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="logs_3">Logs:<a class="headerlink" href="#logs_3" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p>In method <code>check_numeric_conversion</code>:</p>
+<ul>
+<li>If the mean difference for a numerical variable exceeds the threshold, an error is logged with details about the discrepancy.</li>
+</ul>
+</li>
+<li>
+<p>In method <code>check_category_conversion</code>:</p>
+<ul>
+<li>If there is a mismatch in category counts between the raw and homogenized data, a warning is logged with the details of the discrepancy.</li>
+</ul>
+</li>
+<li>
+<p>In method <code>check_format_conversion</code>:</p>
+<ul>
+<li>Logs an informational message when the format conversion checks start.</li>
+<li>Logs the results of both numerical and categorical variable checks.</li>
+</ul>
+</li>
+<li>
+<p>In method <code>export_qc_data</code>:</p>
+<ul>
+<li>If there is any error while exporting the conversion check records, an error is logged with details about the exception.
+<br><br></li>
+</ul>
+</li>
+</ul>
+<h3 id="consistancychecker"><strong><code>ConsistancyChecker</code></strong><a class="headerlink" href="#consistancychecker" title="Permanent link">&para;</a></h3>
+<h4 id="description_4">Description:<a class="headerlink" href="#description_4" title="Permanent link">&para;</a></h4>
+<p>The <code>ConsistancyChecker</code> class is responsible for verifying the consistency of the cohort data. It checks if the final data (homogenized data) complies with the structure defined in the initial metadata (such as <code>var_data</code>, <code>level_data</code>, and <code>panel_data</code> files). This includes checking data types and ensuring that melted variables within panels have consistent data types. The class inherits from <code>GeneralChecker</code> and logs any discrepancies found during the consistency checks.</p>
+<h4 id="attributes_4">Attributes:<a class="headerlink" href="#attributes_4" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Attributes inherited from <code>GeneralChecker</code></strong>: All attributes from the <code>GeneralChecker</code> class.</li>
+</ul>
+<h4 id="methods_4">Methods:<a class="headerlink" href="#methods_4" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p><strong><code>check_data_types() -&gt; None</code></strong>: 
+    This method checks if there are any discrepancies between the data types in the final homogenized data and the data types specified in the <code>var_data</code> metadata. If discrepancies are found, they are logged as warnings.</p>
+<ul>
+<li><strong>Return</strong>: <ul>
+<li><code>None</code>
+<br><br></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>panel_consistancy_datatypes_check(panel_data_json: dict[str, dict]) -&gt; None</code></strong>: 
+    This method checks for consistency in data types within panels. Specifically, it verifies that all melted variables in a panel have the same data type. If discrepancies are found, they are logged as warnings.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>panel_data_json</code> (dict): A dictionary containing metadata about the structure of the panels. This is used to check the consistency of data types within the panels.</li>
+</ul>
+</li>
+<li><strong>Return</strong>: <ul>
+<li><code>None</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="logs_4">Logs:<a class="headerlink" href="#logs_4" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p>In method <code>check_data_types</code>:</p>
+<ul>
+<li>If there are discrepancies between the data types in the homogenized data and those specified in the metadata, a warning is logged with details of the discrepancies.</li>
+</ul>
+</li>
+<li>
+<p>In method <code>panel_consistancy_datatypes_check</code>:</p>
+<ul>
+<li>If there are discrepancies in data types within a panel (i.e., melted variables with different data types), a warning is logged with details of the panel and the conflicting data types.</li>
+</ul>
+</li>
+</ul>
+<h3 id="outlierschecker"><strong><code>OutliersChecker</code></strong><a class="headerlink" href="#outlierschecker" title="Permanent link">&para;</a></h3>
+<h4 id="description_5">Description:<a class="headerlink" href="#description_5" title="Permanent link">&para;</a></h4>
+<p>The <code>OutliersChecker</code> class inherits from the <code>GeneralChecker</code> class and is responsible for detecting outliers in numerical data using a z-score threshold (&gt; 2) and reporting the main percentiles for each variable. This class extends the functionality of <code>GeneralChecker</code> to enable comprehensive outlier detection across all numerical columns in the dataset.</p>
+<h4 id="attributes_5">Attributes:<a class="headerlink" href="#attributes_5" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Attributes inherited from <code>GeneralChecker</code></strong>: All attributes from the <code>GeneralChecker</code> class.</li>
+<li><strong><code>cohort_outliers_z_score</code></strong> (<code>dict</code>): A dictionary containing outliers for all numerical variables in the dataset. Each key represents a variable name, and its value represents the outliers count according to the set threshold (Default set to 2)</li>
+<li><strong><code>cohort_outliers_percentile</code></strong> (<code>dict</code>): A dictionary containing the main percentiles for each numerical variable.</li>
+</ul>
+<h4 id="methods_5">Methods:<a class="headerlink" href="#methods_5" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p><strong><code>get_column_outliers_percentile(df: pd.DataFrame,</code>
+<code>column: str,</code>
+<code>percentiles: list[float] = [0, 0.025, 0.25, 0.50, 0.75, 0.975, 1]) -&gt; dict</code></strong>: </p>
+<p>This method calculates a set of percentiles for a specified variable (column) and returns them as a dictionary. It is intended to be used in <code>get_cohort_outliers</code> along with <code>get_column_outliers_z_score</code> for each numerical variable in the dataset.</p>
+<ul>
+<li>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>df</code> (pandas.DataFrame): The DataFrame containing the data to be analyzed.</li>
+<li><code>column</code> (str): The name of the column/variable for which the percentiles will be calculated.</li>
+<li><code>percentiles</code> (list[float]): A list of percentiles (in decimal form) to be calculated. Default is <code>[0, 0.025, 0.25, 0.50, 0.75, 0.975, 1]</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Return</strong>: </p>
+<ul>
+<li><code>percentiles_dict</code> (dict): A dictionary containing the calculated value for each percentile defined in the <code>percentiles</code> argument. The structure is <code>{percentile: value, ...}</code>.
+<br><br></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>get_column_outliers_z_score(df: pd.DataFrame,</code>
+<code>column: str,</code>
+<code>z_score_bound: float = 2,</code>
+<code>id_var: str = 'cohort_id') -&gt; dict</code></strong>:  </p>
+<p>This method calculates the z-score of a specified numerical variable (column) and identifies outliers based on the specified <code>z_score_bound</code>. It returns a dictionary with the count of outliers and the count of non-missing values for that column. This method is intended to be used in <code>get_cohort_outliers</code> along with <code>get_column_outliers_percentile</code> for each numerical variable in the dataset.</p>
+<ul>
+<li>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>df</code> (pandas.DataFrame): The DataFrame containing the data to be analyzed.</li>
+<li><code>column</code> (str): The name of the column/variable for which the z-score will be calculated and outliers will be identified.</li>
+<li><code>z_score_bound</code> (float): The threshold for identifying an outlier. If the absolute value of the z-score exceeds this parameter, the observation is considered an outlier. Default is <code>2</code>.</li>
+<li><code>id_var</code> (str): The variable used as the identifier for each observation (e.g., <code>cohort_id</code> or <code>liervaim_id</code>). Default is <code>'cohort_id'</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Return</strong>: </p>
+<ul>
+<li><code>outliers_dict</code> (dict): A dictionary with the count of outliers and the count of non-missing values for the specified column. The structure is <code>{'outliers_count': int, 'not_missings_count': int }</code>.
+<br><br></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>get_cohort_outliers() -&gt; tuple[dict, dict]</code></strong>:<br />
+    This method iterates through each numerical column in <code>self.homogeneous_data</code>, calling the <code>get_column_outliers_z_score</code> and <code>get_column_outliers_percentile</code> methods for each column. The results are stored in two dictionaries, one for outliers identified by the z-score and one for percentiles.</p>
+<ul>
+<li><strong>Return</strong>: <ul>
+<li><code>tuple(dict, dict)</code>: A tuple containing two dictionaries:<ul>
+<li><strong>Z-score Outliers Dictionary (dict)</strong>: Contains the outliers identified using the z-score method. Each key is a variable name, and each value is the count of outliers for that variable.</li>
+<li><strong>Percentiles Dictionary (dict)</strong>: Contains the percentiles for each numerical variable. Each key is a variable name, and each value is a dictionary structured as <code>{percentile1: value, percentile2: value, ...}</code>.
+<br><br></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>export_qc_data(export_path: str) -&gt; None</code></strong>:<br />
+    This method exports data related to the outliers analysis to the specified <code>export_path</code>. Specifically, it exports the dictionaries <code>cohort_outliers_name_z_score</code> and <code>cohort_outliers_name_percentile</code>.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>export_path</code> (str): The path where the quality check record will be saved.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="logs_5">Logs:<a class="headerlink" href="#logs_5" title="Permanent link">&para;</a></h4>
+<ul>
+<li>In method <code>export_qc_data</code>:<ul>
+<li>If there is any error while exporting the outlier data to the file, an error is logged with the relevant details.</li>
+</ul>
+</li>
+</ul>
+<h3 id="qcchecker"><strong><code>QCChecker</code></strong><a class="headerlink" href="#qcchecker" title="Permanent link">&para;</a></h3>
+<h4 id="description_6">Description:<a class="headerlink" href="#description_6" title="Permanent link">&para;</a></h4>
+<p>The <code>QCChecker</code> class centralizes the quality control (QC) checks for the cohort data. This class orchestrates the execution of all other checker classes, including <code>NonNumericChecker</code>, <code>NaNChecker</code>, <code>ConversionChecker</code>, <code>ConsistancyChecker</code> and <code>OtuliersChecker</code> to ensure data quality. It also provides methods to generate cohort reports and export QC results. The class inherits from <code>GeneralChecker</code>.</p>
+<h4 id="attributes_6">Attributes:<a class="headerlink" href="#attributes_6" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Attributes inherited from <code>GeneralChecker</code></strong>: All attributes from the <code>GeneralChecker</code> class.</li>
+<li><strong><code>non_numeric_checker</code></strong>: An instance of the <code>NonNumericChecker</code> class, responsible for checking non-numeric values in the cohort data.</li>
+<li><strong><code>nan_checker</code></strong>: An instance of the <code>NaNChecker</code> class, responsible for checking <code>NaN</code> values in the cohort data.</li>
+<li><strong><code>conversion_checker</code></strong>: An instance of the <code>ConversionChecker</code> class, responsible for verifying the conversion of numerical and categorical variables.</li>
+<li><strong><code>consistency_checker</code></strong>: An instance of the <code>ConsistancyChecker</code> class, responsible for checking the consistency of the final data with the initial metadata.</li>
+<li><strong><code>outlier_checker</code></strong>: An instance of the <code>OutliersChecker</code> class, responsible for recording the count of outliers for each numerical variable (and the corresponding ID's).</li>
+<li><strong><code>export_qc_record</code> (bool)</strong>: A boolean value indicating whether the QC records should be exported. This is configured via the <code>config</code> module.</li>
+</ul>
+<h4 id="methods_6">Methods:<a class="headerlink" href="#methods_6" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p><strong><code>cohort_report() -&gt; None</code></strong>: 
+    This method logs a brief description of the raw data and homogenized data from the cohort. It reports the number of variables and patients in each dataset.</p>
+<ul>
+<li><strong>Return</strong>: <ul>
+<li><code>None</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>export_qc_reports() -&gt; None</code></strong>: 
+    This method centralizes the process of exporting the QC results. It first creates the directory where the QC data will be stored (see <a href="#output-description">output description</a>), then calls the export methods of the individual checker classes to save the QC results to files.</p>
+<ul>
+<li><strong>Return</strong>: <ul>
+<li><code>None</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>check_numeric_vars_coherence(data: pandas.DataFrame, var_data_json: dict) -&gt; pandas.DataFrame</code></strong>: 
+    This method checks the coherence of numeric variables across different cohorts. It calculates the mean and standard deviation for each numeric variable in the selected variables and returns a DataFrame summarizing this information. The aim of the method is to detect if there is any odd behaviour between data from the different cohorts (such as huge difference in mean or sd between cohorts). This method must be used with the merged-homogenized data. </p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>data</code> (pandas.DataFrame): The homogenized and merged data from all cohorts.</li>
+<li><code>var_data_json</code> (dict): A dictionary containing metadata about the variables, including data types.</li>
+</ul>
+</li>
+<li><strong>Return</strong>: <ul>
+<li><code>combined_data_df</code> (pandas.DataFrame): A DataFrame containing the mean and standard deviation for each numeric variable, grouped by cohort.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="logs_6">Logs:<a class="headerlink" href="#logs_6" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p>In method <code>cohort_report</code>:</p>
+<ul>
+<li>Logs an informational message summarizing the structure of both the raw data and homogenized data, including the number of variables and patients in each.</li>
+</ul>
+</li>
+<li>
+<p>In method <code>export_qc_reports</code>:</p>
+<ul>
+<li>If there is any error while exporting the QC results, an error is logged with details about the exception.</li>
+</ul>
+</li>
+</ul>
+<h2 id="output-description">Output Description<a class="headerlink" href="#output-description" title="Permanent link">&para;</a></h2>
+<p>Several results generated during quality controls are exported if the <code>QC_EXPORT_RECORD</code> variable (declared in the <a href="../configuration_module/#main_config-module"><code>main_config</code></a> module) is set to <code>True</code>.</p>
+<p>The <code>QC_REPORT_FOLDER</code> directory stores all results related to quality control. This directory contains the code necessary to create the QC report if desired. <code>QC_REPORT_FOLDER</code> also contains a subfolder, defined by the <code>QC_DATA_FOLDER</code> variable, where all the raw outputs generated during QC are saved. Each execution (if <code>QC_EXPORT_RECORD</code> is set to <code>True</code>) will generate a directory within <code>QC_DATA_FOLDER</code> named:</p>
+<pre><code>qc_execution_yyyy-mm-dd_hh-mm-ss
+</code></pre>
+<p>Where <code>yyyy-mm-dd_hh-mm-ss</code> corresponds to the <code>EXECUTION_DATETIME</code>. This directory will store, for each cohort, the files containing the QC-related data. Thus, the general structure of <code>QC_DATA_FOLDER</code> could be something like this:</p>
+<pre><code>QC_REPORT_FOLDER/
+├── qc_report.qmd   # Quarto/md file to create the report.
+└── QC_DATA_FOLDER/
+    ├── qc_execution_2024-08-12_13-42-42/
+    │ ├── Liverscreen
+    │ │   └── &lt;QC_data_files&gt;
+    │ ├── Alcofib
+    │ │   └── ...
+    │ └── ...  
+    ├── qc_execution_2024-08-12_13-42-42/
+    └── ...
+</code></pre>
+<p>The resulting files for each cohort are as follows:</p>
+<ul>
+<li>
+<p><code>raw_nan_record_df.csv</code>: Contains the count of NaN values for the core/selected variables of the raw data (<code>raw_data</code>).</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Variable</th>
+<th>Liverscreen NaN Count</th>
+<th>total_records</th>
+<th>% NaN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>age_0</td>
+<td>0</td>
+<td>23624</td>
+<td>0.00%</td>
+</tr>
+<tr>
+<td>1</td>
+<td>ethnicity</td>
+<td>37</td>
+<td>23624</td>
+<td>0.16%</td>
+</tr>
+<tr>
+<td>2</td>
+<td>gender</td>
+<td>0</td>
+<td>23624</td>
+<td>0.00%</td>
+</tr>
+<tr>
+<td>3</td>
+<td>hypertension</td>
+<td>82</td>
+<td>23624</td>
+<td>0.35%</td>
+</tr>
+<tr>
+<td>4</td>
+<td>centralobesity</td>
+<td>19</td>
+<td>23624</td>
+<td>0.08%</td>
+</tr>
+<tr>
+<td>5</td>
+<td>hightrigly</td>
+<td>488</td>
+<td>23624</td>
+<td>2.07%</td>
+</tr>
+<tr>
+<td>...</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><code>homogeneous_nan_record_df.csv</code>: Contains the count of NaN values for the selected/core variables of the homogeneous data (<code>homogeneous_data</code>).</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Variable</th>
+<th>Liverscreen NaN Count</th>
+<th>total_records</th>
+<th>% NaN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>age</td>
+<td>0</td>
+<td>23624</td>
+<td>0.00%</td>
+</tr>
+<tr>
+<td>1</td>
+<td>ethnicity</td>
+<td>37</td>
+<td>23624</td>
+<td>0.16%</td>
+</tr>
+<tr>
+<td>2</td>
+<td>gender</td>
+<td>0</td>
+<td>23624</td>
+<td>0.00%</td>
+</tr>
+<tr>
+<td>3</td>
+<td>hypertension</td>
+<td>82</td>
+<td>23624</td>
+<td>0.35%</td>
+</tr>
+<tr>
+<td>4</td>
+<td>centralobesity</td>
+<td>19</td>
+<td>23624</td>
+<td>0.08%</td>
+</tr>
+<tr>
+<td>5</td>
+<td>hightrigly</td>
+<td>488</td>
+<td>23624</td>
+<td>0.00%</td>
+</tr>
+<tr>
+<td>...</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><code>non_numeric_record_df.csv</code>: Records non-numeric values (such as -inf, inf) found in the numeric variables of the homogeneous data.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Variable</th>
+<th>non_numeric_values_count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>age</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>weight</td>
+<td>0</td>
+</tr>
+<tr>
+<td>2</td>
+<td>height</td>
+<td>0</td>
+</tr>
+<tr>
+<td>3</td>
+<td>bmi</td>
+<td>0</td>
+</tr>
+<tr>
+<td>4</td>
+<td>hip</td>
+<td>0</td>
+</tr>
+<tr>
+<td>5</td>
+<td>te</td>
+<td>0</td>
+</tr>
+<tr>
+<td>...</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><code>nan_diff_record_dict.json</code>: Contains the differences in NaN counts between the raw and homogeneous data for each variable.</p>
+<pre><code>{
+    "age": 0,
+    "ethnicity": 0,
+    "gender": 0,
+    "hypertension": 0,
+    "centralobesity": 0,
+    ...
+}
+</code></pre>
+</li>
+<li>
+<p><code>mean_difference_dict.json</code>: Records the differences in means between the raw and homogeneous data for numeric variables, after applying the conversion factor.</p>
+<pre><code>{
+    "age": 0.0,
+    "weight": 0.0,
+    "height": 0.0,
+    "bmi": 0.0,
+    "hip": 0.0,
+    "te": 0.0,
+    ...
+}
+</code></pre>
+</li>
+<li>
+<p><code>percentile_outliers.json</code>: Records the precentiles specified during the execution of <code>get_column_outliers_percentile</code> method for each numeric variable. The format is the following:</p>
+<pre><code>```json
+{
+    "age": {
+        "0.0": 36.0,
+        "0.025": 45.0,
+        "0.25": 62.0,
+        "0.5": 71.0,
+        "0.75": 77.0,
+        "0.975": 84.375,
+        "1.0": 88.0
+    },
+    "weight": {
+        "0.0": 44.0,
+        "0.025": 53.625,
+        "0.25": 69.0,
+        "0.5": 79.0,
+        "0.75": 89.0,
+        "0.975": 117.0,
+        "1.0": 160.0
+    },
+    ...
+}
+```
+</code></pre>
+</li>
+<li>
+<p><code>z_score_outliers.json</code>: Records both the outliers according to the z-score value (and the specifided threshold, default set to 2) and the count of not missing data for each variable (so the % of outliers can be calculated in the qc report)</p>
+<pre><code>```json
+{
+    "age": {
+        "outliers_count": 20,
+        "not_missings_count": 466
+    },
+    "weight": {
+        "outliers_count": 17,
+        "not_missings_count": 466
+    },
+    "height": {
+        "outliers_count": 18,
+        "not_missings_count": 466
+    },
+    ...
+}
+```
+</code></pre>
+</li>
+</ul>
+<h2 id="usage-in-main-execution">Usage in main execution<a class="headerlink" href="#usage-in-main-execution" title="Permanent link">&para;</a></h2>
+<p>The use of this module during the main execution of the code is through the instantiation of the <code>QCChecker</code>. Each time a <code>Cohort</code> class is instantiated (and the database is internally processed to obtain the <code>homogeneous_data</code>), a <code>QCChecker</code> object is created for that cohort (i.e., for each cohort listed in <code>COHORT_NAME_LIST</code> from the <a href="../configuration_module/#cohort_config-module"><code>cohort_config</code></a> module).</p>
+<p>When <code>QCChecker</code> is instantiated, it automatically creates instances of all the classes responsible for various validations and checks as its attributes (see <a href="#qcchecker"><code>QCChecker</code> class</a>). Each of these attributes will execute its respective validation and check methods automatically, storing the generated records in their own attributes.</p>
+<p>If the <code>QC_EXPORT_RECORD</code> variable from the <a href="../configuration_module/#main_config-module"><code>main_config</code></a> module is set to <code>True</code>, the <code>export_qc_reports</code> method of the <code>QCChecker</code> will be executed in the main code and quality control records for this specific cohort will be exported (see <a href="#output-description">output descrption</a>). </p>
+<p>After all the cohorts have been created and merged into the final <em>Liveraim</em> cohort, another instance of the <code>QCChecker</code> class is created to perform a quality control check on this final cohort. In this case, quality control checks related to the structure of the final panels will also be applied through the <code>panel_consistancy_datatypes_check</code> method of the <code>ConsistancyChecker</code> class.</p>
+<h2 id="other-complementary-functions">Other complementary functions<a class="headerlink" href="#other-complementary-functions" title="Permanent link">&para;</a></h2>
+<p><em>Not yet implemented</em></p></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = "../.."</script>
+    
+    <script src="../../js/base.js"></script>
+    <script src="../../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>

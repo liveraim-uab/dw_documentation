@@ -1,0 +1,2119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+
+    
+    <title>LIVERAIM Data Warehouse Specifications - WP1</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../css/base.min.css" rel="stylesheet">
+    <link href="../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="..">WP1</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="..">Home</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../dataflow/">Overview</a>
+                    </li>
+                
+                
+                
+                    <li class="active">
+                        <a href="./">LIVERAIM Data Warehouse Specifications</a>
+                    </li>
+                
+                
+                
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Modules documentation <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="../modules_documentation/file_reading_utils_doc/">File Reading utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../modules_documentation/data_processing_utils_doc/">Preprocessing utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../modules_documentation/cohort_utils_doc/">Cohort utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../modules_documentation/biomarker_utils_doc/">Biomkarker utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../modules_documentation/qc_checks_utils_doc/">Quality Control utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../modules_documentation/file_exporting_utils_doc/">File Exporting utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../modules_documentation/sql_exporting_utils_doc/">SQL Exporting utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../modules_documentation/configuration_module/">Configuration module</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../quick_start_guide/">Quick Start Guide</a>
+                    </li>
+                
+                
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="../dataflow/">
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="next" href="../modules_documentation/file_reading_utils_doc/">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#overview">Overview</a></li>
+        <li class="first-level "><a href="#initial-data-and-configuration-data">Initial data and configuration data</a></li>
+            <li class="second-level"><a href="#database-files">Database files</a></li>
+                
+            <li class="second-level"><a href="#var_data-files">var_data files</a></li>
+                
+            <li class="second-level"><a href="#level_data-files">level_data files</a></li>
+                
+            <li class="second-level"><a href="#comb_var_data-file">comb_var_data file</a></li>
+                
+            <li class="second-level"><a href="#panel_data-file">panel_data file</a></li>
+                
+        <li class="first-level "><a href="#liveraim-data-warehouse-structure">Liveraim Data Warehouse Structure</a></li>
+            <li class="second-level"><a href="#a-database-tables-description">a. Database Tables Description</a></li>
+                
+                <li class="third-level"><a href="#table-sources">Table sources:</a></li>
+                <li class="third-level"><a href="#table-population">Table: population</a></li>
+                <li class="third-level"><a href="#table-physical_exam">Table: physical_exam</a></li>
+                <li class="third-level"><a href="#table-demographics">Table: demographics</a></li>
+                <li class="third-level"><a href="#table-fibroscan">Table: fibroscan</a></li>
+                <li class="third-level"><a href="#table-medical_history">Table: medical_history</a></li>
+                <li class="third-level"><a href="#table-blood_test_numerical">Table: blood_test_numerical</a></li>
+                <li class="third-level"><a href="#table-blood_test_categorical">Table: blood_test_categorical</a></li>
+            <li class="second-level"><a href="#varibles-description">Varibles description</a></li>
+                
+            <li class="second-level"><a href="#b-configuration-tables-description">b. Configuration Tables Description</a></li>
+                
+        <li class="first-level "><a href="#general-relationships-in-the-schema">General Relationships in the Schema</a></li>
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h1>
+<p>This section describes the structure, tables, and relationships within the data warehouse.</p>
+<p>The data warehouse is composed of several tables that can be divided into two groups: the database itself, which we will simply call <code>database</code>, and the <code>configuration data</code> tables, where information about the variables, the structure of the database, mapping dictionaries, etc., is stored. The database, in its first version (prior to receiving biomarker data), consists of the following tables:</p>
+<ul>
+<li><code>population</code>: Contains basic information about each patient, such as gender, status, cohort membership, etc.</li>
+<li><code>blood_test_categorical</code>: Contains categorical variables extracted from the blood test (at <code>dat_0</code>).</li>
+<li><code>blood_test_numerical</code>: Contains numerical variables extracted from the blood test (at <code>dat_0</code>).</li>
+<li><code>demographics</code>: Contains demographic information about the patient, such as gender, ethnicity, etc.</li>
+<li><code>fibroscan</code>: Contains information related to the fibroscan test results for each patient.</li>
+<li><code>physical_exam</code>: Contains information obtained from the physical examination, including variables such as weight, height, etc.</li>
+<li><code>medical_history</code>: Contains information about each patient's medical history, including relevant comorbidities, etc.</li>
+</ul>
+<p>We will refer to these tables as panels or tables interchangeably. The <code>population</code> panel acts as the core of the database: the other panels are linked to this primary one (see <a href="#general-relationships-in-the-schema">General Relationships in the Schema</a>).
+ The following image schematically depicts the structure and relationships of the data warehouse:</p>
+<p><img alt="Data_Base_scheme" src="../images/DB_scheme_v0.png" /></p>
+<p>The data warehouse contains two types of tables in terms of format: <strong>long</strong> format tables and <strong>wide</strong> format tables:</p>
+<ul>
+<li>
+<p><strong>Wide</strong>: These are the "usual" tables. Each variable is stored as a separate column in the table. Each row corresponds to the information of a single patient. In these tables, there cannot be duplicates in the identifier columns: all information for a patient is stored in a single row.</p>
+</li>
+<li>
+<p><strong>Long</strong>: These tables contain at least one patient identifier column (in this case, <code>liveraim_id</code> and <code>cohort_id</code>) along with the <code>variable</code> and <code>value</code> columns. The <code>variable</code> column contains the names of the variables, while the <code>value</code> column contains the value of the variable specified in the <code>variable</code> column. Tables in long format will have repeated entries in the patient identifier columns. In addition to the columns mentioned, these tables may include other columns that provide additional context for each entry: annotations for variable values (<code>lower_bound</code>, <code>upper_bound</code>), the date of each observation (<code>date_0</code>), and the units of the variable (<code>final_units</code>).
+Transforming a wide table into a long table is a straightforward process (if the necessary data is available) and is referred to in this documentation as <code>melting</code>. Similarly, it is possible to transform a <strong>long</strong> format table into a <strong>wide</strong> format table with the same ease. An example of this format is shown below:</p>
+<table>
+<thead>
+<tr>
+<th>date_0</th>
+<th>liveraim_id</th>
+<th>cohort_id</th>
+<th>variable</th>
+<th>value</th>
+<th>final_units</th>
+<th>lower_bound</th>
+<th>upper_bound</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2023-01-19 00:00:00</td>
+<td>LA---</td>
+<td>-----</td>
+<td>alb</td>
+<td>NaN</td>
+<td>g/L</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2023-01-19 00:00:00</td>
+<td>LA---</td>
+<td>-----</td>
+<td>alk</td>
+<td>41</td>
+<td>U/L</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2023-01-19 00:00:00</td>
+<td>LA---</td>
+<td>-----</td>
+<td>alt</td>
+<td>21</td>
+<td>UI/L</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2023-01-19 00:00:00</td>
+<td>LA---</td>
+<td>-----</td>
+<td>ast</td>
+<td>20</td>
+<td>U/L</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2023-01-19 00:00:00</td>
+<td>LA---</td>
+<td>-----</td>
+<td>bili</td>
+<td>0.6</td>
+<td>mg/dL</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2023-01-19 00:00:00</td>
+<td>LA---</td>
+<td>-----</td>
+<td>cb</td>
+<td>NaN</td>
+<td>mg/dL</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2023-01-19 00:00:00</td>
+<td>LA---</td>
+<td>-----</td>
+<td>chol</td>
+<td>236</td>
+<td>mg/dL</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2023-01-19 00:00:00</td>
+<td>LA---</td>
+<td>-----</td>
+<td>crea</td>
+<td>1.1</td>
+<td>mg/dL</td>
+<td>0</td>
+<td>10</td>
+</tr>
+<tr>
+<td>2023-01-19 00:00:00</td>
+<td>LA---</td>
+<td>-----</td>
+<td>crp</td>
+<td>NaN</td>
+<td>mg/dL</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2023-01-19 00:00:00</td>
+<td>LA---</td>
+<td>-----</td>
+<td>ferritin</td>
+<td>146</td>
+<td>ng/mL</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>...</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+<p>For <code>long</code> tables, since there can (and should) be repetitions in the ID columns (one repetition for each variable in long format at least), composite primary keys are used. In general, this database uses the columns <code>liveraim_id</code>, <code>cohort_id</code>, and <code>variable</code> as composite primary keys: the database does not allow any repetitions of the combination of these three variables.</p>
+<blockquote>
+<p><strong>Note</strong>: Using both <code>liveraim_id</code> and <code>cohort_id</code> within the composite keys is redundant, as there is a bijective correspondence between these two identifiers. However, it has been configured this way to maintain identifier consistency.</p>
+</blockquote>
+<p>It is important to clarify the difference between <code>cohort_id</code> and <code>liveraim_id</code>. <code>cohort_id</code> is the patient-specific identifier within each cohort. The encoding of these identifiers is heterogeneous, varies between cohorts, and originates from the original data. <code>liveraim_id</code> is a new variable generated during the execution of <code>main.py</code>, which assigns a unique identifier to each patient across all cohorts at the data warehouse level, following a common format. There is a bijective correspondence between these two variables.</p>
+<blockquote>
+<p><strong>Note</strong>: The variables in the <code>variable</code> column (the "melted" variables) of each <code>long</code> table must be of the same data type. This is because SQL does not allow values with different data types in the same column. This adds robustness to the database at the cost of having to create additional tables. For example, in the case of blood test data, two tables are needed: <code>blood_test_numerical</code> and <code>blood_test_categorical</code>.</p>
+</blockquote>
+<h1 id="initial-data-and-configuration-data">Initial data and configuration data<a class="headerlink" href="#initial-data-and-configuration-data" title="Permanent link">&para;</a></h1>
+<p>This section describes the initial data recieved from the partners and teh configuration files that the program needs to build the database. For each cohort, there are four types of files, which are described below:</p>
+<ul>
+<li><a href="#database-files"><code>database</code></a>: contains the raw data of the cohort</li>
+<li><a href="#var_data-files"><code>var_data</code></a>: contains configuration data about the core variables needed to create the data warehouse</li>
+<li><a href="#level_data-files"><code>level_data</code></a>: contains configuration data about the levels of categorical core variables needed to create the data warehouse</li>
+<li><a href="#comb_var_data-file"><code>comb_var_data</code></a>: For the variables that need to be combined, it contains the necessary data to perform this process.</li>
+</ul>
+<p>Finally, an other file, <a href="#panel_data-file"><code>panel_data</code></a> is needed for the proper creation of the data warehouse. In this file the structure of the final panels is described. </p>
+<h2 id="database-files"><code>Database</code> files<a class="headerlink" href="#database-files" title="Permanent link">&para;</a></h2>
+<p>The files we refer to as <em>database</em> files contain the raw database of the cohort. These are the files that the partners responsible for each cohort have sent us with the patient data.</p>
+<p>The content of these files is never modified, neither manually nor through the code: all data processing is done after reading these files, which remain intact after each execution. The only modification they receive is a renaming necessary for their correct reading. For more details, see the section <a href="../quick_start_guide/#structure-of-datacohort_namedatabases-directory">Structure of <code>data/cohort_name/databases/</code> directory</a>.</p>
+<p>The format of these files varies depending on the cohort. For more information on reading the data, see the section <a href="../modules_documentation/file_reading_utils_doc/">File reading utils</a>. When this files are read, they are loaded into the code as <code>pandas.DataFrame</code> objects. </p>
+<blockquote>
+<p><strong>Note</strong>: For obvious data privacy reasons, these files are not uploaded to GitHub.</p>
+</blockquote>
+<h2 id="var_data-files"><code>var_data</code> files<a class="headerlink" href="#var_data-files" title="Permanent link">&para;</a></h2>
+<p>This file, along with level_data, is essential for the creation of the data warehouse. It is an Excel file (.xlsx) where each row corresponds to one of the selected/core variables. It contains the following columns:</p>
+<ul>
+<li><code>original_name (str)</code>: Name of the core variable in the original database. It varies between cohorts.</li>
+<li><code>liveraim_name (str)</code>: Name of the core variable in the common format, i.e., in the liveraim format.</li>
+<li><code>panel (str)</code>: Panel where the variable will be stored.</li>
+<li><code>data_type (str)</code>: Final datatype of the variable.</li>
+<li><code>initial_units (str)</code>: Units of the variable in the original cohort.</li>
+<li><code>description (str)</code>: Short text describing the variable.</li>
+<li><code>final_units (str)</code>: Final units of the variable, i.e., units in the liveraim data warehouse.</li>
+<li><code>lower_bound (float)</code>: Lower bound of the variable. For checking purposes.</li>
+<li><code>upper_bound (float)</code>: Upper bound of the variable. For checking purposes.</li>
+<li><code>conversion_factor (float)</code>: Conversion factor from initial_units to final_units. Set to 1 if not needed.</li>
+</ul>
+<p>Before running the code, you must verify that these files are in the correct directories, can be read correctly, have the structure defined above, and that the information they contain is correct. Any variation in structure/content may result in an error in execution or the creation of an erroneous data warehouse. The correct functioning of the program is highly dependent on these files.</p>
+<p>These files are tracked in GitHub like the rest of the scripts, so there is no need to create them from scratch, and they should work fine if the repository is cloned. </p>
+<p>When this file is read, it is loaded into the code as a <code>pandas.DataFrame</code> object. Throughout all the documentation, we will refer to this DataFrame also as <code>var_data</code>.</p>
+<blockquote>
+<p><strong>Note 1</strong>: There must be certain coherence between the var_data files from each cohort: the number of variables in each file (i.e., the number of rows) should be the same. In addition, the set of variables in <code>liveraim_name</code> should be the same between cohorts, and the <code>final_data</code> column should be consistent. Although this is checked in the code, making sure that there are no errors is recomended. </p>
+<p><strong>Note 2</strong>: If needed, addition of other columns is possible and should not create incompatibilities (but the management of those new columns should be implemented).</p>
+</blockquote>
+<h2 id="level_data-files"><code>level_data</code> files<a class="headerlink" href="#level_data-files" title="Permanent link">&para;</a></h2>
+<p>This file, along with <code>var_data</code>, is essential for the creation of the data warehouse. These files describe the different levels of the categorical core variables. In this case, each row does not correspond to a variable, but to a level of the original variable. The file contains the following columns:</p>
+<ul>
+<li><code>original_name (str)</code>: Name of the core variable in the original database. It varies between cohorts.</li>
+<li><code>original_level_value (Variable)</code>: Original value of the level in the cohort.</li>
+<li><code>original_data_type (str)</code>: Original datatype of the variable.</li>
+<li><code>liveraim_level_value (Variable)</code>: Value of the level in the final database (i.e., in the LIVERAIM data warehouse).</li>
+<li><code>level_desc (str)</code>: Description/label of the level.</li>
+<li><code>liveraim_name (str)</code>: Name of the core variable in the common format, i.e., in the liveraim format.</li>
+</ul>
+<p>Before running the code, you must verify that these files are in the correct directories, can be read correctly, have the structure defined above, and that the information they contain is correct. Any variation in structure/content may result in an error in execution or the creation of an erroneous data warehouse. The correct functioning of the program is highly dependent on these files.</p>
+<p>These files are tracked in GitHub like the rest of the scripts, so there is no need to create them from scratch, and they should work fine if the repository is cloned.</p>
+<p>When this file is read, it is loaded into the code as a <code>pandas.DataFrame</code> object. Throughout all the documentation, we will refer to this DataFrame also as <code>level_data</code>.</p>
+<blockquote>
+<p><strong>Note</strong>: There must be certain coherence between the <code>level_data</code> files from each cohort: In this case, the number of rows in each file does not need to match, as in some cohorts two or more different levels might coincide in the same final level. However, the <code>original_name</code>, <code>liveraim_name</code>, and <code>liveraim_level_value</code> columns should be consistent between files. Although this is checked in the code, it is recommended to ensure there are no errors.</p>
+</blockquote>
+<h2 id="comb_var_data-file"><code>comb_var_data</code> file<a class="headerlink" href="#comb_var_data-file" title="Permanent link">&para;</a></h2>
+<p>This is a <code>json</code> file that will be loaded into the code as a dictionary. It contains the necessary information to obtain a final variable by combining original variables present in the database. For more information about this process, see the section <a href="../modules_documentation/data_processing_utils_doc/"><code>data_processing_utils</code></a>, subsection <a href="../modules_documentation/data_processing_utils_doc/#class-varcombiner"><code>class VarCombiner</code></a>. This section describes the class responsible for combining the variables listed in <code>comb_var_data</code> according to the specified configuration.</p>
+<p>The primary goal of this dictionary is to combine variables that refer to the same magnitude but use different units. Combining these variables helps reduce the number of missing values. For example, in the LIVERSCREEN cohort, for the magnitude blood glucose (in visit 1), there are the variables <code>glc</code> (expressed in mmol/L) and <code>glc_mg_dl</code> (expressed in mg/dL). Both will be combined to fill missing at least one of the variables have a proper value.</p>
+<blockquote>
+<p><strong>Note</strong>: Currently, only the functionality described above has been implemented. However, it can be extended (by modifying this dictionary and the <code>VarCombiner</code> class) to combine categorical variables, generate secondary or calculated variables, and more.</p>
+</blockquote>
+<p>The structure of the <code>comb_var_data</code> dictionary is as follows:</p>
+<ul>
+<li><strong>Primary Key</strong>: The name of the final variable resulting from the combination. This variable must appear in the <a href="#var_data-files"><code>var_data</code></a> file described in this documentation. It usually matches the name of one of the variables to be used in the combination.</li>
+<li><strong>Primary Value</strong>: A dictionary with the following structure:<ul>
+<li><strong>Secondary Key</strong>: Names of the variables (in the database) that will be used for the combination.</li>
+<li><strong>Secondary Value</strong>: Conversion factor to transform the variable from its original units to the final units (i.e., the units of the variable named by the primary key).</li>
+</ul>
+</li>
+</ul>
+<p>The structure of the dictionary would be:</p>
+<pre><code class="language-yaml">comb_var_data:
+  &lt;final_variable_name_1&gt;:            # Primary Key: Name of the final variable
+    &lt;original_variable_name_1&gt;: &lt;conversion_factor_1&gt;    # Secondary Key-Value: Original variable and its conversion factor
+    &lt;original_variable_name_2&gt;: &lt;conversion_factor_2&gt;    # Secondary Key-Value: Original variable and its conversion factor
+  &lt;final_variable_name_2&gt;:            # Primary Key: Name of another final variable
+    &lt;original_variable_name_3&gt;: &lt;conversion_factor_3&gt;    # Secondary Key-Value: Original variable and its conversion factor
+    &lt;original_variable_name_4&gt;: &lt;conversion_factor_4&gt;    # Secondary Key-Value: Original variable and its conversion factor
+  ...
+</code></pre>
+<p>And an example: </p>
+<pre><code>{
+    "glc": {
+        "glc": 1,
+        "glc_mg_dl": 0.055
+    },
+    "crea_mg_dl": {
+        "creat": 0.017,
+        "crea_mg_dl": 1
+    }
+}
+</code></pre>
+<p>In this case, it indicates that the <code>glc</code> variable will be created by combining the <code>glc</code> itself and <code>glc_mg_dl</code> variables. Specifically, the value of <code>glc</code> will be used if it exists, and if not, the value of <code>glc_mg_dl</code> will be used, multiplied by the corresponding conversion factor (in this case, 0.055). A similar procedure will be aplied to <code>crea_mg_dl</code>.</p>
+<p>These files are tracked in GitHub like the rest of the scripts, so there is no need to create them from scratch, and they should work fine if the repository is cloned.</p>
+<h2 id="panel_data-file">panel_data file<a class="headerlink" href="#panel_data-file" title="Permanent link">&para;</a></h2>
+<p>This file is not specific to any cohort and is used as a guide to create and structure the different final panels. The file <code>panel_metadata.xlsx</code> is an Excel file that contains a sheet for each final panel. Each of these panels includes the following columns:</p>
+<ul>
+<li><code>var_name (str)</code>: Name of the variable (in the common liveraim format).</li>
+<li>
+<p><code>melt (int)</code>: Integer (acting as a boolean, so it is 0 or 1) indicating:</p>
+<ul>
+<li><code>0</code>: The variable is not melted: it will appear in the panel as a column.</li>
+<li><code>1</code>: The variable is melted: the variable name and value will be restructured in a long format. A column <code>variable</code> will contain the name of the variable, and the column <code>value</code> will contain its value.</li>
+</ul>
+</li>
+</ul>
+<p>These files are tracked in GitHub like the rest of the scripts, so there is no need to create them from scratch, and they should work fine if the repository is cloned.</p>
+<p>When this file is read, since it is an .xlsx file with multiple sheets, it is loaded into the code as a dictionary of <code>pandas.DataFrames</code>. Each sheet name becomes a key, and the corresponding table becomes its value (a <code>DataFrame</code>). Throughout the documentation, we will refer to this dictionary as <code>panel_metadata</code>.</p>
+<p>It is important to maintain the structure of this file (and the previously described). Changes can be easily made to modify the final structure of the data warehouse by adding new sheets to the file (i.e., adding new panels), adding variables to a panel, or changing their structure (long or wide format).</p>
+<p>For more information about the structure of the final data, check the next section <a href="#liveraim-data-warehouse-structure">LIVERAIM DATA WAREHOUSE STRUCTURE</a>.</p>
+<h1 id="liveraim-data-warehouse-structure">Liveraim Data Warehouse Structure<a class="headerlink" href="#liveraim-data-warehouse-structure" title="Permanent link">&para;</a></h1>
+<p>The <strong>LIVERAIM DATA WAREHOUSE v0.1</strong> is composed by the following tables:</p>
+<p>a. <strong>Database</strong></p>
+<ul>
+<li><code>population</code></li>
+<li><code>blood_test_categorical</code></li>
+<li><code>blood_test_numerical</code></li>
+<li><code>demographics</code></li>
+<li><code>fibroscan</code></li>
+<li><code>physical_exam</code></li>
+<li><code>medical_history</code></li>
+</ul>
+<p>b. <strong>Configuration Data</strong></p>
+<ul>
+<li><code>panel_metadata</code></li>
+<li><code>var_data</code></li>
+<li><code>level_data</code></li>
+<li><code>comb_var_data</code></li>
+<li><code>dictionaries</code></li>
+</ul>
+<h2 id="a-database-tables-description">a. Database Tables Description<a class="headerlink" href="#a-database-tables-description" title="Permanent link">&para;</a></h2>
+<h3 id="table-sources">Table sources:<a class="headerlink" href="#table-sources" title="Permanent link">&para;</a></h3>
+<p>For each cohort, there is at least one raw database containing patient data. Each database corresponds to a single file, and for some cohorts, different versions of the same database are available. If multiple versions are available, the data from the latest version for each patient will be used. During the data processing phase, the databases are merged into a single table, which is later split and restructured into the various tables of the final database.</p>
+<p>From each raw database, a subset of variables is selected. These variables must be common across all cohort databases (although the variable names may differ), ensuring that patient data from different cohorts can be merged. Thus, all variables that appear in the final database are either secondary variables created during the code execution, or they originate from one of the four cohorts (depending on the patient's source) used to construct the final database. For more information about the dataflow go to <a href="../dataflow/">dataflow</a> section.</p>
+<p>A summary of the data sources is presented below:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Cohort</strong></th>
+<th><strong>Number of versions used</strong></th>
+<th><strong>File type</strong></th>
+<th><strong>Reading method</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>liverscreen</td>
+<td>4</td>
+<td>stata file (<code>.dta</code>)</td>
+<td><code>pd.read_stata</code></td>
+</tr>
+<tr>
+<td>alcofib</td>
+<td>1</td>
+<td>sav file (<code>.sav</code>)</td>
+<td><code>pyreadstat.read_sav</code></td>
+</tr>
+<tr>
+<td>glucofib</td>
+<td>1</td>
+<td>csv (<code>.csv</code>)</td>
+<td><code>pd.read_csv</code></td>
+</tr>
+<tr>
+<td>decide</td>
+<td>1</td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note 1</strong>: Some of the information below may be redundant, as certain variables appear in many or all panels. However, redundancies have been intentionally kept for the sake of clarity and readability.</p>
+<p><strong>Note 2</strong>: As three of the four used cohorts have been previously managed isnod RedCap, many RedCap names in the final database have been kept as standard (sometimes with few changes). </p>
+</blockquote>
+<h3 id="table-population">Table: <code>population</code><a class="headerlink" href="#table-population" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Description:</strong> Defines the population of patients within different cohorts.</li>
+<li><strong>Fields:</strong><ul>
+<li><code>liveraim_id</code> (VARCHAR(255)): Common liveraim identifier for the patient. Unique within the data warehouse. </li>
+<li><code>cohort_id</code> (VARCHAR(255)): Cohort-specific identifier for each patient in a cohort. Unique within the cohort. </li>
+<li><code>gender</code> (VARCHAR(8)): Gender of the patient.</li>
+<li><code>birth_date</code> (DATETIME): Date of birth of the patient.</li>
+<li><code>status</code> (VARCHAR(8)): Current status of the patient (ongoing,, withdrawn, finished).</li>
+<li><code>date_0</code> (DATETIME): Date of patient inclusion in the cohort.</li>
+<li><code>exit_date</code> (DATETIME): Date of study exit.</li>
+</ul>
+</li>
+<li><strong>Format</strong>: wide</li>
+<li><strong>Primary Key:</strong> (<code>liveraim_id</code>, <code>cohort_id</code>)</li>
+<li><strong>Relations:</strong> Central table that relates to all other tables using <code>liveraim_id</code> and <code>cohort_id</code>.</li>
+</ul>
+<h4 id="actions-and-specification-tables">Actions and specification tables<a class="headerlink" href="#actions-and-specification-tables" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th><strong>Liveraim name</strong></th>
+<th><strong>Liverscreen name</strong></th>
+<th><strong>Alcofib name</strong></th>
+<th><strong>Glucofib name</strong></th>
+<th><strong>Decide name</strong></th>
+<th><strong>SQL data type</strong></th>
+<th><strong>data type</strong></th>
+<th><strong>Rule/Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>liveraim_id</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td>Created dynamically after merging cohorts.</td>
+</tr>
+<tr>
+<td>cohort_id</td>
+<td>id</td>
+<td>Codigo_deidentificacion</td>
+<td>id</td>
+<td>id</td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td></td>
+</tr>
+<tr>
+<td>gender</td>
+<td>gender</td>
+<td>Sexe</td>
+<td>gender</td>
+<td>gender</td>
+<td>FLOAT</td>
+<td>category</td>
+<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code>.</td>
+</tr>
+<tr>
+<td>birth_date</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>DATETIME</td>
+<td>datetime</td>
+<td>Variable calculated from patient's age and date_0 (inclusion date).</td>
+</tr>
+<tr>
+<td>date_0</td>
+<td>date_0</td>
+<td>Fecha_V1</td>
+<td>date_0</td>
+<td>date_0</td>
+<td>DATETIME</td>
+<td>datetime</td>
+<td></td>
+</tr>
+<tr>
+<td>status</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>VARCHAR(8)</td>
+<td>category</td>
+<td>Calculated variable. If cohort recruitment is ongoing, it is set to <em>ongoing</em>. If cohort recruitment is finished, it is set to <em>finished</em>. If the patient has left the cohort (in cases where more than one version is available), it is set to <em>withdrawn</em>.</td>
+</tr>
+<tr>
+<td>exit_date</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>DATETIME</td>
+<td>datetime</td>
+<td>Calculated variable. If the patient's status is ongoing, it is set to the current date (execution date). If the status is finished, it is set to the date of the last version. If the status is withdrawn, it is set to the date of the last version in which the patient appears.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-physical_exam">Table: <code>physical_exam</code><a class="headerlink" href="#table-physical_exam" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Description:</strong> Stores physical exam results.</li>
+<li><strong>Fields:</strong><ul>
+<li><code>liveraim_id</code> (VARCHAR(255)): Common liveraim identifier for the patient. Unique within the data warehouse. </li>
+<li><code>cohort_id</code> (VARCHAR(255)): Cohort-specific identifier for each patient in a cohort. Unique within the cohort. </li>
+<li><code>date_0</code> (DATETIME): Date of patient inclusion in the cohort.</li>
+<li><code>variable</code> (VARCHAR(255)): Name of the variable to which the corresponding value in the <code>value</code> column refers.</li>
+<li><code>value</code> (FLOAT): Value of variable in <code>variable</code> column. </li>
+<li><code>final_units</code> (VARCHAR(255)): Final units of the value.</li>
+<li><code>lower_bound</code> (FLOAT): Lower acceptable limit for the value.</li>
+<li><code>upper_bound</code> (FLOAT): Upper acceptable limit for the value.</li>
+</ul>
+</li>
+<li><strong>Format</strong>: Long.</li>
+<li>
+<p><strong>Variables in <code>varible</code> column</strong>: <code>weight</code>, <code>height</code>, <code>bmi</code>, <code>hip</code>.</p>
+</li>
+<li>
+<p><strong>Primary Key:</strong> (<code>liveraim_id</code>, <code>cohort_id</code>, <code>variable</code>)</p>
+</li>
+<li><strong>Relations:</strong> Relates to the <code>population</code> table via <code>liveraim_id</code> and <code>cohort_id</code>.</li>
+</ul>
+<h4 id="actions-and-specification-tables_1">Actions and specification tables<a class="headerlink" href="#actions-and-specification-tables_1" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th><strong>Liveraim name</strong></th>
+<th><strong>Liverscreen name</strong></th>
+<th><strong>Alcofib name</strong></th>
+<th><strong>Glucofib name</strong></th>
+<th><strong>Decide name</strong></th>
+<th><strong>Data type</strong></th>
+<th><strong>Rule/Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>liveraim_id</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>VARCHAR(255)</td>
+<td>Created dynamically after merging cohorts.</td>
+</tr>
+<tr>
+<td>cohort_id</td>
+<td>id</td>
+<td>Codigo_deidentificacion</td>
+<td>id</td>
+<td>id</td>
+<td>VARCHAR(255)</td>
+<td></td>
+</tr>
+<tr>
+<td>date_0</td>
+<td>date_0</td>
+<td>Fecha_V1</td>
+<td>date_0</td>
+<td>date_0</td>
+<td>DATETIME</td>
+<td></td>
+</tr>
+<tr>
+<td>variable</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>VARCHAR(255)</td>
+<td>Obtained from melting the variables <code>weight</code>, <code>height</code>, <code>bmi</code>, <code>hip</code></td>
+</tr>
+<tr>
+<td>value</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>FLOAT</td>
+<td>Obtained from melting the variables <code>weight</code>, <code>height</code>, <code>bmi</code>, <code>hip</code></td>
+</tr>
+<tr>
+<td>final_units</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>VARCHAR(255)</td>
+<td></td>
+</tr>
+<tr>
+<td>lower_bound</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>FLOAT</td>
+<td></td>
+</tr>
+<tr>
+<td>upper_bound</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>FLOAT</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h5 id="melted-variables-metadata">Melted variables metadata<a class="headerlink" href="#melted-variables-metadata" title="Permanent link">&para;</a></h5>
+<table>
+<thead>
+<tr>
+<th><strong>Liveraim name</strong></th>
+<th><strong>Liverscreen name</strong></th>
+<th><strong>Alcofib name</strong></th>
+<th><strong>Glucofib name</strong></th>
+<th><strong>Decide name</strong></th>
+<th><strong>Data type</strong></th>
+<th><strong>Rule/Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>weight</td>
+<td>weight</td>
+<td>Peso_V1</td>
+<td>weight</td>
+<td>weight</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>height</td>
+<td>height</td>
+<td>Talla_V1</td>
+<td>height</td>
+<td>height</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>bmi</td>
+<td>bmi</td>
+<td>BMI_V1</td>
+<td>bmi</td>
+<td>bmi</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>hip</td>
+<td>hip</td>
+<td>diametro_cintura</td>
+<td>hip</td>
+<td>hip</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-demographics">Table: <code>demographics</code><a class="headerlink" href="#table-demographics" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Description:</strong> Contains demographic information of patients.</li>
+<li>
+<p><strong>Fields:</strong></p>
+<ul>
+<li><code>liveraim_id</code> (VARCHAR(255)): Common liveraim identifier for the patient. Unique within the data warehouse. </li>
+<li><code>cohort_id</code> (VARCHAR(255)): Cohort-specific identifier for each patient in a cohort. Unique within the cohort. </li>
+<li><code>age</code> (FLOAT): Age of the patient.</li>
+<li><code>ethnicity</code> (VARCHAR(255)): Ethnicity of the patient.</li>
+<li><code>gender</code> (VARCHAR(255)): Gender of the patient.</li>
+<li><code>date_0</code> (DATETIME): Date of patient inclusion in the cohort.</li>
+</ul>
+</li>
+<li>
+<p><strong>Format</strong>: wide.</p>
+</li>
+<li><strong>Primary Key:</strong> (<code>liveraim_id</code>, <code>cohort_id</code>)</li>
+<li><strong>Relations:</strong> Relates to the <code>population</code> table via <code>liveraim_id</code> and <code>cohort_id</code>.</li>
+</ul>
+<h4 id="actions-and-specification-tables_2">Actions and specification tables<a class="headerlink" href="#actions-and-specification-tables_2" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th><strong>Liveraim name</strong></th>
+<th><strong>Liverscreen name</strong></th>
+<th><strong>Alcofib name</strong></th>
+<th><strong>Glucofib name</strong></th>
+<th><strong>Decide name</strong></th>
+<th><strong>SQL data type</strong></th>
+<th><strong>data type</strong></th>
+<th><strong>Rule/Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>liveraim_id</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td>Created dynamically after merging cohorts.</td>
+</tr>
+<tr>
+<td>cohort_id</td>
+<td>id</td>
+<td>Codigo_deidentificacion</td>
+<td>id</td>
+<td>id</td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td></td>
+</tr>
+<tr>
+<td>date_0</td>
+<td>date_0</td>
+<td>Fecha_V1</td>
+<td>date_0</td>
+<td>date_0</td>
+<td>DATETIME</td>
+<td>datetime</td>
+<td></td>
+</tr>
+<tr>
+<td>ethnicity</td>
+<td>ethnicity</td>
+<td>Etnia</td>
+<td>ethnicity</td>
+<td>ethnicity</td>
+<td>VARCHAR(255)</td>
+<td>category</td>
+<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code></td>
+</tr>
+<tr>
+<td>gender</td>
+<td>gender</td>
+<td>Sexe</td>
+<td>gender</td>
+<td>gender</td>
+<td>VARCHAR(255)</td>
+<td>category</td>
+<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-fibroscan">Table: <code>fibroscan</code><a class="headerlink" href="#table-fibroscan" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Description:</strong> Records fibroscan exam results.</li>
+<li><strong>Fields:</strong><ul>
+<li><code>liveraim_id</code> (VARCHAR(255)): Common liveraim identifier for the patient. Unique within the data warehouse. </li>
+<li><code>cohort_id</code> (VARCHAR(255)): Cohort-specific identifier for each patient in a cohort. Unique within the cohort. </li>
+<li><code>date_0</code> (DATETIME): Date of patient inclusion in the cohort.</li>
+<li><code>variable</code> (VARCHAR(255)): Name of the variable to which the corresponding value in the <code>value</code> column refers.</li>
+<li><code>value</code> (FLOAT): Value of variable in <code>variable</code> column. </li>
+<li><code>final_units</code> (VARCHAR(255)): Final units of the value.</li>
+<li><code>lower_bound</code> (FLOAT): Lower acceptable limit for the value.</li>
+<li><code>upper_bound</code> (FLOAT): Upper acceptable limit for the value.</li>
+</ul>
+</li>
+<li><strong>Format</strong>: long</li>
+<li><strong>Variables in <code>varible</code> column</strong>: <code>te</code>, <code>cap</code>.</li>
+<li><strong>Primary Key:</strong> (<code>liveraim_id</code>, <code>cohort_id</code>, <code>variable</code>)</li>
+<li><strong>Relations:</strong> Relates to the <code>population</code> table via <code>liveraim_id</code> and <code>cohort_id</code>.</li>
+</ul>
+<h4 id="actions-and-specification-tables_3">Actions and specification tables<a class="headerlink" href="#actions-and-specification-tables_3" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th><strong>Liveraim name</strong></th>
+<th><strong>Liverscreen name</strong></th>
+<th><strong>Alcofib name</strong></th>
+<th><strong>Glucofib name</strong></th>
+<th><strong>Decide name</strong></th>
+<th><strong>Data type</strong></th>
+<th><strong>Rule/Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>liveraim_id</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>VARCHAR(255)</td>
+<td>Created dynamically after merging cohorts.</td>
+</tr>
+<tr>
+<td>cohort_id</td>
+<td>id</td>
+<td>Codigo_deidentificacion</td>
+<td>id</td>
+<td>id</td>
+<td>VARCHAR(255)</td>
+<td></td>
+</tr>
+<tr>
+<td>date_0</td>
+<td>date_0</td>
+<td>Fecha_V1</td>
+<td>date_0</td>
+<td>date_0</td>
+<td>DATETIME</td>
+<td></td>
+</tr>
+<tr>
+<td>variable</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>VARCHAR(255)</td>
+<td>Obtained from melting the variables <code>te</code>, <code>cap</code>.</td>
+</tr>
+<tr>
+<td>value</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>FLOAT</td>
+<td>Obtained from melting the variables <code>te</code>, <code>cap</code>.</td>
+</tr>
+<tr>
+<td>final_units</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>VARCHAR(255)</td>
+<td></td>
+</tr>
+<tr>
+<td>lower_bound</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>FLOAT</td>
+<td></td>
+</tr>
+<tr>
+<td>upper_bound</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>FLOAT</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h5 id="melted-variables-metadata_1">Melted variables metadata<a class="headerlink" href="#melted-variables-metadata_1" title="Permanent link">&para;</a></h5>
+<table>
+<thead>
+<tr>
+<th><strong>Liveraim name</strong></th>
+<th><strong>Liverscreen name</strong></th>
+<th><strong>Alcofib name</strong></th>
+<th><strong>Glucofib name</strong></th>
+<th><strong>Decide name</strong></th>
+<th><strong>Data type</strong></th>
+<th><strong>Rule/Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>te</td>
+<td>te</td>
+<td>LS_V1</td>
+<td>te</td>
+<td>te</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>cap</td>
+<td>cap</td>
+<td>CAP_V1</td>
+<td>cap</td>
+<td>cap</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-medical_history">Table: <code>medical_history</code><a class="headerlink" href="#table-medical_history" title="Permanent link">&para;</a></h3>
+<p><span style="color:red">This table structure must be reviewed.</span></p>
+<ul>
+<li><strong>Description:</strong> Stores medical history of patients.</li>
+<li>
+<p><strong>Fields:</strong></p>
+<ul>
+<li><code>liveraim_id</code> (VARCHAR(255)): Common liveraim identifier for the patient. Unique within the data warehouse. </li>
+<li><code>cohort_id</code> (VARCHAR(255)): Cohort-specific identifier for each patient in a cohort. Unique within the cohort. </li>
+<li><code>date_0</code> (DATETIME): Date of patient inclusion in the cohort.</li>
+<li><code>hypertension</code> (VARCHAR(255)): Hypertension information.</li>
+<li><code>centralobesity</code> (VARCHAR(255)): Central obesity information.</li>
+<li><code>hightrigly</code> (VARCHAR(255)): High triglycerides information.</li>
+<li><code>COPD</code> (VARCHAR(255)): Chronic obstructive pulmonary disease information.</li>
+<li><code>smoke</code> (VARCHAR(255)): Smoking status of the patient.</li>
+<li><code>alcohol_treat</code> (VARCHAR(255)): Information on alcohol treatment.</li>
+</ul>
+</li>
+<li>
+<p><strong>Format</strong>: wide</p>
+</li>
+<li><strong>Primary Key:</strong> (<code>liveraim_id</code>, <code>cohort_id</code>)</li>
+<li><strong>Relations:</strong> Relates to the <code>population</code> table via <code>liveraim_id</code> and <code>cohort_id</code>.</li>
+</ul>
+<h4 id="actions-and-specification-tables_4">Actions and specification tables<a class="headerlink" href="#actions-and-specification-tables_4" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th><strong>Liveraim name</strong></th>
+<th><strong>Liverscreen name</strong></th>
+<th><strong>Alcofib name</strong></th>
+<th><strong>Glucofib name</strong></th>
+<th><strong>Decide name</strong></th>
+<th><strong>SQL data type</strong></th>
+<th><strong>Data type</strong></th>
+<th><strong>Rule/Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>liveraim_id</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td>Created dynamically after merging cohorts.</td>
+</tr>
+<tr>
+<td>cohort_id</td>
+<td>id</td>
+<td>Codigo_deidentificacion</td>
+<td>id</td>
+<td>id</td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td></td>
+</tr>
+<tr>
+<td>date_0</td>
+<td>date_0</td>
+<td>Fecha_V1</td>
+<td>date_0</td>
+<td>date_0</td>
+<td>DATETIME</td>
+<td>datetime</td>
+<td></td>
+</tr>
+<tr>
+<td>hypertension</td>
+<td>hypertension</td>
+<td>HTA</td>
+<td>hypertension</td>
+<td>hypertension</td>
+<td>hypertension</td>
+<td>category</td>
+<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code>.</td>
+</tr>
+<tr>
+<td>centralobesity</td>
+<td>centralobesity</td>
+<td>Obesidad_abdominal</td>
+<td>centralobesity</td>
+<td>centralobesity</td>
+<td>centralobesity</td>
+<td>category</td>
+<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code>.</td>
+</tr>
+<tr>
+<td>hightrigly</td>
+<td>hightrigly</td>
+<td>Hipertriglic</td>
+<td>hightrigly</td>
+<td>hightrigly</td>
+<td>hightrigly</td>
+<td>category</td>
+<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code>.</td>
+</tr>
+<tr>
+<td>COPD</td>
+<td>comorbid___2</td>
+<td>EPOC</td>
+<td>comorbid___2</td>
+<td>comorbid___2</td>
+<td>comorbid___2</td>
+<td>category</td>
+<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code>.</td>
+</tr>
+<tr>
+<td>smoke</td>
+<td>smoke</td>
+<td>Tabaquismo</td>
+<td>smoke</td>
+<td>smoke</td>
+<td>smoke</td>
+<td>category</td>
+<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code>.</td>
+</tr>
+<tr>
+<td>alcohol_treat</td>
+<td>med_type___12</td>
+<td>Medicacion_abstinencia</td>
+<td>med_type___12</td>
+<td>med_type___12</td>
+<td>med_type___12</td>
+<td>category</td>
+<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-blood_test_numerical">Table: <code>blood_test_numerical</code><a class="headerlink" href="#table-blood_test_numerical" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Description:</strong> Stores numerical blood test results.</li>
+<li><strong>Fields:</strong><ul>
+<li><code>date_0</code> (DATETIME): Date of patient inclusion in the cohort.</li>
+<li><code>liveraim_id</code> (VARCHAR(255)): Common liveraim identifier for the patient. Unique within the data warehouse. </li>
+<li><code>cohort_id</code> (VARCHAR(255)): Cohort-specific identifier for each patient in a cohort. Unique within the cohort. </li>
+<li><code>variable</code> (VARCHAR(255)): Type of variable measured.</li>
+<li><code>value</code> (FLOAT): Value of the blood test result.</li>
+<li><code>final_units</code> (VARCHAR(255)): Final units of the value.</li>
+<li><code>lower_bound</code> (FLOAT): Lower acceptable limit for the value.</li>
+<li><code>upper_bound</code> (FLOAT): Upper acceptable limit for the value.</li>
+</ul>
+</li>
+<li><strong>Format</strong>: long.</li>
+<li>
+<p><strong>Variables in <code>varible</code> column</strong>: <code>crea</code>, <code>crp</code>, <code>glc</code>, <code>ast</code>, <code>alt</code>, <code>ggt</code>, <code>bili</code>, <code>cb</code>, <code>alk</code>, <code>prot_tot</code>, <code>alb</code>, <code>hto</code>, <code>plates</code>, <code>ferritin</code>, <code>fesat</code>, <code>inr</code>, <code>chol</code>, <code>hdl</code>, <code>ldl</code>, <code>tg</code>, <code>ghb</code>, <code>wcc</code>.</p>
+</li>
+<li>
+<p><strong>Primary Key:</strong> (<code>liveraim_id</code>, <code>cohort_id</code>, <code>variable</code>)</p>
+</li>
+<li><strong>Relations:</strong> Relates to the <code>population</code> table via <code>liveraim_id</code> and <code>cohort_id</code>.</li>
+</ul>
+<h4 id="actions-and-specification-tables_5">Actions and specification tables<a class="headerlink" href="#actions-and-specification-tables_5" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th><strong>Liveraim name</strong></th>
+<th><strong>Liverscreen name</strong></th>
+<th><strong>Alcofib name</strong></th>
+<th><strong>Glucofib name</strong></th>
+<th><strong>Decide name</strong></th>
+<th><strong>Data type</strong></th>
+<th><strong>Rule/Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>liveraim_id</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>VARCHAR(255)</td>
+<td>Created dynamically after merging cohorts.</td>
+</tr>
+<tr>
+<td>cohort_id</td>
+<td>id</td>
+<td>Codigo_deidentificacion</td>
+<td>id</td>
+<td>id</td>
+<td>VARCHAR(255)</td>
+<td></td>
+</tr>
+<tr>
+<td>date_0</td>
+<td>date_0</td>
+<td>Fecha_V1</td>
+<td>date_0</td>
+<td>date_0</td>
+<td>DATETIME</td>
+<td></td>
+</tr>
+<tr>
+<td>variable</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>VARCHAR(255)</td>
+<td>Obtained from melting the variables <code>crea</code>, <code>crp</code>, <code>glc</code>, <code>ast</code>, <code>alt</code>, <code>ggt</code>, <code>bili</code>, <code>cb</code>, <code>alk</code>, <code>prot_tot</code>, <code>alb</code>, <code>hto</code>, <code>plates</code>, <code>ferritin</code>, <code>fesat</code>, <code>inr</code>, <code>chol</code>, <code>hdl</code>, <code>ldl</code>, <code>tg</code>, <code>ghb</code>, <code>wcc</code></td>
+</tr>
+<tr>
+<td>value</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>FLOAT</td>
+<td>Obtained from melting the variables <code>crea</code>, <code>crp</code>, <code>glc</code>, <code>ast</code>, <code>alt</code>, <code>ggt</code>, <code>bili</code>, <code>cb</code>, <code>alk</code>, <code>prot_tot</code>, <code>alb</code>, <code>hto</code>, <code>plates</code>, <code>ferritin</code>, <code>fesat</code>, <code>inr</code>, <code>chol</code>, <code>hdl</code>, <code>ldl</code>, <code>tg</code>, <code>ghb</code>, <code>wcc</code></td>
+</tr>
+<tr>
+<td>final_units</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>VARCHAR(255)</td>
+<td></td>
+</tr>
+<tr>
+<td>lower_bound</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>FLOAT</td>
+<td></td>
+</tr>
+<tr>
+<td>upper_bound</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>FLOAT</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h5 id="melted-variables-metadata_2">Melted variables metadata<a class="headerlink" href="#melted-variables-metadata_2" title="Permanent link">&para;</a></h5>
+<table>
+<thead>
+<tr>
+<th><strong>Liveraim name</strong></th>
+<th><strong>Liverscreen name</strong></th>
+<th><strong>Alcofib name</strong></th>
+<th><strong>Glucofib name</strong></th>
+<th><strong>Decide name</strong></th>
+<th><strong>Data type</strong></th>
+<th><strong>Rule/Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>crea</td>
+<td>crea_mg_dl</td>
+<td>Crea_V1</td>
+<td>crea_mg_dl</td>
+<td>crea_mg_dl</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>crp</td>
+<td>crp</td>
+<td>CRP_V1</td>
+<td>crp</td>
+<td>crp</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>glc</td>
+<td>glc_mg_dl</td>
+<td>Glu_V1</td>
+<td>glc_mg_dl</td>
+<td>glc_mg_dl</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>ast</td>
+<td>ast</td>
+<td>ASAT_V1</td>
+<td>ast</td>
+<td>ast</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>alt</td>
+<td>alt</td>
+<td>ALAT_V1</td>
+<td>alt</td>
+<td>alt</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>ggt</td>
+<td>ggt</td>
+<td>GGT_V1</td>
+<td>ggt</td>
+<td>ggt</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>bili</td>
+<td>bili_mgdl</td>
+<td>Bili_V1</td>
+<td>bili_mgdl</td>
+<td>bili_mgdl</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>cb</td>
+<td>cb_mg_dl</td>
+<td>Bili_directa_v1</td>
+<td>cb_mg_dl</td>
+<td>cb_mg_dl</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>alk</td>
+<td>alk</td>
+<td>FA_V1</td>
+<td>alk</td>
+<td>alk</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>prot_tot</td>
+<td>prot_g_l</td>
+<td>Prot_Tot_V1</td>
+<td>prot_g_l</td>
+<td>prot_g_l</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>alb</td>
+<td>alb</td>
+<td>Albumina_V1</td>
+<td>alb</td>
+<td>alb</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>hto</td>
+<td>hto</td>
+<td>HTO_V1</td>
+<td>hto</td>
+<td>hto</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>plates</td>
+<td>plates</td>
+<td>Plaq_V1</td>
+<td>plates</td>
+<td>plates</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>ferritin</td>
+<td>ferritin</td>
+<td>Ferr_V1</td>
+<td>ferritin</td>
+<td>ferritin</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>fesat</td>
+<td>fesat</td>
+<td>IS_V1</td>
+<td>fesat</td>
+<td>fesat</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>inr</td>
+<td>inr</td>
+<td>INR_V1</td>
+<td>inr</td>
+<td>inr</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>chol</td>
+<td>chol_mg_dl</td>
+<td>CT_V1</td>
+<td>chol_mg_dl</td>
+<td>chol_mg_dl</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>hdl</td>
+<td>hdl_mg_dl</td>
+<td>HDL_V1</td>
+<td>hdl_mg_dl</td>
+<td>hdl_mg_dl</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>ldl</td>
+<td>ldl_mg_dl</td>
+<td>LDL_V1</td>
+<td>ldl_mg_dl</td>
+<td>ldl_mg_dl</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>tg</td>
+<td>tg</td>
+<td>TG_V1</td>
+<td>tg</td>
+<td>tg</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>ghb</td>
+<td>ghb</td>
+<td>HbA1c_V1</td>
+<td>ghb</td>
+<td>ghb</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>wcc</td>
+<td>wcc</td>
+<td>LEU_V1</td>
+<td>wcc</td>
+<td>wcc</td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
+</tr>
+</tbody>
+</table>
+<h3 id="table-blood_test_categorical">Table: <code>blood_test_categorical</code><a class="headerlink" href="#table-blood_test_categorical" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Description:</strong> Stores categorical blood test results.</li>
+<li><strong>Fields:</strong><ul>
+<li><code>date_0</code> (DATETIME): Date of patient inclusion in the cohort.</li>
+<li><code>liveraim_id</code> (VARCHAR(255)): Common liveraim identifier for the patient. Unique within the data warehouse. </li>
+<li><code>cohort_id</code> (VARCHAR(255)): Cohort-specific identifier for each patient in a cohort. Unique within the cohort. </li>
+<li><code>variable</code> (VARCHAR(255)): Name of the variable to which the corresponding value in the <code>value</code> column refers. </li>
+<li><code>value</code> (VARCHAR(255)): Categorical result of the blood test.</li>
+<li><code>final_units</code> (VARCHAR(255)): Final units of the value.</li>
+<li><code>lower_bound</code> (FLOAT): Lower acceptable limit for the value (if applicable).</li>
+<li><code>upper_bound</code> (FLOAT): Upper acceptable limit for the value (if applicable).</li>
+</ul>
+</li>
+<li><strong>Format</strong>: long.</li>
+<li><strong>Variables in <code>varible</code> column</strong>: <code>hbs_ag</code>, <code>hcv</code>.</li>
+<li><strong>Primary Key:</strong> (<code>liveraim_id</code>, <code>cohort_id</code>, <code>variable</code>)</li>
+<li><strong>Relations:</strong> Relates to the <code>population</code> table via <code>liveraim_id</code> and <code>cohort_id</code>.</li>
+</ul>
+<h4 id="actions-and-specification-tables_6">Actions and specification tables<a class="headerlink" href="#actions-and-specification-tables_6" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th><strong>Liveraim name</strong></th>
+<th><strong>Liverscreen name</strong></th>
+<th><strong>Alcofib name</strong></th>
+<th><strong>Glucofib name</strong></th>
+<th><strong>Decide name</strong></th>
+<th><strong>SQL data type</strong></th>
+<th><strong>Data type</strong></th>
+<th><strong>Rule/Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>liveraim_id</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td>Created dynamically after merging cohorts.</td>
+</tr>
+<tr>
+<td>cohort_id</td>
+<td>id</td>
+<td>Codigo_deidentificacion</td>
+<td>id</td>
+<td>id</td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td></td>
+</tr>
+<tr>
+<td>date_0</td>
+<td>date_0</td>
+<td>Fecha_V1</td>
+<td>date_0</td>
+<td>date_0</td>
+<td>DATETIME</td>
+<td>datetime</td>
+<td></td>
+</tr>
+<tr>
+<td>variable</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>VARCHAR(255)</td>
+<td></td>
+<td>Obtained from melting the variables <code>hbs_ag</code>, <code>hcv</code>.</td>
+</tr>
+<tr>
+<td>value</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>VARCHAR(255)</td>
+<td>category</td>
+<td>Obtained from melting the variables <code>hbs_ag</code>, <code>hcv</code>.</td>
+</tr>
+<tr>
+<td>final_units</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td></td>
+</tr>
+<tr>
+<td>lower_bound</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>FLOAT</td>
+<td>float</td>
+<td></td>
+</tr>
+<tr>
+<td>upper_bound</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>FLOAT</td>
+<td>float</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h5 id="melted-variables-metadata_3">Melted variables metadata<a class="headerlink" href="#melted-variables-metadata_3" title="Permanent link">&para;</a></h5>
+<table>
+<thead>
+<tr>
+<th><strong>Liveraim name</strong></th>
+<th><strong>Liverscreen name</strong></th>
+<th><strong>Alcofib name</strong></th>
+<th><strong>Glucofib name</strong></th>
+<th><strong>Decide name</strong></th>
+<th><strong>SQL data type</strong></th>
+<th><strong>Data type</strong></th>
+<th><strong>Rule/Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hbs_ag</td>
+<td>hbs_ag</td>
+<td>HBsAg_V1</td>
+<td>hbs_ag</td>
+<td>hbs_ag</td>
+<td>VARCHAR(255)</td>
+<td>category</td>
+<td>applied a mapping (to homogenize level codification) defined in <code>level_data</code></td>
+</tr>
+<tr>
+<td>hcv</td>
+<td>hcv</td>
+<td>HCVAb_V1</td>
+<td>hcv</td>
+<td>hcv</td>
+<td>VARCHAR(255)</td>
+<td>category</td>
+<td>applied a mapping (to homogenize level codification) defined in <code>level_data</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="varibles-description">Varibles description<a class="headerlink" href="#varibles-description" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>liveraim_name</th>
+<th>data_type</th>
+<th>Units/levels</th>
+<th>panels</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>liveraim_id</td>
+<td>string</td>
+<td>-</td>
+<td>all panels</td>
+<td>Intra-cohort identification code.</td>
+</tr>
+<tr>
+<td>cohort_id</td>
+<td>string</td>
+<td>-</td>
+<td>population</td>
+<td>Identifier for each cohort.</td>
+</tr>
+<tr>
+<td>inclusion_date</td>
+<td>datetime64[ns]</td>
+<td>date</td>
+<td>all cohort-related tables</td>
+<td>Date of visit 0.</td>
+</tr>
+<tr>
+<td>status</td>
+<td>category</td>
+<td>0: Finished<br>1: Ongoing<br>2: Withdrawn</td>
+<td>population</td>
+<td>Status of the patients in the cohort. Finished if recruitment is complete, ongoing if still recruiting, withdrawn otherwise.</td>
+</tr>
+<tr>
+<td>birth_date</td>
+<td>datetime64[ns]</td>
+<td>date</td>
+<td>population</td>
+<td>Date of birth of the patients (calculated using variables age and inclusion_date).</td>
+</tr>
+<tr>
+<td>cohort</td>
+<td>category</td>
+<td>-</td>
+<td>population</td>
+<td>Cohort from which the patient originates.</td>
+</tr>
+<tr>
+<td>exit_date</td>
+<td>datetime64[ns]</td>
+<td>date</td>
+<td>population</td>
+<td>Date when recruitment finished or last version date for withdrawn patients.</td>
+</tr>
+<tr>
+<td>age</td>
+<td>float64</td>
+<td>years</td>
+<td>demographics, population</td>
+<td>Age at inclusion.</td>
+</tr>
+<tr>
+<td>ethnicity</td>
+<td>category</td>
+<td>0: Caucasian<br>1: Latin-American<br>2: African<br>3: Asian<br>4: Mix<br>5: Other</td>
+<td>demographics</td>
+<td>Ethnicity or continent of origin.</td>
+</tr>
+<tr>
+<td>gender</td>
+<td>category</td>
+<td>0: Female<br>1: Male</td>
+<td>demographics, population</td>
+<td>Gender of the patient.</td>
+</tr>
+<tr>
+<td>hypertension</td>
+<td>category</td>
+<td>0: No<br>1: Yes</td>
+<td>medical_history</td>
+<td>High blood pressure status.</td>
+</tr>
+<tr>
+<td>centralobesity</td>
+<td>category</td>
+<td>0: No<br>1: Yes</td>
+<td>medical_history</td>
+<td>Abdominal obesity status.</td>
+</tr>
+<tr>
+<td>hightrigly</td>
+<td>category</td>
+<td>0: No<br>1: Yes</td>
+<td>medical_history</td>
+<td>High triglycerides status.</td>
+</tr>
+<tr>
+<td>COPD</td>
+<td>category</td>
+<td>0: No<br>1: Yes</td>
+<td>medical_history</td>
+<td>COPD comorbidity.</td>
+</tr>
+<tr>
+<td>smoke</td>
+<td>category</td>
+<td>1: Current smoker<br>2: Prior smoking<br>3: Non-smoker</td>
+<td>medical_history</td>
+<td>Smoking history of the patient.</td>
+</tr>
+<tr>
+<td>weight</td>
+<td>float64</td>
+<td>kg</td>
+<td>physical_exam</td>
+<td>Weight of the patient.</td>
+</tr>
+<tr>
+<td>height</td>
+<td>float64</td>
+<td>cm</td>
+<td>physical_exam</td>
+<td>Height of the patient.</td>
+</tr>
+<tr>
+<td>bmi</td>
+<td>float64</td>
+<td>kg/m²</td>
+<td>physical_exam</td>
+<td>Body mass index.</td>
+</tr>
+<tr>
+<td>hip</td>
+<td>float64</td>
+<td>cm</td>
+<td>physical_exam</td>
+<td>Hip circumference.</td>
+</tr>
+<tr>
+<td>probe</td>
+<td>category</td>
+<td>0: M<br>1: XL</td>
+<td>fibroscan</td>
+<td>Probe type used in FibroScan.</td>
+</tr>
+<tr>
+<td>te</td>
+<td>float64</td>
+<td>kPa</td>
+<td>fibroscan</td>
+<td>Median liver stiffness (kPa).</td>
+</tr>
+<tr>
+<td>cap</td>
+<td>float64</td>
+<td>dB/m</td>
+<td>fibroscan</td>
+<td>CAP median.</td>
+</tr>
+<tr>
+<td>crea</td>
+<td>float64</td>
+<td>mg/dL</td>
+<td>blood_test</td>
+<td>Creatinine (mg/dL).</td>
+</tr>
+<tr>
+<td>crp</td>
+<td>float64</td>
+<td>mg/dL</td>
+<td>blood_test</td>
+<td>C-reactive protein (CRP, mg/dL).</td>
+</tr>
+<tr>
+<td>glc</td>
+<td>float64</td>
+<td>mg/dL</td>
+<td>blood_test</td>
+<td>Glucose (mg/dL).</td>
+</tr>
+<tr>
+<td>ast</td>
+<td>float64</td>
+<td>U/L</td>
+<td>blood_test</td>
+<td>Aspartate aminotransferase (AST).</td>
+</tr>
+<tr>
+<td>alt</td>
+<td>float64</td>
+<td>U/L</td>
+<td>blood_test</td>
+<td>Alanine aminotransferase (ALT).</td>
+</tr>
+<tr>
+<td>ggt</td>
+<td>float64</td>
+<td>U/L</td>
+<td>blood_test</td>
+<td>Gamma-glutamyl transferase (GGT).</td>
+</tr>
+<tr>
+<td>bili</td>
+<td>float64</td>
+<td>mg/dL</td>
+<td>blood_test</td>
+<td>Bilirubin (mg/dL).</td>
+</tr>
+<tr>
+<td>cb</td>
+<td>float64</td>
+<td>mg/dL</td>
+<td>blood_test</td>
+<td>Conjugated bilirubin (mg/dL).</td>
+</tr>
+<tr>
+<td>alk</td>
+<td>float64</td>
+<td>U/L</td>
+<td>blood_test</td>
+<td>Alkaline phosphatase (U/L).</td>
+</tr>
+<tr>
+<td>prot_tot</td>
+<td>float64</td>
+<td>g/L</td>
+<td>blood_test</td>
+<td>Total proteins (g/L).</td>
+</tr>
+<tr>
+<td>alb</td>
+<td>float64</td>
+<td>g/L</td>
+<td>blood_test</td>
+<td>Albumin (g/L).</td>
+</tr>
+<tr>
+<td>hto</td>
+<td>float64</td>
+<td>%</td>
+<td>blood_test</td>
+<td>Hematocrit.</td>
+</tr>
+<tr>
+<td>plates</td>
+<td>float64</td>
+<td>10^9/L</td>
+<td>blood_test</td>
+<td>Platelet count.</td>
+</tr>
+<tr>
+<td>ferritin</td>
+<td>float64</td>
+<td>ng/mL</td>
+<td>blood_test</td>
+<td>Ferritin (ng/mL).</td>
+</tr>
+<tr>
+<td>fesat</td>
+<td>float64</td>
+<td>%</td>
+<td>blood_test</td>
+<td>Transferrin saturation (%).</td>
+</tr>
+<tr>
+<td>inr</td>
+<td>float64</td>
+<td>-</td>
+<td>blood_test</td>
+<td>INR (International Normalized Ratio).</td>
+</tr>
+<tr>
+<td>chol</td>
+<td>float64</td>
+<td>mg/dL</td>
+<td>blood_test</td>
+<td>Total cholesterol (mg/dL).</td>
+</tr>
+<tr>
+<td>hdl</td>
+<td>float64</td>
+<td>mg/dL</td>
+<td>blood_test</td>
+<td>HDL-cholesterol (mg/dL).</td>
+</tr>
+<tr>
+<td>ldl</td>
+<td>float64</td>
+<td>mg/dL</td>
+<td>blood_test</td>
+<td>LDL-cholesterol (mg/dL).</td>
+</tr>
+<tr>
+<td>tg</td>
+<td>float64</td>
+<td>mg/dL</td>
+<td>blood_test</td>
+<td>Triglycerides (mg/dL).</td>
+</tr>
+<tr>
+<td>hcv</td>
+<td>category</td>
+<td>0: Negative<br>1: Positive</td>
+<td>blood_test</td>
+<td>HCV antibody status.</td>
+</tr>
+<tr>
+<td>hbs_ag</td>
+<td>category</td>
+<td>0: Negative<br>1: Positive</td>
+<td>blood_test</td>
+<td>HBs antigen status.</td>
+</tr>
+<tr>
+<td>alcohol_treat</td>
+<td>category</td>
+<td>0: No<br>1: Yes</td>
+<td>medical_history</td>
+<td>Medication for alcoholism treatment.</td>
+</tr>
+<tr>
+<td>ghb</td>
+<td>float64</td>
+<td>%</td>
+<td>blood_test</td>
+<td>Glycated hemoglobin (%).</td>
+</tr>
+<tr>
+<td>wcc</td>
+<td>float64</td>
+<td>10^9/L</td>
+<td>blood_test</td>
+<td>White cell count.</td>
+</tr>
+<tr>
+<td>variable (biomarker)</td>
+<td>category</td>
+<td>-</td>
+<td>biomarkers</td>
+<td>Biomarker identification code (blinded).</td>
+</tr>
+<tr>
+<td>value (biomarkers)</td>
+<td>float64</td>
+<td>Unknown units</td>
+<td>biomarkers</td>
+<td>Biomarker analysis value, may include '&lt;' or '&gt;' for values outside detection range.</td>
+</tr>
+<tr>
+<td>register_date</td>
+<td>datetime64[ns]</td>
+<td>date</td>
+<td>biomarkers</td>
+<td>Date when the sample was registered in the laboratory.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="b-configuration-tables-description">b. Configuration Tables Description<a class="headerlink" href="#b-configuration-tables-description" title="Permanent link">&para;</a></h2>
+<p>For further information about the structure of this configuration data go to <a href="#initial-data-and-configuration-data">initial data configuration</a> section. </p>
+<h1 id="general-relationships-in-the-schema">General Relationships in the Schema<a class="headerlink" href="#general-relationships-in-the-schema" title="Permanent link">&para;</a></h1>
+<ul>
+<li><strong>Central Tables:</strong> The <code>population</code> table acts as the central table in the schema, relating to all other tables through <code>liveraim_id</code> and <code>cohort_id</code>.</li>
+<li><strong>Foreign Keys:</strong> Tables containing specific data (such as <code>fiscal_exam</code>, <code>fibroscan</code>, <code>blood_test_numerical</code>, and <code>blood_test_categorical</code>) use <code>liveraim_id</code> and <code>cohort_id</code> as foreign keys pointing to the <code>population</code> table.</li>
+</ul></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = ".."</script>
+    
+    <script src="../js/base.js"></script>
+    <script src="../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>

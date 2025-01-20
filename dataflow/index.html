@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+
+    
+    <title>Overview - WP1</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../css/base.min.css" rel="stylesheet">
+    <link href="../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="..">WP1</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="..">Home</a>
+                    </li>
+                
+                
+                
+                    <li class="active">
+                        <a href="./">Overview</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../liveraim_data_warehouse_specifications/">LIVERAIM Data Warehouse Specifications</a>
+                    </li>
+                
+                
+                
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Modules documentation <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="../modules_documentation/file_reading_utils_doc/">File Reading utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../modules_documentation/data_processing_utils_doc/">Preprocessing utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../modules_documentation/cohort_utils_doc/">Cohort utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../modules_documentation/biomarker_utils_doc/">Biomkarker utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../modules_documentation/qc_checks_utils_doc/">Quality Control utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../modules_documentation/file_exporting_utils_doc/">File Exporting utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../modules_documentation/sql_exporting_utils_doc/">SQL Exporting utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../modules_documentation/configuration_module/">Configuration module</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../quick_start_guide/">Quick Start Guide</a>
+                    </li>
+                
+                
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="..">
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="next" href="../liveraim_data_warehouse_specifications/">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#overview">Overview</a></li>
+            <li class="second-level"><a href="#dataflow">Dataflow</a></li>
+                
+            <li class="second-level"><a href="#data-reading">Data Reading</a></li>
+                
+            <li class="second-level"><a href="#data-preprocessing">Data Preprocessing</a></li>
+                
+                <li class="third-level"><a href="#merging-database-versions">Merging database versions</a></li>
+                <li class="third-level"><a href="#addition-of-new-variables">Addition of new variables</a></li>
+                <li class="third-level"><a href="#combination-of-variables">Combination of variables</a></li>
+            <li class="second-level"><a href="#cohort-instantiation-and-processing">Cohort Instantiation and Processing</a></li>
+                
+            <li class="second-level"><a href="#cohort-quality-control">Cohort Quality Control</a></li>
+                
+            <li class="second-level"><a href="#cohort-merging">Cohort Merging</a></li>
+                
+            <li class="second-level"><a href="#exportation-to-files">Exportation to Files</a></li>
+                
+            <li class="second-level"><a href="#exportation-to-mysql-database">Exportation to MySQL Database</a></li>
+                
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h1>
+<p>hola oscar</p>
+<h2 id="dataflow">Dataflow<a class="headerlink" href="#dataflow" title="Permanent link">&para;</a></h2>
+<p>This section describes the data flow and ETL process, from the data reading to data export in various formats.</p>
+<p>The data processing follows these steps, which are explained in detail in this document:</p>
+<ul>
+<li><a href="#data-reading"><strong>Data Reading</strong></a>: Reading of all data required for the creation of the data warehouse. Specifically, the files described in <a href="../liveraim_data_warehouse_specifications/#initial-data-and-configuration-data">initial_data_configuration</a> are read.</li>
+<li><a href="#data-preprocessing"><strong>Data Preprocessing</strong></a>: An initial transformation of the data is performed, where some variables are added and combined. This process allows each cohort to be treated individually and specific changes to be applied to that cohort.</li>
+<li><a href="#cohort-instantiation-and-processing"><strong>Cohort Instantiation and Processing</strong></a>: For each cohort, a <code>Cohort</code> object is created. This centralizes the formatting and homogenization of the cohorts to produce a curated database with a consistent format across all cohorts.</li>
+<li><a href="#cohort-quality-control"><strong>Cohort Quality Control</strong></a>: Quality control is performed for each cohort to validate the transformations carried out in the previous steps.</li>
+<li><a href="#cohort-merging"><strong>Cohort Merging</strong></a>: Once the different cohorts with homogenized data have been created, they are merged into a new <code>Cohort</code> object (named <code>liveraim</code>). Two important actions are performed in this cohort:<ul>
+<li>The variable <code>liveraim_id</code> is added, a common format identifier.</li>
+<li>The different panels (in <code>DataFrame</code> format) that will later be exported are created.</li>
+</ul>
+</li>
+<li><a href="#exportation-to-files"><strong>Exportation to Files</strong></a>: The created panels are exported as <code>.feather</code> and <code>.csv</code> files for further analysis.</li>
+<li><a href="#exportation-to-mysql-database"><strong>Exportation to MySQL Database</strong></a>: A connection is made to MySQL, where the various tables and relationships of the schema are created, and the data is exported to SQL format.</li>
+</ul>
+<p>The following image describes schematically the ETL process:</p>
+<p><img alt="ETL-scheme" src="../images/ETL-scheme_v0.png" /></p>
+<h2 id="data-reading">Data Reading<a class="headerlink" href="#data-reading" title="Permanent link">&para;</a></h2>
+<p>Data reading is handled through the <a href="../modules_documentation/file_reading_utils_doc/"><code>DataReader</code></a> class. This class is responsible for reading the following files for each cohort:</p>
+<ul>
+<li><strong><code>var_data (.xlsx)</code></strong>: A .xlsx file that is loaded into the code as a <code>DataFrame</code>.</li>
+<li><strong><code>level_data (.xlsx)</code></strong>: A .xlsx file that is loaded into the code as a <code>DataFrame</code>.</li>
+<li><strong><code>comb_var_data (.json)</code></strong>: A .json file that is loaded into the code as a dictionary.</li>
+<li><strong><code>databases (variable)</code></strong>: For each cohort, there will be one or more versions of the database. <code>DataReader</code> reads each version in its respective format (<code>.dta</code>, <code>.sav</code>, ...) and loads them into the code as <code>pandas</code> <code>DataFrames</code>. These dataframes are stored in a dictionary where the <em>key</em> is the version name (i.e., the date when the DB version was received) and the <em>value</em> is the DataFrame containing the database.</li>
+</ul>
+<p>Additionally, it reads the data related to the final structure of the panels. This is stored in the <code>panel_metadata (.xlsx)</code> file. Since this is a .xlsx file with multiple sheets, it is loaded into the code as a dictionary where the <em>key</em> is the sheet name (i.e., the name of the panel) and the <em>value</em> is a <code>DataFrame</code> with the content of the sheet.</p>
+<p>These data are stored in the <code>DataReader.all_data</code> attribute, a dictionary with the following structure:</p>
+<pre><code class="language-yaml">all_data:
+  &lt;cohort_name_1&gt;:                      # Name of the cohort
+    data: &lt;database_versions_dictionary&gt;    # Dictionary containing each database version
+    var_data: &lt;var_data_file&gt;           # Excel file containing var_data
+    level_data: &lt;level_data_file&gt;       # File containing level_data
+    comb_var_data: &lt;comb_var_data_file&gt; # File containing comb_var_data
+  &lt;cohort_name_2&gt;:                      # Name of the next cohort
+    data: &lt;database_versions_dictionary&gt;    # Dictionary containing each database version
+    var_data: &lt;var_data_file&gt;           # Excel file containing var_data
+    level_data: &lt;level_data_file&gt;       # File containing level_data
+    comb_var_data: &lt;comb_var_data_file&gt; # File containing comb_var_data
+  ...
+  panel_data: &lt;panel_data_file&gt;         # Dictionary with panel_data information  
+</code></pre>
+<blockquote>
+<p><strong>Note</strong>: The data warehouse will be created using all versions of the databases, up to the most recent one. This allows for more detailed tracking of patients who have entered and exited in each version. How the different versions are managed is explained in the next section, <a href="#data-preprocessing">Data Preprocessing</a>.</p>
+</blockquote>
+<p>These files are essential for the correct processing of the data. To see the structure of these files, refer to the section <a href="../liveraim_data_warehouse_specifications/#initial-data-and-configuration-data">initial_data_configuration</a>.</p>
+<p>The variables that store the filenames to be read, as well as the directories where these files are located, are defined in the module <a href="../modules_documentation/configuration_module/#main_config-module"><code>main_config</code></a>.</p>
+<p>Refer to <a href="../modules_documentation/file_reading_utils_doc/"><code>data_reading_utils</code></a> for more details on the internal workings of <code>DataReader</code> and the data reading process.</p>
+<h2 id="data-preprocessing">Data Preprocessing<a class="headerlink" href="#data-preprocessing" title="Permanent link">&para;</a></h2>
+<p>Once the initial data is loaded, an instance of the <code>DataPreprocessor</code> class is created for each cohort. This instance takes as parameters all the elements from <code>all_data[cohort_name]</code>, as well as the name of the respective cohort. This data is stored in the atributes <code>cohort_databases</code>, <code>vara_data</code>, <code>level_data</code>, <code>var_comb_data</code> and <code>cohort_name</code> respectively. </p>
+<p><code>DataPreprocessor</code> performs the following actions:</p>
+<ul>
+<li><a href="#merging-database-versions">Merging database versions</a> </li>
+<li><a href="#addition-of-new-variables">Addition of new variables</a></li>
+<li><a href="#combination-of-variables">Combination of variables</a></li>
+</ul>
+<p>The aim of this class is to prepare the data from each cohort for the formatting and homogenization process, which requires a specific structure. This class is designed to handle each cohort individually and allows for specific adjustments to be made for each cohort, adapting to the particularities of each one.</p>
+<h4 id="merging-database-versions">Merging database versions<a class="headerlink" href="#merging-database-versions" title="Permanent link">&para;</a></h4>
+<p>The dictionary containing the cohort database versions is stored in the attribute <code>DataPreprocessor.cohort_databases</code>. From the dataframes of each version, a <strong>single dataframe</strong> will be generated that contains, for each patient present in at least one of the versions, the latest available data (i.e., the data from the most recent version in which they appear).</p>
+<p>Additionally, the variable <code>status</code> is added. This categorical variable can take 3 values:</p>
+<ul>
+<li><code>finished</code>: Patients who appear in the latest version of the cohort database, and the cohort is already closed.</li>
+<li><code>ongoing</code>: Patients who appear in the latest version of the cohort database, and the cohort is still ongoing.</li>
+<li><code>withdrawn</code>: Patients who do not appear in the latest version of the cohort database.</li>
+</ul>
+<p>The variable <code>date_version (str)</code> is also added, indicating the version from which each patient's data is extracted.</p>
+<blockquote>
+<p><strong>Note</strong>: During this process, it is required that the variables in the databases (and their names) do not change between versions. Checks are performed to ensure compatibility between versions, and if they are not compatible, only the latest version will be used, and the previous ones will be ignored.</p>
+</blockquote>
+<p>To obtain this <strong>single dataframe</strong>, the following steps are followed:</p>
+<ul>
+<li>The <code>date_version</code> column is assigned to each dataframe from each version. This column will contain the version to which that data corresponds (i.e., all columns in the same dataframe will have the same value).</li>
+<li>All versions of the database are concatenated (vertically). This requires the structure of the dataframes to be compatible.</li>
+<li>The rows are sorted according to the <code>date_version</code> variable.</li>
+<li>Rows with duplicate values in the <code>id_var</code> column (the patient identifier) are removed, keeping the latest <code>date_version</code>.</li>
+<li>The <code>status</code> variable is added by verifying if the <code>date_version</code> of each patient corresponds to the latest version.</li>
+</ul>
+<p>Since <code>status</code> will be one of the core variables in the data warehouse, the <code>var_data</code> and <code>level_data</code> attributes are updated to include this variable.</p>
+<p>this new dataframe is stored in <code>data</code> atribute.</p>
+<h4 id="addition-of-new-variables">Addition of new variables<a class="headerlink" href="#addition-of-new-variables" title="Permanent link">&para;</a></h4>
+<p>Once a single dataframe with the database is created, the following variables will be added to the <code>data</code> attribute:</p>
+<ul>
+<li><code>birth_date</code>: Obtained by combining the patient's age with the date of entry into the cohort.</li>
+<li><code>exit_date</code>: Date of exit from the cohort if the patient is not ongoing, or the current date at the time of code execution otherwise.</li>
+<li><code>cohort</code>: The name of the cohort to which the data belongs.</li>
+</ul>
+<blockquote>
+<p><strong>Note</strong>: Just as with the <code>status</code> variable, since these new variables will be core variables, the <code>var_data</code> attribute will be updated (adding the metadata of the respective variable). In addittion if a categorical variable is added, the <code>level_data</code> attribute will also be updated accordingly.</p>
+</blockquote>
+<h4 id="combination-of-variables">Combination of variables<a class="headerlink" href="#combination-of-variables" title="Permanent link">&para;</a></h4>
+<p>If the <code>var_comb_data</code> parameter is passed during the initialization of <code>DataPreprocessor</code>, it will be used to combine the variables specified in that parameter. The primary goal here is to reduce the number of missing values by using variables that refer to the same magnitude but have different units.</p>
+<p>To achieve this, <code>DataPreprocessor</code> utilizes the <code>VarCombiner</code> class, which is instantiated with a dataframe (in this case, the <code>data</code> attribute) and a dictionary that defines the variable combinations (in this case the <code>var_comb_dict</code> attribute). It is recommended to consult the section <a href="../liveraim_data_warehouse_specifications/#comb_var_data-file"><code>comb_var_data</code> file</a> for details on the internal structure of the dictionary. Additionally, refer to the section <a href="../modules_documentation/data_processing_utils_doc/#class-varcombiner"><code>Class VarCombiner</code></a> for more information on how the class works.</p>
+<p>For each variable to be combined, <code>VarCombiner</code> sequentially checks whether a variable with a certain magnitude is missing. If it is not missing, the value of that variable is taken as the final value (applying the appropriate conversion factor). If the value is missing, it moves on to the next variable referring to the same magnitude (but with different units) and performs the same check. If all variables in the iteration are missing, <code>NaN</code> is assigned as the final value.</p>
+<p>To illustrate this, suppose the <code>var_comb_data</code> dictionary is as follows:</p>
+<pre><code>{
+    "glc": {
+        "glc": 1,
+        "glc_mg_dl": 0.055
+    },
+    "crea_mg_dl": {
+        "crea_mg_dl": 1,
+        "creat": 0.017
+    }
+}
+</code></pre>
+<p>This indicates that two variables should be combined: <code>glc</code> (using <code>glc</code> and <code>glc_mg_dl</code>) and <code>crea_mg_dl</code> (using <code>creat</code> and <code>crea_mg_dl</code>). <code>VarCombiner</code> will first iterate over the pair <code>"glc": {"glc": 1, "glc_mg_dl": 0.055}</code>. The <code>glc</code> variable (the first key) will be calculated as described above: if <code>glc</code> (in this case, the key in the pair <code>"glc": 1</code>) is not missing, this value will be used for the <code>glc</code> variable. Otherwise, it will check if <code>glc_mg_dl</code> is missing. If it is not missing, the value of <code>glc_mg_dl</code> multiplied by 0.055 will be used as the final value (where 0.055 is the conversion factor to convert <code>glc_mg_dl</code> units to <code>glc</code> units).</p>
+<p>The processing for <code>crea_mg_dl</code> is entirely analogous.</p>
+<p>The final result is that in the <code>data</code> attribute, the <code>glc</code> and <code>crea_mg_dl</code> variables will be populated with values from other <em>compatible</em> variables.</p>
+<h2 id="cohort-instantiation-and-processing">Cohort Instantiation and Processing<a class="headerlink" href="#cohort-instantiation-and-processing" title="Permanent link">&para;</a></h2>
+<p>Once the cohort data has been preprocessed, it is formatted so that all cohorts have a homogeneous structure and can be subsequently combined. The central element of this processing is the <code>Cohort</code> class, and the <code>var_data</code> and <code>level_data</code> objects mentioned earlier are essential for its correct operation.</p>
+<p>For each cohort, a <code>Cohort</code> object is instantiated, which uses the (already preprocessed) attributes of <code>DataPreprocessor</code>: <code>data</code> (as the <code>raw_data</code> parameter), <code>var_data</code>, and <code>level_data</code>. It is important to note that each row in the <code>var_data</code> DataFrame corresponds to one of the selected core variables. For each of these variables, this DataFrame contains configuration data about how they should be transformed:</p>
+<ul>
+<li>Initial variable name in the cohort.</li>
+<li>Final variable name in the common database.</li>
+<li>Final variable datatype.</li>
+<li>Conversion factor (if needed).</li>
+</ul>
+<p>Additionally, the cohort name (parameter <code>cohort_name</code>), the ID variable name (parameter <code>id_variable</code>), the inclusion date variable name (parameter <code>date_variable</code>), and the cohort status (parameter <code>status</code>) are introduced as parameters. Optionally, a dictionary with the structure of <code>comb_var_data</code> can also be provided. For more detailed information about these objects, refer to the section <a href="../liveraim_data_warehouse_specifications/#comb_var_data-file"><code>initial_data_configuration</code></a>.</p>
+<p>The instantiation of the cohort concludes with a call to the <code>Cohort.homogenize_data</code> method. This method creates a copy of the <code>raw_data</code> attribute (which was initialized with the preprocessed cohort database, i.e., the <code>raw_data</code> parameter), formats it, and stores it in the <code>homogeneous_data</code> attribute. In general terms, the data formatting follows these steps:</p>
+<ol>
+<li><strong>Selection</strong> of the subset of <code>raw_data</code> with the core variables.</li>
+<li><strong>Translation</strong> of the variable names (columns of the DataFrame) to the final names defined in <code>var_data</code>.</li>
+<li><strong>Formatting</strong> of the variables. It iterates over each of the selected variables and:<ol>
+<li>Verifies the datatype assigned in <code>var_data</code> and applies the appropriate datatype to that column.</li>
+<li>If the variable is numeric, applies the appropriate conversion factor.</li>
+<li>If the variable is categorical, maps the original levels to the final levels. This mapping is defined in <code>level_data</code>.</li>
+</ol>
+</li>
+</ol>
+<p>The result for each cohort should be the same: a DataFrame with the same structure, variables, and format stored in the <code>homogeneous_data</code> attribute. The only difference between cohorts would be the number of patients.</p>
+<p>For more details on the specific implementation of the <code>Cohort</code> class and its methods, refer to the section dedicated to the <a href="../modules_documentation/cohort_utils_doc/">cohort_utils</a>.</p>
+<h2 id="cohort-quality-control">Cohort Quality Control<a class="headerlink" href="#cohort-quality-control" title="Permanent link">&para;</a></h2>
+<p>For more details on the specific implementation of the QC checks, refer to the section  <a href="../modules_documentation/qc_checks_utils_doc/">qc_checks_utils_doc</a>.</p>
+<h2 id="cohort-merging">Cohort Merging<a class="headerlink" href="#cohort-merging" title="Permanent link">&para;</a></h2>
+<p>Once all cohorts have been formatted, they are merged using the <code>merge_cohorts</code> function, defined in the <a href="../modules_documentation/cohort_utils_doc/"><code>cohort_utils</code></a> module. <code>merge_cohorts</code> takes a list of already instantiated cohorts (i.e., they contain the <code>homogeneous_data</code> attribute) and performs the following actions:</p>
+<ol>
+<li>Concatenates (vertically) the <code>homogeneous_data</code> attributes (DataFrames) from each cohort, ensuring that the resulting DataFrame combines all the data from the individual cohorts.</li>
+<li>Merges the <code>var_data</code> attributes (DataFrames) from each cohort, ensuring that the resulting DataFrame is consistent with the merged database and that any discrepancies are handled.</li>
+<li>Merges the <code>level_data</code> attributes (DataFrames) from each cohort, ensuring that the resulting DataFrame is consistent with the merged database and that categorical variables are properly aligned across cohorts.</li>
+<li>Instantiates a new <code>Cohort</code> object using the previously created merged elements. This cohort is named <code>liveraim</code> from now on. </li>
+</ol>
+<p>For more details on the functionality of this process, refer to the section <a href="../modules_documentation/cohort_utils_doc/#merge_cohorts-function"><code>merge_cohorts</code> function</a>.</p>
+<p><span style="color:red">falta indicar que se añade la variable id</span></p>
+<h2 id="exportation-to-files">Exportation to Files<a class="headerlink" href="#exportation-to-files" title="Permanent link">&para;</a></h2>
+<p>If the variable <code>EXPORT_FILES</code> defined in the <code>main_config</code> module is set to <code>True</code>, the data for each of the final panels will be exported as files. In the current version, the data is exported to <code>.csv</code> and <code>.feather</code> formats.</p>
+<h2 id="exportation-to-mysql-database">Exportation to MySQL Database<a class="headerlink" href="#exportation-to-mysql-database" title="Permanent link">&para;</a></h2>
+<p>After exporting the database as files, the MySQL database is created. The module responsible for handling this export is <a href="../modules_documentation/sql_exporting_utils_doc/"><code>sql_exporting_utils</code></a>. Specifically, the <code>SQLExporter</code> class, defined in this module, centralizes the connection to the database, the creation of tables, and the export of data.</p>
+<p>The <code>SQLExporter</code> class is initialized using the <code>panel_metadata</code> DataFrame dictionary (this object has not been modified at any point). This dictionary specifies the structure of each of the final panels in the database. For more information on the structure of the <code>panel_metadata</code> file (and the corresponding <code>panel_metadata</code> object), see the section <a href="../liveraim_data_warehouse_specifications/#panel_data-file"><code>panel_data</code> file</a>.</p>
+<p><code>SQLExporter</code> performs the following actions sequentially:</p>
+<ol>
+<li><strong>Creates an <code>engine</code> object</strong>, which establishes the connection to the database based on the configuration specified in the <code>connection_config</code> module. For more information on the connection parameters, see the section <a href="../modules_documentation/configuration_module/#connection_config-module"><code>connection_config</code> module</a>.</li>
+<li><strong>Creates the database structure</strong>: It defines the tables, the format of each table (which variables each contains, whether it's in long or wide format, etc.), and the relationships between them. To do this, it uses the configuration data  present in the <code>panel_metadata</code> object.</li>
+<li>Establishes the connection to the database and generates the previously defined tables in the MySQL database.</li>
+<li>Iterates over each of the DataFrames in <code>liveraim.final_data</code> and inserts the data into the corresponding table.</li>
+</ol>
+<blockquote>
+<p><strong>Note</strong>: The <code>engine</code> object does not immediately create the connection, but dynamically manages connections as needed. Therefore, until the tables are explicitly created in the database (and then populated), it does not actually connect to the database. Similarly, step <em>2</em> is internal to the <code>SQLExporter</code> class, meaning that when the table and relationship structure is created, it is stored in an internal object within the class. It is in step <em>3</em> that this structure is executed when an explicit connection to the database is established.</p>
+</blockquote></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = ".."</script>
+    
+    <script src="../js/base.js"></script>
+    <script src="../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>
