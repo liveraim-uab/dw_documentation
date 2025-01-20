@@ -1,0 +1,29 @@
+site_name: WP1
+nav:
+  - Home: index.md
+
+  - Overview: dataflow.md
+  - LIVERAIM Data Warehouse Specifications: liveraim_data_warehouse_specifications.md
+
+  - Modules documentation:
+    - File Reading utils: modules_documentation/file_reading_utils_doc.md
+    - Preprocessing utils: modules_documentation/data_processing_utils_doc.md
+    - Cohort utils: modules_documentation/cohort_utils_doc.md
+    - Biomkarker utils: modules_documentation/biomarker_utils_doc.md
+    - Quality Control utils: modules_documentation/qc_checks_utils_doc.md
+    - File Exporting utils: modules_documentation/file_exporting_utils_doc.md
+    - SQL Exporting utils: modules_documentation/sql_exporting_utils_doc.md
+    - Configuration module: modules_documentation/configuration_module.md
+    
+  
+  - Quick Start Guide: quick_start_guide.md
+
+theme: 
+  name: cinder
+  color_mode: dark
+
+markdown_extensions:
+  - markdown_include.include:
+      base_path: docs/
+  - toc: 
+      permalink: True

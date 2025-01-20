@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../img/favicon.ico">
+
+    
+    <title>File Exporting utils - WP1</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../../css/base.min.css" rel="stylesheet">
+    <link href="../../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="../..">WP1</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="../..">Home</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../dataflow/">Overview</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../liveraim_data_warehouse_specifications/">LIVERAIM Data Warehouse Specifications</a>
+                    </li>
+                
+                
+                
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Modules documentation <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="../file_reading_utils_doc/">File Reading utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../data_processing_utils_doc/">Preprocessing utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../cohort_utils_doc/">Cohort utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../biomarker_utils_doc/">Biomkarker utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../qc_checks_utils_doc/">Quality Control utils</a>
+</li>
+
+                        
+                            
+<li class="active">
+    <a href="./">File Exporting utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../sql_exporting_utils_doc/">SQL Exporting utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../configuration_module/">Configuration module</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../quick_start_guide/">Quick Start Guide</a>
+                    </li>
+                
+                
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="../qc_checks_utils_doc/">
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="next" href="../sql_exporting_utils_doc/">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#file_exporting_utils-documentation">file_exporting_utils Documentation</a></li>
+            <li class="second-level"><a href="#overview">Overview</a></li>
+                
+            <li class="second-level"><a href="#general-structure">General Structure</a></li>
+                
+            <li class="second-level"><a href="#class-description">Class Description</a></li>
+                
+                <li class="third-level"><a href="#fileexporter">FileExporter</a></li>
+            <li class="second-level"><a href="#logs">Logs</a></li>
+                
+            <li class="second-level"><a href="#usage-example">Usage Example</a></li>
+                
+            <li class="second-level"><a href="#output-description">Output Description</a></li>
+                
+            <li class="second-level"><a href="#error-handling">Error Handling</a></li>
+                
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h1 id="file_exporting_utils-documentation"><code>file_exporting_utils</code> Documentation<a class="headerlink" href="#file_exporting_utils-documentation" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The <code>file_exporting_utils</code> module is responsible for exporting data produced during the execution of the main program into various file formats, such as <code>.csv</code> and <code>.feather</code>. It ensures that the exported files are saved within a structured directory system, which includes a timestamp-based execution folder and separate subfolders for each file format.</p>
+<p>This module facilitates the following functionalities:
++ <strong>Export to CSV</strong>: Exports pandas DataFrames into <code>.csv</code> files.
++ <strong>Export to Feather</strong>: Exports pandas DataFrames into <code>.feather</code> files.
++ <strong>Dynamic directory creation</strong>: Creates structured directories based on the execution time to organize the exported files.</p>
+<p>The <code>FileExporter</code> class is used to centralize all export operations, handling the creation of necessary subdirectories, file formatting, and logging potential issues during the export process. This class is initialized with a common root folder and dynamically creates subdirectories for each export type.</p>
+<h2 id="general-structure">General Structure<a class="headerlink" href="#general-structure" title="Permanent link">&para;</a></h2>
+<p>The module includes the definition of the main class resposible of managing the exportation:</p>
+<ul>
+<li><code>FileExporter</code>: This is the main class of the module and is responsible for handling data exports to both CSV and Feather formats. It also manages the creation of subdirectories based on the current execution time and logs any errors that occur during the export process.</li>
+</ul>
+<p>When the class is instantiated, it autoatically creates the directories needed for the exportations.</p>
+<h2 id="class-description">Class Description<a class="headerlink" href="#class-description" title="Permanent link">&para;</a></h2>
+<h3 id="fileexporter"><strong><code>FileExporter</code></strong><a class="headerlink" href="#fileexporter" title="Permanent link">&para;</a></h3>
+<h4 id="description">Description:<a class="headerlink" href="#description" title="Permanent link">&para;</a></h4>
+<p>The <code>FileExporter</code> class is designed to export pandas DataFrames to <code>.csv</code> and <code>.feather</code> formats, ensuring the exported files are organized into separate directories for each execution. It dynamically creates directories for each type of export (CSV and Feather) based on the execution time and logs the export process.</p>
+<h4 id="attributes">Attributes:<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong><code>common_export_folder</code> (str)</strong>: The root directory where all exported files will be saved.</li>
+<li><strong><code>execution_time</code> (str)</strong>: A timestamp indicating when the export was initiated, based on the current execution time.</li>
+<li><strong><code>execution_export_folder</code> (str)</strong>: A folder specific to the current execution, where all export files will be stored.</li>
+<li><strong><code>feather_folder</code> (str)</strong>: Subfolder where <code>.feather</code> files will be saved.</li>
+<li><strong><code>csv_folder</code> (str)</strong>: Subfolder where <code>.csv</code> files will be saved.</li>
+</ul>
+<h4 id="methods">Methods:<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p><strong><code>__init__(self, common_export_folder: str) -&gt; None</code></strong>: 
+    Initializes the <code>FileExporter</code> object and creates the necessary export folders.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>common_export_folder</code> (str): The root directory where export files will be stored.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>_create_folder(self, folder: str) -&gt; None</code></strong>: 
+    Creates a folder in the file system. Logs an error if the folder could not be created.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>folder</code> (str): The path of the folder to create.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>_create_csv_exports_folder(self, parent_folder: str) -&gt; str</code></strong>: 
+    Creates the subfolder for storing CSV files within the specified parent folder.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>parent_folder</code> (str): The directory where the CSV subfolder will be created.</li>
+</ul>
+</li>
+<li><strong>Returns</strong>:<ul>
+<li><code>str</code>: The path to the created CSV folder.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>_create_feather_exports_folder(self, parent_folder: str) -&gt; str</code></strong>: 
+    Creates the subfolder for storing Feather files within the specified parent folder.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>parent_folder</code> (str): The directory where the Feather subfolder will be created.</li>
+</ul>
+</li>
+<li><strong>Returns</strong>:<ul>
+<li><code>str</code>: The path to the created Feather folder.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>export_to_csv(self, df: pd.DataFrame, df_name: str = "Unspecified file") -&gt; None</code></strong>: 
+    Exports the given pandas DataFrame to a CSV file in the CSV export subfolder.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>df</code> (pandas.DataFrame): The DataFrame to export.</li>
+<li><code>df_name</code> (str): The name of the file (without extension). Defaults to "Unspecified file".</li>
+</ul>
+</li>
+<li><strong>Returns</strong>:<ul>
+<li><code>None</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>export_to_feather(self, df: pd.DataFrame, df_name: str = "Unspecified file") -&gt; None</code></strong>: 
+    Exports the given pandas DataFrame to a Feather file in the Feather export subfolder.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>df</code> (pandas.DataFrame): The DataFrame to export.</li>
+<li><code>df_name</code> (str): The name of the file (without extension). Defaults to "Unspecified file".</li>
+</ul>
+</li>
+<li><strong>Returns</strong>:<ul>
+<li><code>None</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h2>
+<p>The <code>FileExporter</code> class logs various events during the execution of its methods:</p>
+<ul>
+<li><strong>Folder creation</strong>: Logs whether folders were successfully created or not.</li>
+<li><strong>CSV and Feather exports</strong>: Logs success messages when DataFrames are exported correctly. Logs error messages if any issues arise during the export process.</li>
+</ul>
+<h2 id="usage-example">Usage Example<a class="headerlink" href="#usage-example" title="Permanent link">&para;</a></h2>
+<p>The following is an example of how to use the <code>FileExporter</code> class:</p>
+<pre><code class="language-python">from file_exporter import FileExporter
+import pandas as pd
+
+# Example DataFrame
+df = pd.DataFrame({
+    'col1': [1, 2, 3],
+    'col2': [4, 5, 6]
+})
+
+# Create a FileExporter object
+exporter = FileExporter(common_export_folder=&quot;/path/to/export/folder&quot;)
+
+# Export the DataFrame to CSV
+exporter.export_to_csv(df, df_name=&quot;example_data&quot;)
+
+# Export the DataFrame to Feather
+exporter.export_to_feather(df, df_name=&quot;example_data&quot;)
+</code></pre>
+<p>In this example, the <code>FileExporter</code> is instantiated with a root export folder. When the class is isntantiated, the directories are automatically created. The DataFrame is then exported to both CSV and Feather formats.</p>
+<h2 id="output-description">Output Description<a class="headerlink" href="#output-description" title="Permanent link">&para;</a></h2>
+<p>The FileExporter class creates the following directory structure for each execution in the main directory:</p>
+<pre><code class="language-php">&lt;common_export_folder&gt;/
+    execution_&lt;timestamp&gt;/
+        csv_files/
+            LIVERAIM_DATA_&lt;file_name&gt;.csv
+        feather_files/
+            LIVERAIM_DATA_&lt;file_name&gt;.feather
+</code></pre>
+<p>Each execution will create a new folder using the timestamp to store the exported files. The subfolders csv_files and feather_files contain the respective exported data formats.</p>
+<pre><code>LIVERAIM_DATA_example_data.csv
+LIVERAIM_DATA_example_data.feather
+</code></pre>
+<p>These files will be named based on the prefix LIVERAIM_DATA followed by the user-provided file name. In particular, for the <code>main.py</code> execution, the file names would be the panel names. File names would be, for example: </p>
+<pre><code>LIVERAIM_DATA_population.csv
+LIVERAIM_DATA_population.feather
+</code></pre>
+<p>During the main execution, the name <code>common_export_folder</code> is imported from the variable <code>DATAWAREHOUSE_PATH</code>, declared in the <a href="../configuration_module/#main_config-module"><code>main_config</code> module</a>.</p>
+<h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
+<p>The FileExporter handles common export errors such as:</p>
+<ul>
+<li><code>FileNotFoundError</code>: If the directory does not exist or cannot be accessed.</li>
+<li><code>PermissionError</code>: If there are insufficient permissions to write to the directory.</li>
+<li><code>OSError</code>: General errors related to file system operations.</li>
+</ul>
+<p>These errors are logged, and the process continues without crashing the program.</p></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = "../.."</script>
+    
+    <script src="../../js/base.js"></script>
+    <script src="../../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>

@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../img/favicon.ico">
+
+    
+    <title>File Reading utils - WP1</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../../css/base.min.css" rel="stylesheet">
+    <link href="../../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="../..">WP1</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="../..">Home</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../dataflow/">Overview</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../liveraim_data_warehouse_specifications/">LIVERAIM Data Warehouse Specifications</a>
+                    </li>
+                
+                
+                
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Modules documentation <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li class="active">
+    <a href="./">File Reading utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../data_processing_utils_doc/">Preprocessing utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../cohort_utils_doc/">Cohort utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../biomarker_utils_doc/">Biomkarker utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../qc_checks_utils_doc/">Quality Control utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../file_exporting_utils_doc/">File Exporting utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../sql_exporting_utils_doc/">SQL Exporting utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../configuration_module/">Configuration module</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../quick_start_guide/">Quick Start Guide</a>
+                    </li>
+                
+                
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="../../liveraim_data_warehouse_specifications/">
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="next" href="../data_processing_utils_doc/">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#file_reading_utils-documentation">file_reading_utils Documentation</a></li>
+            <li class="second-level"><a href="#overview">Overview</a></li>
+                
+            <li class="second-level"><a href="#general-structure">General Structure</a></li>
+                
+            <li class="second-level"><a href="#class-description">Class Description</a></li>
+                
+                <li class="third-level"><a href="#class-datareader">Class DataReader</a></li>
+            <li class="second-level"><a href="#utility-functions">Utility Functions</a></li>
+                
+            <li class="second-level"><a href="#general-operation">General Operation</a></li>
+                
+            <li class="second-level"><a href="#logs">Logs</a></li>
+                
+            <li class="second-level"><a href="#usage-example">Usage Example</a></li>
+                
+            <li class="second-level"><a href="#output-description">Output Description</a></li>
+                
+            <li class="second-level"><a href="#error-handling">Error Handling</a></li>
+                
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h1 id="file_reading_utils-documentation"><code>file_reading_utils</code> Documentation<a class="headerlink" href="#file_reading_utils-documentation" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The <code>file_reading_utils</code> module is responsible for reading various types of data files (databases and metadata) required for building the data warehouse. The primary class in this module is <code>DataReader</code>, which centralizes the reading process for all relevant files, including raw cohort data, variable metadata (<code>var_data</code>), level metadata (<code>level_data</code>), panel metadata (<code>panel_data</code>) and metadata to combine variables (<code>comb_var_data</code>). </p>
+<p>This module is sensitive to the structure of the directory where the data is stored, and it also includes the function <code>hash_file</code>, which calculates the hash of a file. This can be useful for logging purposes, as it helps trace the files used during data reading.</p>
+<h2 id="general-structure">General Structure<a class="headerlink" href="#general-structure" title="Permanent link">&para;</a></h2>
+<p>The module contains the following key components:</p>
+<ul>
+<li><strong><code>DataReader</code></strong>: The main class used for reading raw cohort data and metadata, managing logging, and ensuring the directory structure is correct.</li>
+<li><strong><code>hash_file</code></strong>: A utility function for generating the hash of a file.</li>
+<li><strong><code>stringfy</code></strong>: A helper function to convert a list of dictionaries into a formatted string for logging purposes.</li>
+</ul>
+<h2 id="class-description">Class Description<a class="headerlink" href="#class-description" title="Permanent link">&para;</a></h2>
+<h3 id="class-datareader">Class <strong><code>DataReader</code></strong><a class="headerlink" href="#class-datareader" title="Permanent link">&para;</a></h3>
+<h4 id="description">Description:<a class="headerlink" href="#description" title="Permanent link">&para;</a></h4>
+<p>The <code>DataReader</code> class centralizes the process of reading various data files required for creating a data warehouse. This includes reading raw cohort data, variable and level metadata, panel data and combination variable data. It manages logging, error handling, and ensures proper file access and reading.</p>
+<h4 id="attributes">Attributes:<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong><code>reading_methods_dict</code> (dict)</strong>: Contains the methods for reading different types of data (e.g., <code>.csv</code>, <code>.dta</code>, <code>.xlsx</code>).</li>
+<li><strong><code>databases_format_dict</code> (dict)</strong>: Specifies the format of the raw databases for each cohort, used in conjunction with <code>reading_methods_dict</code> to read cohort data.</li>
+<li><strong><code>common_data_folder</code> (str)</strong>: The directory where all the data files to be read are stored.</li>
+<li><strong><code>databases_folder</code> (str)</strong>: The subfolder where the raw data for each cohort is stored.</li>
+<li><strong><code>level_file_names</code> (dict)</strong>: A dictionary containing the filenames of the level data for each cohort.</li>
+<li><strong><code>var_file_names</code> (dict)</strong>: A dictionary containing the filenames of the variable data for each cohort.</li>
+<li><strong><code>comb_vars_file_names</code> (dict)</strong>: A dictionary containing the filenames of the combined variables data for each cohort.</li>
+<li><strong><code>panel_file_name</code> (str)</strong>: The filename for the panel data.</li>
+<li><strong><code>cohorts</code> (list[str])</strong>: A list containing the names of the cohorts to be read.</li>
+<li><strong><code>reading_exceptions</code> (tuple)</strong>: A tuple of common exceptions that may arise while reading files.</li>
+<li><strong><code>all_data</code> (dict)</strong>: A dictionary containing all the data required to create the data warehouse.</li>
+<li><strong><code>read_files_log</code> (dict)</strong>: A dictionary containing the filenames and their hashes for logging purposes.</li>
+</ul>
+<h4 id="methods">Methods:<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p><strong><code>__init__(self, cohort_names_list: list) -&gt; None</code></strong>: 
+    Initializes the <code>DataReader</code> with a list of cohort names and sets up the necessary attributes and configurations.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>cohort_names_list</code> (list): List of cohort names that will be read.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>check_cohort_names(self, cohort_names_list: list) -&gt; list</code></strong>: 
+    Checks if the provided cohort names are valid based on the available configuration. Logs an error if any name is incorrect.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>cohort_names_list</code> (list): List of cohort names to validate.</li>
+</ul>
+</li>
+<li><strong>Returns</strong>:<ul>
+<li><code>list</code>: The validated list of cohort names.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>read_cohort_databases(self, cohort: str, engine='csv') -&gt; dict[str, pd.DataFrame]</code></strong>: 
+    Reads all versions of the raw data for a specified cohort. The files must be stored in the same directory and have the same format.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>cohort</code> (str): Name of the cohort whose data will be read.</li>
+<li><code>engine</code> (str): The engine used to read the files (default is 'csv').</li>
+</ul>
+</li>
+<li><strong>Returns</strong>:<ul>
+<li><code>dict[str, pd.DataFrame]</code>: A dictionary with version names as keys and DataFrames as values.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>read_meta_data(self, cohort_name: str, meta: Literal['var', 'level']) -&gt; pd.DataFrame</code></strong>: 
+    Reads the specified metadata (either variable or level data) for a cohort and returns it as a DataFrame.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>cohort_name</code> (str): The name of the cohort whose metadata will be read.</li>
+<li><code>meta</code> (Literal): Specifies whether to read variable (<code>var</code>) or level (<code>level</code>) metadata.</li>
+</ul>
+</li>
+<li><strong>Returns</strong>:<ul>
+<li><code>pd.DataFrame</code>: The metadata DataFrame.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>read_panel_data(self) -&gt; dict[str, pd.DataFrame]</code></strong>: 
+    Reads the panel data, which contains additional metadata for the panels.</p>
+<ul>
+<li><strong>Returns</strong>:<ul>
+<li><code>dict[str, pd.DataFrame]</code>: A dictionary with the panel data.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>read_combined_vars_data(self, cohort_name: str) -&gt; dict</code></strong>: 
+    Reads the combined variables data for a specified cohort and returns it as a dictionary.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>cohort_name</code> (str): The name of the cohort whose combined variables data will be read.</li>
+</ul>
+</li>
+<li><strong>Returns</strong>:<ul>
+<li><code>dict</code>: The combined variables data as a dictionary.
+:</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>read_all_cohort_data(self, cohort_name: str) -&gt; dict</code></strong> 
+    Reads all data related to a specific cohort, including metadata and raw data.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>cohort_name</code> (str): The name of the cohort whose data will be read.</li>
+</ul>
+</li>
+<li><strong>Returns</strong>:<ul>
+<li><code>dict</code>: A dictionary containing the raw data, variable data, and level data for the cohort.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>read_all_data(self) -&gt; dict</code></strong>: 
+    Reads all data for all cohorts, including metadata and panel data.</p>
+<ul>
+<li><strong>Returns</strong>:<ul>
+<li><code>dict</code>: A dictionary containing the data for all cohorts and panel data.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>set_all_data(self) -&gt; None</code></strong>: 
+    Sets the <code>all_data</code> attribute by calling the <code>read_all_data</code> method.</p>
+</li>
+</ul>
+<h2 id="utility-functions">Utility Functions<a class="headerlink" href="#utility-functions" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong><code>hash_file(file_name: str, algorithm: str="sha256") -&gt; str</code></strong>: 
+    Generates the hash of a specified file using the provided hashing algorithm (default is SHA-256).</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>file_name</code> (str): The path of the file to hash.</li>
+<li><code>algorithm</code> (str): The hashing algorithm to use (default is "sha256").</li>
+</ul>
+</li>
+<li><strong>Returns</strong>:<ul>
+<li><code>str</code>: The hash of the file in hexadecimal format.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>stringfy(files: list[dict]) -&gt; str</code></strong>: 
+    Converts a list of dictionaries into a string format for logging purposes.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>files</code> (list[dict]): A list of simple dictionaries.</li>
+</ul>
+</li>
+<li><strong>Returns</strong>:<ul>
+<li><code>str</code>: The formatted string representation of the input.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>test_datareader() -&gt; None</code></strong>:
+    Tests the instantiation of the DataReader class and prints the relative path and names of the files that have been read. For testing purpose. If this module (<code>file_reading_utils</code>) is executed directly as the main program, this function will be executed. </p>
+</li>
+</ul>
+<h2 id="general-operation">General Operation<a class="headerlink" href="#general-operation" title="Permanent link">&para;</a></h2>
+<p>Cuando se instancía la clase <code>DataReader</code> se desencadenan, secuencialmente, las siguientes acciones: </p>
+<ul>
+<li>Instanciación de los atributos básicos importados desde los modulos de configuración (<code>config</code>) como <code>reading_methods_dict</code>, <code>common_data_folder</code>, etc. </li>
+<li>Chequeo de los nombres de las cohortes para las cuales se va a leer los datos. Esto se hace llamando al método <code>check_cohort_names</code>.</li>
+<li>Lectura de todos los datos, que se almacenan en el atributo <code>all_data</code>. Esto se hace llamando al método <code>read_all_data</code>. Consulta el apartado <a href="#output-description"><code>output description</code></a> para más detalles. Este método llama internamente, y para cada cohorte, al método <code>read_cohort_data</code>, encargado de leer todos los datos necesarios de una cohorte. Además, lee el archivo <code>panel_data</code>. </li>
+</ul>
+<h2 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h2>
+<p>The <code>DataReader</code> class logs various events during the reading process:
+- <strong>Cohort Name Validation</strong>: Logs an error if any invalid cohort names are provided.
+- <strong>File Reading</strong>: Logs success or failure messages for each file read (raw data, metadata, panel data). For the database files, it also logs the name of each version and its hash. 
+- <strong>Hash Calculation</strong>: Logs errors if any issues occur while calculating file hashes.</p>
+<h2 id="usage-example">Usage Example<a class="headerlink" href="#usage-example" title="Permanent link">&para;</a></h2>
+<p>The following is an example of how to use the <code>DataReader</code> class to read cohort data and metadata:</p>
+<pre><code class="language-python">from data_reader import DataReader
+import config.cohort_config as cc
+
+# List of cohorts to read
+cohorts_list = cc.COHORT_NAME_LIST
+
+# Instantiate the DataReader class
+data_reader = DataReader(cohorts_list)
+
+# Access the all_data attribute, which contains all cohort data
+all_data = data_reader.all_data
+
+# Access data for a specific cohort
+liverscreen_data = all_data['Liverscreen']['data']
+var_data = all_data['Liverscreen']['var_data']
+level_data = all_data['Liverscreen']['level_data']
+</code></pre>
+<p>In this example, the <code>DataReader</code> is instantiated with a list of cohort names, and the data for each cohort is read into the <code>all_data</code> attribute. The raw data, variable metadata, and level metadata for each cohort can be accessed from this attribute.</p>
+<h2 id="output-description">Output Description<a class="headerlink" href="#output-description" title="Permanent link">&para;</a></h2>
+<p>The DataReader class reads and stores the following data for each cohort:</p>
+<ul>
+<li><strong>Raw Data</strong>: The raw data (multiple versions if available) for each cohort. </li>
+<li><strong>Variable Metadata</strong> (var_data): Metadata describing the variables in the cohort.</li>
+<li><strong>Level Metadata</strong> (level_data): Metadata describing the levels for categorical variables.</li>
+<li><strong>Combined Variables Data</strong>: Information required to combine specific variables.</li>
+</ul>
+<p>Additionally, the <strong>panel data</strong> is read and stored as a dictionary. </p>
+<p>The structure of <code>all_data</code> is:</p>
+<pre><code>all_data = {
+    'Liverscreen': {
+        'data': {version_name: DataFrame, ...},
+        'var_data': DataFrame,
+        'level_data': DataFrame,
+        'comb_var_data': dict,
+    },
+    'Glucofib': {...
+    },
+    ...
+    'panel_data': {
+        'panel_name': DataFrame, ...
+    }
+}
+</code></pre>
+<h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
+<p>The DataReader handles several common errors that may arise during the file reading process, including:</p>
+<ul>
+<li><code>FileNotFoundError</code>: Raised if a specified file or directory does not exist.</li>
+<li><code>pd.errors.EmptyDataError</code>: Raised if a file is empty.</li>
+<li><code>pd.errors.ParserError</code>: Raised if there is a parsing error while reading a file.</li>
+<li><code>json.JSONDecodeError</code>: Raised if there is an error decoding JSON files.</li>
+<li><code>UnicodeDecodeError</code>: Raised if there is an encoding issue while reading a file.</li>
+</ul>
+<p>These errors are logged, and empty DataFrames or dictionaries are returned in case of failure.</p></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = "../.."</script>
+    
+    <script src="../../js/base.js"></script>
+    <script src="../../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>

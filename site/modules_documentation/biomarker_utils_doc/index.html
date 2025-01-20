@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../img/favicon.ico">
+
+    
+    <title>Biomkarker utils - WP1</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../../css/base.min.css" rel="stylesheet">
+    <link href="../../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="../..">WP1</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="../..">Home</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../dataflow/">Overview</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../liveraim_data_warehouse_specifications/">LIVERAIM Data Warehouse Specifications</a>
+                    </li>
+                
+                
+                
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Modules documentation <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="../file_reading_utils_doc/">File Reading utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../data_processing_utils_doc/">Preprocessing utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../cohort_utils_doc/">Cohort utils</a>
+</li>
+
+                        
+                            
+<li class="active">
+    <a href="./">Biomkarker utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../qc_checks_utils_doc/">Quality Control utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../file_exporting_utils_doc/">File Exporting utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../sql_exporting_utils_doc/">SQL Exporting utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../configuration_module/">Configuration module</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../quick_start_guide/">Quick Start Guide</a>
+                    </li>
+                
+                
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="../cohort_utils_doc/">
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="next" href="../qc_checks_utils_doc/">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#biomarker_utils-documentation">biomarker_utils Documentation</a></li>
+            <li class="second-level"><a href="#general-sturcture">General Sturcture</a></li>
+                
+            <li class="second-level"><a href="#functions-and-classes">Functions and Classes</a></li>
+                
+                <li class="third-level"><a href="#functions">Functions</a></li>
+                <li class="third-level"><a href="#classes">Classes</a></li>
+                <li class="third-level"><a href="#class-bmkdatareader">Class BMKDataReader</a></li>
+                <li class="third-level"><a href="#class-bmkdataprocessor">Class BMKDataProcessor</a></li>
+            <li class="second-level"><a href="#general-operation">General Operation</a></li>
+                
+                <li class="third-level"><a href="#biomarker-data-reading-checks">Biomarker Data Reading Checks</a></li>
+            <li class="second-level"><a href="#usage-in-main-execution">Usage in main execution</a></li>
+                
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h1 id="biomarker_utils-documentation"><code>biomarker_utils</code> Documentation<a class="headerlink" href="#biomarker_utils-documentation" title="Permanent link">&para;</a></h1>
+<h2 id="general-sturcture">General Sturcture<a class="headerlink" href="#general-sturcture" title="Permanent link">&para;</a></h2>
+<p>This module defines the following classes:</p>
+<ul>
+<li><code>BMKDataReader</code>: Responsible for centralizing the process of reading biomarker data.</li>
+<li><code>BMKDataProcessor</code>: Handles the processing, formatting, and validation of biomarker data. 
+  The resulting data is ready for export in <code>.csv</code> or <code>feather</code> format as well as to a 
+  <strong>MySQL database</strong>.</li>
+</ul>
+<h2 id="functions-and-classes">Functions and Classes<a class="headerlink" href="#functions-and-classes" title="Permanent link">&para;</a></h2>
+<p>In this sections are described the classes and functions defined in the module:</p>
+<h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong><code>test_BMKDataReader() -&gt; None</code></strong></p>
+<p>If executed, it creates an instance of <code>BMKDataReader</code> and reads the biomarker data using the parameters set in <code>biomarkers_config</code>. If an error occurs, it prints the error. Otherwise, it prints the names of the files read and their hash.</p>
+<ul>
+<li><strong>Logs</strong><ul>
+<li>If an error occurs during the instantiation of the <code>BMKDataReader</code> class.</li>
+<li>If an error occurs while reading any of the files listed in the <code>bmk_data_directory</code> attribute of the <code>BMKDataReader</code> instance.</li>
+<li>If no errors occur, the files read and their hash are printed.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">&para;</a></h3>
+<h3 id="class-bmkdatareader">Class <code>BMKDataReader</code><a class="headerlink" href="#class-bmkdatareader" title="Permanent link">&para;</a></h3>
+<h4 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h4>
+<p>Reads all the data related to the biomarkers. It is responsible for reading and and organizing the files in a data dictionary, by version. This class is file-name dependant, so the files in the folder bmk-data_directory must meet the nomenclature (see read_bmk_data).</p>
+<h4 id="attributes">Attributes<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p><strong><code>bmk_data_directory</code> (str)</strong>: directory where de bmk raw data is stored. Variable exported from the bmk configuration file.</p>
+</li>
+<li>
+<p><strong><code>read_files</code> (str):</strong> list of the files that has been read (the file name and its hash). initialized as None.</p>
+</li>
+<li>
+<p><strong><code>bmk_data_dict</code> (str):</strong> dict whit all the read bmk data. Keys are each bmk version (date it was recieved) and values are the data read in DataFrame format. Initialized as None.</p>
+</li>
+</ul>
+<h4 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p><strong><code>read_bmk_data(self) -&gt; 'BMKDataReader':</code></strong></p>
+<p>Reads all files in the folder <code>self.bmk_data_directory</code>. The correct operation of this method depends on the proper naming of the files in the folder. BMK data files must follow the naming convention: <code>bmk_database_&lt;version_date&gt;</code>, where <code>&lt;version_date&gt;</code> is formatted as <code>yyyymmdd</code>. An example of a valid filename would be: <code>bmk_database_20241011</code>. 
+The method stores the read data in a dictionary, where keys are the different versions and values are DataFrames containing the BMK data.</p>
+<ul>
+<li><strong>Returns</strong>:<ul>
+<li><code>BMKDataReader</code>: The updated instance of BMKDataReader with the attribute <code>bmk_data_dict</code> filled with the BMK data.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="class-bmkdataprocessor">Class <code>BMKDataProcessor</code><a class="headerlink" href="#class-bmkdataprocessor" title="Permanent link">&para;</a></h3>
+<p>Processes the biomarker data to meet the proper format and merges all the versions (data batches). It also includes a QC checks and manages the exportation of the QC results.</p>
+<h4 id="attributes_1">Attributes<a class="headerlink" href="#attributes_1" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong><code>cohort_ids_dict</code> (dict)</strong>: dictionary to map the cohort ids to the common liveraim ids. </li>
+<li><strong><code>cohort_ids</code> (set)</strong>: set of original ids of all patients in liveraim database. </li>
+<li><strong><code>bmk_qc_dir</code> (str)</strong>: directory where qc reports will be dumped. </li>
+<li><strong><code>raw_bmk_data</code> (pd.DataFrame)</strong>: </li>
+<li><strong><code>formatted_bmk_data</code> (pd.DataFrame)</strong>: df containing all bmk data ready to export.</li>
+<li><strong><code>unmatching_ids</code> (set)</strong>: ids in bmk data that do not match with any id in liveraim db.</li>
+<li><strong><code>inconsistancies</code> (pd.Series)</strong>: </li>
+<li><strong><code>bmk_summary_dict</code> (dict[str, pd.DataFrame])</strong>: dict of dataframes with the qc reports 
+of the bmk data.</li>
+</ul>
+<h4 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p><strong><code>check_bmk_structure(self, df: pd.DataFrame) -&gt; None:</code></strong></p>
+<p>Checks if the DataFrame provided as a parameter contains the columns defined in the <code>biomarkers_config</code> module. It also verifies if there are any duplicates for the combination of ID and variable (biomarker/Prestacion).</p>
+<ul>
+<li>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><code>df</code> (pd.DataFrame): DataFrame to be checked.
+  <br><br></li>
+</ul>
+</li>
+<li>
+<p><strong>Logs</strong>:</p>
+<ul>
+<li>Logs an error if the columns in biomarkers databases do not match the ones described in <code>biomarkers_config</code>.</li>
+<li>Logs an error if finds any duplicates of the pair <code>ID(Paciente) - Variable(Prestacion)</code> 
+  <br><br></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>process(self) -&gt; 'BMKDataProcessor':</code></strong></p>
+<p>Centralizes the formatting of <code>bmk_data</code>. For each version (data batch), applies the 
+following transformations:</p>
+<ul>
+<li><code>process_symbol</code>: Extracts symbols for "out-of-range" values and creates two additional
+    columns (see <code>process_symbol</code> method).</li>
+<li><code>column_typing</code>: Assigns the appropriate data type to each column.</li>
+<li>Generates a summary of the processing results for quality control (QC).</li>
+<li>Renames the columns in biomarkers data. </li>
+<li>Add the <code>liveraim_id</code> column, the common identifier, to the patients that appear in the biomarker data and in the Liveraim database.
+  <br><br></li>
+</ul>
+<p>After processing, the method merges all DataFrames and checks for any inconsistencies 
+in the data. Finally, it assigns the merged DataFrame to the attribute <code>formatted_bmk_data</code> and stores the QC data in <code>bmk_summary_dict</code>.</p>
+<ul>
+<li><strong>Returns</strong>:<ul>
+<li><code>BMKDataProcessor</code>: The updated instance of BMKDataProcessor with <code>formatted_bmk_data</code> and <code>bmk_summary_dict</code> attributes populated.
+   <br><br></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>log_bmk_summary(self, df: pd.DataFrame) -&gt; None:</code></strong></p>
+<p>Logs a brief summary of the current biomarkers data.</p>
+<ul>
+<li>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>df</code> (<code>pd.DataFrame</code>): The DataFrame containing biomarker data to be summarized.</li>
+</ul>
+</li>
+<li>
+<p><strong>Logs</strong>:</p>
+<ul>
+<li>Logs the count of missing numeric values in the biomarkers data.</li>
+<li>Logs the count of "off limits" values found in biomarkers data, specifically values marked with symbols <code>&lt;</code> or <code>&gt;</code>.</li>
+<li>Logs the total number of unique patients and unique biomarker labels in the data.
+<br><br></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>extract_symbol(self, value: str) -&gt; float:</code></strong></p>
+<p>Extracts the symbols '&lt;' or '&gt;' from a string (if present) and returns the numeric portion as a float. If the input contains "No calculable," it returns a NaN value. This method is intended to be used within a DataFrame's <code>apply</code> function (see <code>process_symbol</code>).</p>
+<ul>
+<li>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>value</code> (str): A string containing a numeric value and, in some cases, the symbol '&lt;' or '&gt;'.</li>
+</ul>
+</li>
+<li>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>float</code>: The numeric portion of the input value, or NaN if "No calculable" is found.
+<br><br></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>process_symbol(self, df: pd.DataFrame, regex: str = r'([&lt;&gt;])') -&gt; None:</code></strong></p>
+<p>Processes the symbols '&lt;' or '&gt;' in a specified column of the DataFrame and extracts the numeric values. This method creates two additional columns: one for storing the detected symbols (if any) and another for the numeric portion of the values. It has the following effects: </p>
+<ul>
+<li>Adds a new column to <code>df</code> named <code>bmk_config.LIMIT_DETECT_COLUMN</code>, containing any 
+extracted '&lt;' or '&gt;' symbols.</li>
+<li>
+<p>Adds another column named <code>bmk_config.NUMERIC_VALUE_COLUMN</code> with the numeric 
+portion of each value, processed by the <code>extract_symbol</code> method to handle 
+strings with symbols.</p>
+</li>
+<li>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>df</code> (pd.DataFrame): The DataFrame containing the data to process. This DataFrame 
+    should include the column defined by <code>bmk_config.VALUE_COLUMN</code>, which may 
+    contain numerical values with '&lt;' or '&gt;' symbols.</li>
+<li><code>regex</code> (str, optional): The regular expression used to identify and extract symbols 
+    from the <code>VALUE_COLUMN</code>. Defaults to <code>r'([&lt;&gt;])'</code>, which targets the symbols 
+    '&lt;' and '&gt;'.
+<br><br></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>column_typing(self, df: pd.DataFrame) -&gt; None:</code></strong></p>
+<p>Assigns the appropriate data type to each column in the provided DataFrame based on the types specified in <code>bmk_config.python_column_types</code>. If a column's type is not found in this configuration, a warning is logged, and the column remains unmodified. Modifies <code>df</code> in place by changing the data types of its columns.</p>
+<ul>
+<li>
+<p><strong>Argumentss</strong>:
+    <code>df</code> (pd.DataFrame): The DataFrame containing the data to be typed. Each column's 
+        data type will be set according to <code>bmk_config.python_column_types</code>.</p>
+</li>
+<li>
+<p><strong>Logs</strong>:</p>
+<ul>
+<li>Logs a warning if a column is not found in <code>python_column_types</code>.</li>
+<li>Logs an error if a column cannot be converted to the specified data type, 
+detailing the column and error message.
+<br><br></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>column_typing(self, df: pd.DataFrame) -&gt; None:</code></strong>
+    Maps and assigns <code>liveraim_id</code> values to the DataFrame based on a provided ID mapping 
+    dictionary. If no mapping is provided, it defaults to <code>self.cohort_ids_dict</code>.</p>
+<ul>
+<li>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>df</code> (pd.DataFrame): The DataFrame containing the data to which <code>liveraim_id</code> values 
+    will be assigned.
+<code>id_map</code> (dict, optional): A dictionary mapping original IDs (in <code>bmk_config.ID_COLUMN</code>) 
+    to <code>liveraim_id</code> values. If not provided, <code>self.cohort_ids_dict</code> is used.</li>
+</ul>
+</li>
+<li>
+<p><strong>Returns</strong>:
+    <code>pd.DataFrame</code>: The updated DataFrame with a new column, <code>bmk_config.LIVERAIM_ID_COLUMN</code>, containing the mapped <code>liveraim_id</code> values.
+<br><br></p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>check_ids_coherence(self, df: pd.DataFrame, cohort_ids: set) -&gt; pd.DataFrame:</code></strong></p>
+<p>Checks for coherence between IDs in the provided DataFrame and a set of cohort IDs. Identifies and removes any unmatched IDs from the DataFrame to prevent potential errors during exportation to MySQL database. The effects are:</p>
+<ul>
+<li>Sets <code>self.unmatching_ids</code> with the unmatched IDs found.</li>
+<li>
+<p>Modifies <code>df</code> by removing rows with unmatched IDs.</p>
+</li>
+<li>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>df</code> (pd.DataFrame): The DataFrame containing the data with IDs to be checked.</li>
+<li><code>cohort_ids</code> (set): A set of valid cohort IDs for comparison against the IDs in the 
+  DataFrame column defined by <code>bmk_config.ID_COLUMN</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Returns</strong>:
+        <code>pd.DataFrame</code>: The updated DataFrame with unmatched IDs removed.</p>
+</li>
+<li>
+<p><strong>Logs</strong>:
+        - Logs a warning if unmatched IDs are found, detailing the count and indicating 
+        that these IDs will be removed.
+  <br><br></p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>check_inconsistancies(self, df: pd.DataFrame) -&gt; pd.DataFrame:</code></strong>
+    Checks for inconsistencies in the provided DataFrame, including duplicate records and  value mismatches across duplicates, ensuring data compatibility for export to MySQL.</p>
+<p>This method identifies and handles:
+- Duplicate records based on key columns, retaining only the most recent record (based on validation date).
+- Inconsistent values across duplicate entries, logging any discrepancies found.</p>
+<ul>
+<li>
+<p><strong>Arguments</strong>:
+    <code>df</code> (pd.DataFrame): The DataFrame containing biomarker data to be checked for both 
+        duplicate records and value inconsistencies.</p>
+</li>
+<li>
+<p><strong>Returns</strong>:
+    <code>pd.DataFrame</code>: The DataFrame with duplicate records removed, where applicable.</p>
+</li>
+<li>
+<p><strong>Logs</strong>:</p>
+<ul>
+<li>Logs the number of duplicates and any value inconsistencies found across duplicate
+entries.
+  <br><br></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>export_qc_report(self) -&gt; None:</code></strong></p>
+<p>Exports the quality control (QC) report to an Excel file if the configuration allows it. The report includes data summaries, such as version summaries and biomarker-specific information, saved in an Excel workbook with separate sheets.</p>
+<p>This method uses the <code>config.EXPORT_QC_RECORD</code> setting to determine if the export should 
+proceed. If enabled, the report is saved in a directory defined by  <code>config.QC_RECORD_EXPORT_FOLDER</code>, organized by execution time.</p>
+<p>Creates a directory at the specified export path if it does not already exist and exports the QC report to an Excel file at the location <code>{QC_RECORD_EXPORT_FOLDER}/qc_execution_&lt;execution_time&gt;/bmk_inconsistancies.xlsx</code>.
+  <br><br></p>
+</li>
+<li>
+<p><strong><code>bmk_summary(self, df: pd.DataFrame, cohort_ids: set) -&gt; dict:</code></strong></p>
+<p>Generates a summary of key metrics for the given biomarkers DataFrame, including the      number of unique patients and biomarkers, counts of missing values, duplicate records, 
+unmatched IDs, and values marked as out-of-range.</p>
+<ul>
+<li>
+<p><strong>Arguments</strong>:
+    <code>df</code> (pd.DataFrame): The DataFrame containing biomarker data to summarize.
+    <code>cohort_ids</code> (set): A set of cohort IDs to compare against the IDs in the DataFrame, used to count unmatched IDs.</p>
+</li>
+<li>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>dict</code>: A dictionary containing the following summary metrics:<ul>
+<li>"number_patients": Count of unique patients in the data.</li>
+<li>"number_biomarkers": Count of unique biomarkers in the data.</li>
+<li>"missings": Total count of missing values in <code>NUMERIC_VALUE_COLUMN</code>.</li>
+<li>"duplicates": Number of duplicate entries based on patient and biomarker ID.</li>
+<li>"unmatching_ids": Count of IDs in <code>ID_COLUMN</code> that do not match any cohort IDs.</li>
+<li>"off_limits": Count of values marked as out-of-range (with '&lt;' or '&gt;').
+  <br><br></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>data_by_bmk(self, df: pd.DataFrame) -&gt; pd.DataFrame:</code></strong>
+    Aggregates biomarker data by calculating the count of missing values and the number of unique patients for each biomarker in the provided DataFrame.</p>
+<ul>
+<li>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>df</code> (pd.DataFrame): The DataFrame containing biomarker data to be aggregated. It 
+    should include columns specified in <code>bmk_config.NUMERIC_VALUE_COLUMN</code> and 
+    <code>bmk_config.ID_COLUMN</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>pd.DataFrame</code>: A DataFrame with one row per biomarker, containing the following columns:<ul>
+<li><code>bmk_config.VARIABLE_COLUMN</code>: The biomarker identifier.</li>
+<li>"missings": Count of missing values for each biomarker.</li>
+<li>"patients_count": Number of unique patients associated with each biomarker.
+  <br><br></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>bmk_summary(self, df: pd.DataFrame, cohort_ids: set) -&gt; dict:</code></strong></p>
+<p>Centralizes the quality control (QC) checks for the biomarker data. This method is intended to receive a DataFrame containing the formatted biomarker data, which will be checked for inconsistencies. If inconsistencies are found, they will be resolved by removing the necessary rows to maintain data integrity.
+Calls various internal methods to perform specific QC checks, such as boundary checks, data type validation, ID coherence, and inconsistency resolution.</p>
+<ul>
+<li>
+<p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>df</code> (pd.DataFrame): The DataFrame containing formatted biomarker data to be checked.</li>
+</ul>
+</li>
+<li>
+<p><strong>Returns</strong>:</p>
+<ul>
+<li><code>pd.DataFrame</code>: The updated DataFrame with any identified inconsistencies resolved by 
+removing affected rows.
+<br><br></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>compute_bmk_bounds(self) -&gt; None:</code></strong></p>
+<p>Method that creates the <code>bmk_bounds</code> attribute from the previously formatted biomarker data. For each biomarker, it extracts the upper and lower bounds (if present in the data) and stores them in a dictionary.
+Once created, the dictionary is assigned to the <code>bmk_bounds</code> attribute. The dictionary structure is as follows:</p>
+<pre><code>{
+    &lt;bmk_label&gt;: {
+        "&lt;": &lt;lower_bound&gt;, 
+        "&gt;": &lt;upper_bound&gt;},
+    ...
+}
+</code></pre>
+<ul>
+<li><strong>Logs</strong>:<ul>
+<li>If the biomarker data has not yet been processed, a warning is generated indicating that the data must be formatted before creating <code>bmk_bounds</code>.</li>
+<li>If multiple bounds of the same type are found for the same biomarker, a warning about possible inconsistency in the bounds is issued.
+<br><br></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>check_bmk_bounds(self) -&gt; None:</code></strong></p>
+<p>Method responsible for checking the bounds of formatted biomarker data using the previously created <code>bmk_bounds</code> attribute. Specifically, it verifies if any values exceed or fall below the established bounds.</p>
+<ul>
+<li><strong>Logs</strong>:<ul>
+<li>If the <code>bmk_bounds</code> attribute has not yet been created, a warning is issued indicating that this attribute must be created first, then the method returns.</li>
+<li>If any inconsistencies are found, i.e., values outside the <code>bmk_bounds</code> limits, a message with relevant error information is logged.
+<br><br></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="general-operation">General Operation<a class="headerlink" href="#general-operation" title="Permanent link">&para;</a></h2>
+<p>This module centralizes the reading, processing, and quality control of biomarker data (unlike other modules, where these functionalities are separate). The biomarker data reading is managed by the <code>BMKDataReader</code> class (and not by the <a href="../file_reading_utils_doc/#class-datareader"><code>DataReader</code></a> class). Once the class is instantiated, biomarker data can be read by calling the <code>read_bmk_data</code> method (it is important to verify the directory structure and file naming conventions before reading the data). Once read, the data is stored in the <code>bmk_data_dict</code> attribute (to ensure data is read correctly, see the section <a href="#biomarker-data-reading-checks">Biomarker Data Reading Checks</a>).</p>
+<p>To obtain processed biomarker data ready for export, the <code>BMKDataProcessor</code> class is required. Instantiating the class requires:</p>
+<ul>
+<li><code>bmk_data_dict</code> (dict): A dictionary containing biomarker data. Keys represent the date of each version, while values are DataFrames containing the biomarker data.</li>
+<li><code>cohort_ids_dict</code> (dict): A dictionary mapping cohort-specific identifiers (keys) to the common liveraim identifiers (values).</li>
+</ul>
+<p>Once instantiated, the <code>process()</code> method centralizes the processing, transformation, and verification of biomarker data. The merged and formatted biomarker data is stored as a <code>pd.DataFrame</code> in the <code>formatted_bmk_data</code> attribute. This DataFrame is ready to be exported to <code>.csv</code>, <code>.feather</code>, or to a MySQL database. The method <code>export_qc_report</code> is resposible for exporting the data to the specified file types. <code>SQLExporter</code> is respondible of exporting data to MySQL database.</p>
+<h3 id="biomarker-data-reading-checks">Biomarker Data Reading Checks<a class="headerlink" href="#biomarker-data-reading-checks" title="Permanent link">&para;</a></h3>
+<p>To verify that the biomarker data reading configuration is correct, the <code>test_BMKDataReader()</code> function can be called. If any errors occur during reading, it will log them. If there are no errors, it will print the names of the files read (presumably all batches of biomarker data) and their respective hashes. Alternatively, you can execute the <code>biomarker_utils</code> module directly from the terminal to achieve the same effect:</p>
+<pre><code class="language-bash">python biomarkers_utils.py
+</code></pre>
+<p>This will produce the following output:</p>
+<pre><code class="language-plaintext">
+Instance of BMKDataReader successfully created.
+Dir. path: data/biomarkers_data 
+Data successfully read:
+
+{'file_name': 'biomarker_data_20241016.xls', 'hash': 'e79002b53b2214e72643158dc033affe9ca43b443c7b912c03179ed215ef6b6c'}
+</code></pre>
+<h2 id="usage-in-main-execution">Usage in main execution<a class="headerlink" href="#usage-in-main-execution" title="Permanent link">&para;</a></h2>
+<pre><code class="language-python">
+... # Reading of cohorts data
+
+# Reading biomarkers data
+bmk_data: dict = BMKDataReader().read_bmk_data().bmk_data_dict
+
+... # processing of cohorts data
+
+# Processing of biomarkers data
+bmk_processor = BMKDataProcessor(bmk_data, cohort_ids).process()
+bmk_processed_data = bmk_processor.formatted_bmk_data
+
+# Exportation of bmk data to csv and feather files
+bmk_processor.export_qc_report()
+
+...# instantitations of SQLExporter
+
+# Exportation to MySQL DB of bmk data
+sql_exporter.export_df_to_sql(bmk_processed_data, &quot;biomarkers&quot;)
+
+
+</code></pre></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = "../.."</script>
+    
+    <script src="../../js/base.js"></script>
+    <script src="../../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>

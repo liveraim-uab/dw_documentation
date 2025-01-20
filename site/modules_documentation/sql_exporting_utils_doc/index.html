@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../img/favicon.ico">
+
+    
+    <title>SQL Exporting utils - WP1</title>
+    
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/v4-shims.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
+    <link href='//rsms.me/inter/inter.css' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
+    <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="../../css/base.min.css" rel="stylesheet">
+    <link href="../../css/cinder.min.css" rel="stylesheet">
+
+    
+        
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/github.min.css">
+        
+    
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+        <![endif]-->
+
+    
+
+     
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+
+            
+              <a class="navbar-brand" href="../..">WP1</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="../..">Home</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../dataflow/">Overview</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../liveraim_data_warehouse_specifications/">LIVERAIM Data Warehouse Specifications</a>
+                    </li>
+                
+                
+                
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Modules documentation <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="../file_reading_utils_doc/">File Reading utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../data_processing_utils_doc/">Preprocessing utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../cohort_utils_doc/">Cohort utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../biomarker_utils_doc/">Biomkarker utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../qc_checks_utils_doc/">Quality Control utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../file_exporting_utils_doc/">File Exporting utils</a>
+</li>
+
+                        
+                            
+<li class="active">
+    <a href="./">SQL Exporting utils</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../configuration_module/">Configuration module</a>
+</li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../quick_start_guide/">Quick Start Guide</a>
+                    </li>
+                
+                
+                </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="prev" href="../file_exporting_utils_doc/">
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </a>
+                    </li>
+                    <li >
+                        <a rel="next" href="../configuration_module/">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="first-level active"><a href="#sql_exporting_utils-documentation">sql_exporting_utils Documentation</a></li>
+            <li class="second-level"><a href="#overview">Overview</a></li>
+                
+            <li class="second-level"><a href="#general-structure">General Structure</a></li>
+                
+            <li class="second-level"><a href="#class-description">Class Description</a></li>
+                
+                <li class="third-level"><a href="#sqlexporter">SQLExporter</a></li>
+            <li class="second-level"><a href="#logs">Logs</a></li>
+                
+            <li class="second-level"><a href="#general-operation">General operation</a></li>
+                
+            <li class="second-level"><a href="#example-usage">Example Usage</a></li>
+                
+                <li class="third-level"><a href="#creating-and-exporting-data">Creating and Exporting Data</a></li>
+                <li class="third-level"><a href="#testing-the-connection">Testing the connection:</a></li>
+            <li class="second-level"><a href="#output-description">Output Description</a></li>
+                
+            <li class="second-level"><a href="#usage-in-the-main-execution">Usage in the main execution</a></li>
+                
+    </ul>
+</div></div>
+        <div class="col-md-9" role="main">
+
+<h1 id="sql_exporting_utils-documentation"><code>sql_exporting_utils</code> Documentation<a class="headerlink" href="#sql_exporting_utils-documentation" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The <code>SQLExporter</code> module is responsible for creating the structure of a MySQL database, handling connections, and exporting processed data into the database. It relies on SQLAlchemy ORM for creating tables, establishing relationships, and managing connections to the database. The primary functionality of this module is centralized in the <code>SQLExporter</code> class.</p>
+<h2 id="general-structure">General Structure<a class="headerlink" href="#general-structure" title="Permanent link">&para;</a></h2>
+<p>The module defines the following key components:</p>
+<ul>
+<li><strong><code>Base</code></strong>: This is the base class used by SQLAlchemy for defining metadata and creating the ORM mappings. All table classes in this module inherit from this base class. For further information, visit the <a href="https://docs.sqlalchemy.org/en/20/">SQLAlchemy documentation</a>. </li>
+<li><strong><code>SQLExporter</code></strong>: This is the main class that manages the creation of tables, connection to the database, and the export of cohort data to the MySQL database. It uses SQLAlchemy's ORM to handle the database schema and pandas to export dataframes.</li>
+</ul>
+<h2 id="class-description">Class Description<a class="headerlink" href="#class-description" title="Permanent link">&para;</a></h2>
+<h3 id="sqlexporter"><strong><code>SQLExporter</code></strong><a class="headerlink" href="#sqlexporter" title="Permanent link">&para;</a></h3>
+<h4 id="description">Description:<a class="headerlink" href="#description" title="Permanent link">&para;</a></h4>
+<p>The <code>SQLExporter</code> class handles the creation of MySQL tables based on the cohort data, establishes a connection to the MySQL database, and exports processed cohort data to the database. It uses the SQLAlchemy ORM to define the table schema and manage database interactions.</p>
+<h4 id="attributes">Attributes:<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong><code>panel_data_json</code> (dict)</strong>: A dictionary containing metadata about the cohort panels (tables) and their columns.</li>
+<li><strong><code>engine</code> (Engine)</strong>: The SQLAlchemy engine object that manages the connection to the MySQL database.</li>
+<li><strong><code>base</code> (type)</strong>: The SQLAlchemy <code>Base</code> class used to define ORM mappings.</li>
+<li><strong><code>metadata</code> (MetaData)</strong>: SQLAlchemy's metadata object, which contains information about all the tables defined in the schema.</li>
+<li><strong><code>type_mapping</code> (dict)</strong>: A dictionary that maps Python data types to SQLAlchemy data types.</li>
+</ul>
+<h4 id="methods">Methods:<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h4>
+<ul>
+<li>
+<p><strong><code>set_engine() -&gt; Engine</code></strong>:<br />
+    This method initializes and returns the SQLAlchemy engine for connecting to the MySQL database. The connection parameters are retrieved from environment variables using the <code>connection_config</code> module.</p>
+<ul>
+<li><strong>Return</strong>: <ul>
+<li><code>Engine</code>: The SQLAlchemy engine for the MySQL connection.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>create_table_class(name: str, table_json: dict, type_mapping: dict) -&gt; type</code></strong>:<br />
+    Dynamically creates a table class based on the provided metadata (<code>table_json</code>). The method defines columns, data types, and sets primary/foreign keys based on whether the table is in wide or long format.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>name</code> (str): The name of the table.</li>
+<li><code>table_json</code> (dict): Metadata about the table, including columns and data types.</li>
+<li><code>type_mapping</code> (dict): A mapping of Python data types to SQLAlchemy data types.</li>
+</ul>
+</li>
+<li><strong>Return</strong>:<ul>
+<li><code>cls</code>: The dynamically created class representing the table.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>is_long_format(table_json: dict) -&gt; bool</code></strong>:<br />
+    Determines if a table is in long format (melted) based on the configuration data.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>table_json</code> (dict): configuration data for the table.</li>
+</ul>
+</li>
+<li><strong>Return</strong>:<ul>
+<li><code>bool</code>: Returns <code>True</code> if the table is in long format, <code>False</code> otherwise.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>get_value_datatype(table_json: dict) -&gt; str</code></strong>:<br />
+    Retrieves the data type for the 'value' column in long-format tables by checking if there are any variables to be melted in the table_json configuration dictionary.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>table_json</code> (dict): Metadata for the table.</li>
+</ul>
+</li>
+<li><strong>Return</strong>:<ul>
+<li><code>str</code>: The data type of the 'value' column.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>define_final_columns(table_json: dict, long_format: bool) -&gt; dict</code></strong>:<br />
+    Defines the final columns and their data types for a given table based on the metadata. If the table is in long format, additional columns like 'variable' and 'value' are added.</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>table_json</code> (dict): configuration data for the table.</li>
+<li><code>long_format</code> (bool): Whether the table is in long or wide format.</li>
+</ul>
+</li>
+<li><strong>Return</strong>:<ul>
+<li><code>dict</code>: A dictionary mapping column names to their data types.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>create_tables() -&gt; None</code></strong>:<br />
+    For each table specified in <code>panel_data_json</code> (except the population panel), creates its corresponding ORM class by calling <code>create_table_class</code>.</p>
+</li>
+<li>
+<p><strong><code>create_all() -&gt; None</code></strong>:<br />
+    Creates all the ORM table classes specified in <code>panel_data_json</code> and calls the SQLAlchemy method <code>metadata.create_all</code> to create the tables in the MySQL database.</p>
+</li>
+<li>
+<p><strong><code>export_data_to_sql(final_data: dict[str, pd.DataFrame], if_exists: Literal['fail', 'replace', 'append'] = 'append') -&gt; None</code></strong>:<br />
+    Exports the final cohort data to the MySQL database. The data is exported using pandas' <code>to_sql</code> method, with options to handle existing data (fail, replace, append).</p>
+<ul>
+<li><strong>Arguments</strong>:<ul>
+<li><code>final_data</code> (dict[str, pd.DataFrame]): A dictionary where keys are panel names and values are pandas DataFrames representing the panel data.</li>
+<li><code>if_exists</code> (Literal['fail', 'replace', 'append']): Determines what happens if the table already exists in the database. Default is 'append'.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong><code>export_df_to_sql(self, df: pd.DataFrame,</code>
+                         <code>table_name: str,</code>
+                         <code>if_exists: Literal['fail', 'replace', 'append'] ="append") -&gt; None:</code></strong>
+    A simple method to dump a single dataframe into the database. Uses the pandas method pd.to_sql and the engine created in the class.</p>
+<ul>
+<li><strong>Arguments</strong>:<br />
+        - <code>df</code> (pd.DataFrame): dataframe to be dumped in the MySQL database
+        - <code>table_name</code> (str): name of the table where the dataframe should be dumped. 
+        - <code>if_exists</code> (Literal['fail', 'replace', 'append'], optional): 
+            Specifies the behavior if the table already exists in the database:
+                - '<em>fail</em>': If the table exists, an error is raised.
+                - '<em>replace</em>': The existing table is dropped, and a new one is created.
+                - '<em>append</em>': The new data is appended to the existing table.
+            Default is 'append'.</li>
+</ul>
+</li>
+<li>
+<p><strong><code>drop_all() -&gt; None</code></strong>:<br />
+    Drops all the tables from the MySQL database.</p>
+</li>
+<li>
+<p><strong><code>verify_tables() -&gt; None</code></strong>:<br />
+    Verifies the existence of tables in the database and logs their names if present.</p>
+</li>
+<li>
+<p><strong><code>test_connection() -&gt; bool</code></strong>:<br />
+    Tests the connection to the MySQL database by executing a simple query. Returns <code>True</code> if the connection is successful, <code>False</code> otherwise.</p>
+</li>
+</ul>
+<h2 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h2>
+<ul>
+<li>In method <code>set_engine</code>:<ul>
+<li>Logs an error if any enviroment variable needed for the connection couldn't be called. </li>
+<li>Logs if the engine was successfully created or there was an error while creating it. </li>
+</ul>
+</li>
+<li>In <code>create_table_class</code>:<ul>
+<li>Logs an error If any data type in the configuration data (<code>final_columns</code> parameter) is not compatible (i.e. is not in the type_mapping attribute).</li>
+<li>Logs if the table ORM class has been succesfully created or if there has been an error while creating it (i.e. while calling metaclass <code>type</code>)</li>
+</ul>
+</li>
+<li>In <code>get_value_datatype</code>: <ul>
+<li>Logs an error if there are two or more different datatypes in the variables that have to be melted (transformed into long format) in a specific panel.</li>
+<li>Logs an error if there are no variables to be melted. </li>
+</ul>
+</li>
+<li>In <code>export_data_to_sql</code>:<ul>
+<li>Logs if everte panel has been exported to MySQL properly or if, on the contrary, an error ocurred while exporting the data. </li>
+</ul>
+</li>
+<li>In <code>export_df_to_sql</code>:<ul>
+<li>Logs if the dataframe has been exported to MySQL properly or if, on the contrary, an error ocurred while exporting the data. </li>
+</ul>
+</li>
+<li>In <code>drop_all</code>:<ul>
+<li>If no tables are found in the database, it logs an info message. </li>
+<li>For every dropped table, it logs an info message. </li>
+<li>If a specific table to drop is not found in metadata, logs a message indicating that it skips this table. </li>
+<li>If an error ocurrs while dropping a table, it is logged. </li>
+</ul>
+</li>
+<li>In <code>verify_tables</code>:<ul>
+<li>If an error ocurrs while inspecting the database and getting the table names, it is logged. </li>
+<li>It logs the list of tables in the database (if any).</li>
+<li>If no tables are found, an info message is logged indiciating so.</li>
+</ul>
+</li>
+<li>In <code>test_connection</code>: <ul>
+<li>If the connection test was successful, logs a message indicating. Otherwise logs an error message. </li>
+</ul>
+</li>
+</ul>
+<h2 id="general-operation">General operation<a class="headerlink" href="#general-operation" title="Permanent link">&para;</a></h2>
+<p>It is important to mention that <code>SQLExporter</code> utilizes the ORM (Object-Relational Mapping) framework provided by SQLAlchemy. This means that future SQL database tables must be treated as Python classes in the code. For example, if you wish to create a table called <code>population</code>, you must first define a Python class (which, for technical reasons, should inherit from <code>Base</code>), let's call it <code>Population</code>. This class will define the metadata for the table through its attributes.</p>
+<p>When an instance of the <code>SQLExporter</code> class is created (which requires an object of the <code>panel_data</code> type), an <code>Engine</code> object is automatically created. The <code>Engine</code> is responsible for managing database connections as they are needed.</p>
+<blockquote>
+<p><strong>Note</strong>: The <code>Engine</code> object follows a "lazy" connection paradigm. This means that it does not establish a connection to the database until it is actually required. Therefore, when the <code>Engine</code> is created, no immediate connection is made. One consequence of this behavior is that, although the <code>Engine</code> can be created without errors, the actual database connection may still fail. To verify the connection, it is recommended to run the <code>test_connection</code> method or execute the module as the main program.</p>
+</blockquote>
+<p>Additionally, the <code>SQLExporter</code> class creates the attributes <code>base</code> (which uses the previously defined <code>Base</code> class) and <code>metadata</code> (an attribute of the <code>Base</code> class). For more detailed information on the internal workings of <code>Base</code> and <code>metadata</code>, refer to the <a href="https://docs.sqlalchemy.org/en/20/">SQLAlchemy documentation</a>. In general terms, the <code>Base</code> class acts as a "repository" where all tables and relationships (defined as classes) are stored within the <code>SQLExporter</code>. To create a table in the database, it must first be declared as a class in Python. For the class to be registered in <code>Base</code>, it must inherit from <code>Base</code>. This allows <code>Base</code> to record all tables/classes and their configurations, so that they can later be created in the SQL database when the connection is established.</p>
+<p>When the <code>SQLExporter</code> class is instantiated, the <code>Population</code> table/class is stored within <code>Base</code>.</p>
+<p>After instantiating the class, the <code>create_all</code> method is called. This method dynamically creates the table/class for each panel in the <code>panel_data_json</code>. It does so using the methods previously defined. For each panel defined in the <code>panel_data_json</code> dictionary:</p>
+<ol>
+<li>It checks if the panel follows a long or wide format. If the panel is in long format, it extracts the data type of the future <code>values</code> column.</li>
+<li>It runs the <code>define_final_columns</code> method, which generates a dictionary containing the metadata for each final column (taking into account the final table structure), as well as relationships, primary keys, and foreign keys.</li>
+<li>It executes the <code>create_table_class</code> method, which creates a table/class using the parameters obtained from <code>define_final_columns</code>.</li>
+</ol>
+<p>Once the tables are created and stored in <code>Base</code>, the <code>create_all</code> method is called. At this point, the first explicit connection to the database is made: the tables stored in <code>Base</code> (along with their respective configurations) are now created in the actual MySQL database.</p>
+<p>Finally, the <code>export_data_to_sql</code> method (called from <code>main</code>) is executed, taking as a parameter the final data that needs to be exported to SQL. This method reconnects to the database and loads the data into the corresponding tables.</p>
+<h2 id="example-usage">Example Usage<a class="headerlink" href="#example-usage" title="Permanent link">&para;</a></h2>
+<h3 id="creating-and-exporting-data">Creating and Exporting Data<a class="headerlink" href="#creating-and-exporting-data" title="Permanent link">&para;</a></h3>
+<pre><code class="language-python">from sql_exporter import SQLExporter
+import pandas as pd
+
+# Example metadata
+panel_data_json = {
+    'population': {...},  # Population panel metadata
+    'panel_1': {...},     # Panel 1 metadata
+    # Other panels...
+}
+
+# Example data
+final_data = {
+    'population': pd.DataFrame(...),
+    'panel_1': pd.DataFrame(...),
+    # Other panels...
+}
+
+# Instantiate SQLExporter
+sql_exporter = SQLExporter(panel_data_json)
+
+# Create the tables in MySQL
+sql_exporter.create_all()
+
+# Export the data to MySQL
+sql_exporter.export_data_to_sql(final_data)
+</code></pre>
+<h3 id="testing-the-connection">Testing the connection:<a class="headerlink" href="#testing-the-connection" title="Permanent link">&para;</a></h3>
+<p>You can test if the connection cnfiguration is correct by calling the method <code>test_connection</code> or by executiong the module as the main program. To do so, just execute the following comand in the terminal (make sure you are in the proper directory)ç</p>
+<pre><code class="language-bash">python sql_exporting_utils.py
+</code></pre>
+<h2 id="output-description">Output Description<a class="headerlink" href="#output-description" title="Permanent link">&para;</a></h2>
+<p>Consulta la sección </p>
+<h2 id="usage-in-the-main-execution">Usage in the main execution<a class="headerlink" href="#usage-in-the-main-execution" title="Permanent link">&para;</a></h2>
+<p>In the context of database creation, an instance of the <code>SQLExporter</code> class is created using <code>liveraim.panel_data_json</code> as a parameter. Next, the database tables are created, and finally, the final data (previously created and stored in the <code>Liveraim.final_data</code> attribute) is exported.</p>
+<pre><code class="language-python">if config.CREATE_SQL_DB:
+        sql_exporter = SQLExporter(liveraim.panel_data_json)
+        sql_exporter.create_all()
+        sql_exporter.export_data_to_sql(liveraim.final_data)
+</code></pre></div>
+        
+        
+    </div>
+
+    
+      <footer class="col-md-12 text-center">
+          
+          
+            <hr>
+            <p>
+            <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</small>
+            </p>
+          
+
+          
+          
+      </footer>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="../../js/bootstrap-3.0.3.min.js"></script>
+
+    
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
+        
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    <script>var base_url = "../.."</script>
+    
+    <script src="../../js/base.js"></script>
+    <script src="../../search/main.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+
+</html>
