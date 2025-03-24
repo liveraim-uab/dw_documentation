@@ -15,7 +15,7 @@ The data warehouse is composed of several tables that can be divided into two gr
 We will refer to these tables as panels or tables interchangeably. The `population` panel acts as the core of the database: the other panels are linked to this primary one (see [General Relationships in the Schema](#general-relationships-in-the-schema)).
  The following image schematically depicts the structure and relationships of the data warehouse:
 
-![Data_Base_scheme](images/DB_scheme_v0.png)
+![Data_Base_scheme](images/DB_scheme_v1.png)
 
 The data warehouse contains two types of tables in terms of format: **long** format tables and **wide** format tables:
 
@@ -209,10 +209,12 @@ A summary of the data sources is presented below:
 
 | **Cohort**  | **Number of versions used** | **File type**       | **Reading method**    |
 | ----------- | --------------------------- | ------------------- | --------------------- |
-| liverscreen | 4                           | stata file (`.dta`) | `pd.read_stata`       |
-| alcofib     | 1                           | sav file (`.sav`)   | `pyreadstat.read_sav` |
+| liverscreen | 7                           | stata file (`.dta`) | `pd.read_stata`       |
+| alcofib     | 2                           | sav file (`.sav`)   | `pyreadstat.read_sav` |
 | glucofib    | 1                           | csv (`.csv`)        | `pd.read_csv`         |
-| decide      | 1                           | -                   | -                     |
+| decide      | 1                           | stata file (`.dta`) | `pd.read_stata`       |
+| galaald     | 1                           | stata file (`.dta`) | `pd.read_stata`       |
+| marina      | 2                           | sav file (`.sav`)   | `pyreadstat.read_sav` |
 
 > **Note 1**: Some of the information below may be redundant, as certain variables appear in many or all panels. However, redundancies have been intentionally kept for the sake of clarity and readability.
 

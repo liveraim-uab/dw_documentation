@@ -11,7 +11,7 @@
     <link rel="shortcut icon" href="../img/favicon.ico">
 
     
-    <title>Overview - WP1</title>
+    <title>Overview - LiverAim Data Warehouse</title>
     
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
@@ -59,7 +59,7 @@
             <!-- Main title -->
 
             
-              <a class="navbar-brand" href="..">WP1</a>
+              <a class="navbar-brand" href="..">LiverAim Data Warehouse</a>
             
         </div>
 
@@ -185,8 +185,11 @@
             <li class="second-level"><a href="#data-preprocessing">Data Preprocessing</a></li>
                 
                 <li class="third-level"><a href="#merging-database-versions">Merging database versions</a></li>
+                <li class="third-level"><a href="#id-transformations">ID transformations</a></li>
+                <li class="third-level"><a href="#ids-dropping">IDs dropping</a></li>
                 <li class="third-level"><a href="#addition-of-new-variables">Addition of new variables</a></li>
                 <li class="third-level"><a href="#combination-of-variables">Combination of variables</a></li>
+                <li class="third-level"><a href="#cohort-specific-transformations">Cohort-specific transformations</a></li>
             <li class="second-level"><a href="#cohort-instantiation-and-processing">Cohort Instantiation and Processing</a></li>
                 
             <li class="second-level"><a href="#cohort-quality-control">Cohort Quality Control</a></li>
@@ -220,7 +223,7 @@
 <li><a href="#exportation-to-mysql-database"><strong>Exportation to MySQL Database</strong></a>: A connection is made to MySQL, where the various tables and relationships of the schema are created, and the data is exported to SQL format.</li>
 </ul>
 <p>The following image describes schematically the ETL process:</p>
-<p><img alt="ETL-scheme" src="../images/ETL-scheme_v0.png" /></p>
+<p><img alt="ETL-scheme" src="../images/ETL-scheme_v1.png" /></p>
 <h2 id="data-reading">Data Reading<a class="headerlink" href="#data-reading" title="Permanent link">&para;</a></h2>
 <p>Data reading is handled through the <a href="../modules_documentation/file_reading_utils_doc/"><code>DataReader</code></a> class. This class is responsible for reading the following files for each cohort:</p>
 <ul>
@@ -245,19 +248,23 @@
   ...
   panel_data: &lt;panel_data_file&gt;         # Dictionary with panel_data information  
 </code></pre>
+<p>This process is carried out for the data of each WP. In particular, each WP will contain not only the different data related to the cohort databases and configuration files but will also have its own panel configuration document, which may be different from those of other WPs.</p>
 <blockquote>
-<p><strong>Note</strong>: The data warehouse will be created using all versions of the databases, up to the most recent one. This allows for more detailed tracking of patients who have entered and exited in each version. How the different versions are managed is explained in the next section, <a href="#data-preprocessing">Data Preprocessing</a>.</p>
+<p><strong>Note</strong>: The data warehouse will be created using all versions of the cohort databases, up to the most recent one. This allows for more detailed tracking of patients who have entered and exited in each version. How the different versions are managed is explained in the next section, <a href="#data-preprocessing">Data Preprocessing</a>.</p>
 </blockquote>
-<p>These files are essential for the correct processing of the data. To see the structure of these files, refer to the section <a href="../liveraim_data_warehouse_specifications/#initial-data-and-configuration-data">initial_data_configuration</a>.</p>
+<p>These files described above are essential for the correct processing of the data. To see the structure of these files, refer to the section <a href="../liveraim_data_warehouse_specifications/#initial-data-and-configuration-data">initial_data_configuration</a>.</p>
 <p>The variables that store the filenames to be read, as well as the directories where these files are located, are defined in the module <a href="../modules_documentation/configuration_module/#main_config-module"><code>main_config</code></a>.</p>
 <p>Refer to <a href="../modules_documentation/file_reading_utils_doc/"><code>data_reading_utils</code></a> for more details on the internal workings of <code>DataReader</code> and the data reading process.</p>
 <h2 id="data-preprocessing">Data Preprocessing<a class="headerlink" href="#data-preprocessing" title="Permanent link">&para;</a></h2>
 <p>Once the initial data is loaded, an instance of the <code>DataPreprocessor</code> class is created for each cohort. This instance takes as parameters all the elements from <code>all_data[cohort_name]</code>, as well as the name of the respective cohort. This data is stored in the atributes <code>cohort_databases</code>, <code>vara_data</code>, <code>level_data</code>, <code>var_comb_data</code> and <code>cohort_name</code> respectively. </p>
 <p><code>DataPreprocessor</code> performs the following actions:</p>
 <ul>
-<li><a href="#merging-database-versions">Merging database versions</a> </li>
+<li><a href="#merging-database-versions">Merging database versions</a></li>
+<li><a href="#id-transformations">ID transformations</a></li>
 <li><a href="#addition-of-new-variables">Addition of new variables</a></li>
 <li><a href="#combination-of-variables">Combination of variables</a></li>
+<li><a href="#ids-dropping">IDs dropping</a></li>
+<li><a href="#cohort-specific-transformations">Cohort-specific transformations</a></li>
 </ul>
 <p>The aim of this class is to prepare the data from each cohort for the formatting and homogenization process, which requires a specific structure. This class is designed to handle each cohort individually and allows for specific adjustments to be made for each cohort, adapting to the particularities of each one.</p>
 <h4 id="merging-database-versions">Merging database versions<a class="headerlink" href="#merging-database-versions" title="Permanent link">&para;</a></h4>
@@ -282,6 +289,18 @@
 </ul>
 <p>Since <code>status</code> will be one of the core variables in the data warehouse, the <code>var_data</code> and <code>level_data</code> attributes are updated to include this variable.</p>
 <p>this new dataframe is stored in <code>data</code> atribute.</p>
+<h4 id="id-transformations">ID transformations<a class="headerlink" href="#id-transformations" title="Permanent link">&para;</a></h4>
+<p>The format of patient identification variables can vary significantly between cohorts (even at the intra-cohort level), and the identifiers from laboratories may present (and do present) certain inconsistencies and errors compared to the cohort identifiers.<br />
+To address this issue, the ID variables of all cohorts are transformed, ensuring that there is a correspondence between the IDs from the cohorts and those from the laboratory data. The following transformations are performed:</p>
+<ul>
+<li><strong><code>Addition of 0's</code></strong>: A significant number of IDs contain a hyphen in the middle of the identifier (<em>e.g.</em>, <code>1055-12</code>). This leads to errors if, for example, the same patient is registered as <code>1055-0012</code> in another database. To prevent this, zeros are added after the hyphen to ensure that all identifiers have the same length (after the hyphen). In the current version, this length has been set to 5. Thus, after the transformation, both identifiers would be converted to <code>1055-00012</code>.</li>
+<li><strong><code>Deletion of blank spaces</code></strong>: All blank spaces in the IDs are removed.</li>
+<li><strong><code>Deletion of typos</code></strong>: Some symbols, such as <code>º, $</code>, etc., are considered typos and are removed from the ID if present.</li>
+<li><strong><code>Uppercasing</code></strong>: All letters in the identifiers are converted to uppercase (if they are not already). Thus, the identifiers such as <code>glu1234</code> and <code>GLU1234</code> would both be transformed into <code>GLU1234</code>.</li>
+</ul>
+<h4 id="ids-dropping">IDs dropping<a class="headerlink" href="#ids-dropping" title="Permanent link">&para;</a></h4>
+<p>Some patients must be removed from the database, often because they have duplicate entries for certain values. This may occur, for example, due to errors when entering IDs into the databases. The file <code>ids_to_drop.txt</code>, located in the <code>data</code> directory (see <a href="../quick_start_guide/#structure-of-the-project-directory">Structure of the Project Directory</a>), contains the list of IDs that must be removed from the final DW.  </p>
+<p>During the preprocessing of each cohort, the system checks whether these identifiers are present in the database, and if so, their entries are deleted.</p>
 <h4 id="addition-of-new-variables">Addition of new variables<a class="headerlink" href="#addition-of-new-variables" title="Permanent link">&para;</a></h4>
 <p>Once a single dataframe with the database is created, the following variables will be added to the <code>data</code> attribute:</p>
 <ul>
@@ -311,6 +330,12 @@
 <p>This indicates that two variables should be combined: <code>glc</code> (using <code>glc</code> and <code>glc_mg_dl</code>) and <code>crea_mg_dl</code> (using <code>creat</code> and <code>crea_mg_dl</code>). <code>VarCombiner</code> will first iterate over the pair <code>"glc": {"glc": 1, "glc_mg_dl": 0.055}</code>. The <code>glc</code> variable (the first key) will be calculated as described above: if <code>glc</code> (in this case, the key in the pair <code>"glc": 1</code>) is not missing, this value will be used for the <code>glc</code> variable. Otherwise, it will check if <code>glc_mg_dl</code> is missing. If it is not missing, the value of <code>glc_mg_dl</code> multiplied by 0.055 will be used as the final value (where 0.055 is the conversion factor to convert <code>glc_mg_dl</code> units to <code>glc</code> units).</p>
 <p>The processing for <code>crea_mg_dl</code> is entirely analogous.</p>
 <p>The final result is that in the <code>data</code> attribute, the <code>glc</code> and <code>crea_mg_dl</code> variables will be populated with values from other <em>compatible</em> variables.</p>
+<h4 id="cohort-specific-transformations">Cohort-specific transformations<a class="headerlink" href="#cohort-specific-transformations" title="Permanent link">&para;</a></h4>
+<p>A continuación se describen las modificaciones que se aplican, de forma específica, a cad Cohorte:</p>
+<h5 id="liverscreen">Liverscreen<a class="headerlink" href="#liverscreen" title="Permanent link">&para;</a></h5>
+<p><em>Temporary</em>: Currently, one of the database versions (<code>20241223</code>) includes the <code>Ever smoker</code> level in the <code>smoke</code> variable, which was not present in previous versions. This level is encoded with the value <code>1.5</code>. These values are mapped to the string <code>"Ever smoker"</code>, a notation that is more consistent with the rest of the versions.  </p>
+<h5 id="decide">Decide<a class="headerlink" href="#decide" title="Permanent link">&para;</a></h5>
+<p>Some patients in the Decide cohort are also present in the Liverscreen cohort (those whose ID starts with <code>1056</code>). These patients are removed from the cohort to avoid duplicates.</p>
 <h2 id="cohort-instantiation-and-processing">Cohort Instantiation and Processing<a class="headerlink" href="#cohort-instantiation-and-processing" title="Permanent link">&para;</a></h2>
 <p>Once the cohort data has been preprocessed, it is formatted so that all cohorts have a homogeneous structure and can be subsequently combined. The central element of this processing is the <code>Cohort</code> class, and the <code>var_data</code> and <code>level_data</code> objects mentioned earlier are essential for its correct operation.</p>
 <p>For each cohort, a <code>Cohort</code> object is instantiated, which uses the (already preprocessed) attributes of <code>DataPreprocessor</code>: <code>data</code> (as the <code>raw_data</code> parameter), <code>var_data</code>, and <code>level_data</code>. It is important to note that each row in the <code>var_data</code> DataFrame corresponds to one of the selected core variables. For each of these variables, this DataFrame contains configuration data about how they should be transformed:</p>
