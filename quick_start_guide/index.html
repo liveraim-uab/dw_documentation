@@ -203,8 +203,8 @@
 </div></div>
         <div class="col-md-9" role="main">
 
-<h1 id="fast-configuration">Fast Configuration<a class="headerlink" href="#fast-configuration" title="Permanent link">&para;</a></h1>
-<p>This section describes the necessary configuration to run the code and generate the data warehouse for WP1. For a comprehensive description of all configuration parameters, refer to the section <a href="../modules_documentation/configuration_module/">Configuration Module</a>.</p>
+<h1 id="fast-configuration">Fast Configuration</h1>
+<p>This section describes the necessary configuration to run the code and generate the data warehouse (DW). For a comprehensive description of all configuration parameters, refer to the section <a href="../modules_documentation/configuration_module/">Configuration Module</a>.</p>
 <blockquote>
 <p><strong>Important Notice</strong>: Before configuring the project, ensure that the prerequisites described in the <a href="#enviroment-setup">Environment Setup</a> section are met.</p>
 <p><strong>Note</strong>: If you have downloaded the repository from GitHub, the structure of the entire repository should be correct. In this case, and if you want to run the code with the default configuration, only the following modifications would be needed:</p>
@@ -213,57 +213,81 @@
 <li>Configure the MySQL DB connection parameters. See the section <a href="#mysql-connection-configuration">MySQL Connection Configuration</a>.</li>
 </ul>
 </blockquote>
-<h2 id="structure-of-the-project-directory">Structure of the Project Directory<a class="headerlink" href="#structure-of-the-project-directory" title="Permanent link">&para;</a></h2>
+<h2 id="structure-of-the-project-directory">Structure of the Project Directory</h2>
 <p>While the configuration allows some flexibility in the project directory structure, it is recommended to maintain the current structure to avoid errors. The project directory currently (as of 08/07/2024) has the following structure:</p>
-<pre><code>LIVERAIM_WP1/
-├── config/
-│   ├── cohort_config.py
-│   ├── connection_config.py
-│   ├── main_config.py
-│   ├── new_levels_config.py
-│   ├── new_var_config.py
-│   └── reference_names.py
-├── data/
-│   ├── Alcofib/
-│   ├── Glucofib/
-│   ├── Decide/
-│   └── Liverscreen/
-├── logs/
-│   ...
-├── qc_report/
-│   ...
-├── wp1_documentation/
-│   ...
-├── requirements.txt
-├── main.py
-...
-other python modules
+<pre><code>DATA_WAREHOUSE/
+├── data
+│   ├── biomarkers_data
+│   │   ├── nordic_biomarkers_data
+│   │   └── hclinic_biomarkers_data
+│   ├── WP1
+│   │   ├── Liverscreen
+│   │   ├── Alcofib
+│   │   └── ... 
+│   ├── WP2
+│   │   └── Galaald
+│   └── numeric_bounds.json
+└── scr
+    ├── config/
+    │   ├── cohort_config.py
+    │   ├── connection_config.py
+    │   ├── main_config.py
+    │   ├── new_levels_config.py
+    │   ├── new_var_config.py
+    │   └── reference_names.py
+    ├── logs/
+    │   ...
+    ├── qc_report/
+    │   ...
+    ├── requirements.txt
+    ├── main.py
+    ...
+    other python modules
 </code></pre>
-<h3 id="structure-of-datacohort_name-directory">Structure of <code>data/cohort_name/</code> Directory<a class="headerlink" href="#structure-of-datacohort_name-directory" title="Permanent link">&para;</a></h3>
-<p>Each subdirectory within <code>data/</code> contains the databases and files related to each cohort. These subdirectories should have the following structure:</p>
+<h3 id="structure-of-datacohort_name-directory">Structure of <code>data/cohort_name/</code> Directory</h3>
+<p>Each subdirectory within <code>data/</code> contains the databases and files related to each cohort or the biomarker data. These subdirectories should have the following structure:</p>
 <pre><code>data/
-├── cohort_name/
-│   ├── databases/
-│   │   ├── cohort_name_database_version_date.extension
-│   │   ...
-│   ├── cohort_name_level_data.xlsx
-│   └── cohort_name_var_data.xlsx
+├── WP1   
+    ├── &lt;cohort_name&gt;/
+    │   ├── databases/
+    │   │   ├── &lt;cohort_name_database_version_date&gt;.extension
+    │   │   ...
+    │   ├── &lt;cohort_name&gt;_level_data.xlsx
+    │   └── &lt;cohort_name&gt;_var_data.xlsx
+    └── panel_data.xlsx
+├── WP2    
+    ├── ...
+        ...
+└── biomarkers_data
+    ├── nordic_biomarkers_data
+        ├── &lt;name_database_version_date&gt;.extension
+        ...
+    └── hclinic_biomarkers_data
+        ├── &lt;name_database_version_date&gt;.extension
+        ...
 ...
 </code></pre>
 <p>The <code>cohort_name_level_data.xlsx</code> and <code>cohort_name_var_data.xlsx</code> files are described in the section <a href="../liveraim_data_warehouse_specifications/#initial-data-and-configuration-data">Initial Data and Configuration data</a>. If you downloaded the repository from GitHub, you should not need to modify these files.</p>
-<h3 id="structure-of-datacohort_namedatabases-directory">Structure of <code>data/cohort_name/databases/</code> Directory<a class="headerlink" href="#structure-of-datacohort_namedatabases-directory" title="Permanent link">&para;</a></h3>
-<p>The <code>/data/cohort_name/databases</code> directory should store the files containing the raw data for the databases of each cohort. Each file in the directory corresponds to one of the received database versions. For more information on how different versions are handled, see the section <a href="">Managing Raw Data Versions</a>. It is <strong>very important</strong> (for this particular case) that the file names follow this structure:</p>
-<pre><code>cohort_name_database_version_date.extension
+<h3 id="structure-of-datacohort_namedatabases-directory">Structure of <code>data/cohort_name/databases/</code> Directory</h3>
+<p>The <code>/data/&lt;cohort_name&gt;/databases</code> directory should store the files containing the raw data for the databases of each cohort. Each file in the directory corresponds to one of the received database versions. For more information on how different versions are handled, see the section <a href="">Managing Raw Data Versions</a>. It is <strong>very important</strong> (for this particular case) that the file names follow this structure:</p>
+<pre><code>&lt;cohort_name&gt;_database_&lt;version_date&gt;.extension
 </code></pre>
-<p>For example, the raw data file for the Liverscreen cohort received on 07/29/2024 in .dta format would be named:</p>
+<p>For example, the raw data file for the Liverscreen cohort received on 29/07/2024 in .dta format would be named:</p>
 <pre><code>liverscreen_database_20240729.dta
 </code></pre>
 <p>Note that the name is in lowercase and the date is in the <em>yyyymmdd</em> format.</p>
 <blockquote>
 <p><strong>Note</strong>: This folder may contain only one file. It is recommended that this corresponds to the latest version of the data.</p>
 </blockquote>
-<p>Since these data are not uploaded to GitHub, it is necessary to manually place them in the correct directory and format. Once this is done, the directory should be correctly configured.</p>
-<h2 id="mysql-connection-configuration">MySQL Connection Configuration<a class="headerlink" href="#mysql-connection-configuration" title="Permanent link">&para;</a></h2>
+<p>Similarly, the directory <code>/data/biomarkers_data/&lt;provider&gt;_biomarkers_data</code> should store the files containing the raw data from the biomarkers transfered by this particular provider. This folder may contain different versions or batches of data. Those different files are, again, read and merged during the execution of the database. For further information on the merging of this data, see section <a href="../dataflow/#biomarker-data-management">Biomerkers data Management</a>.</p>
+<p>Biomarker data files must also follow the structure:</p>
+<pre><code>&lt;provider&gt;_biomarkers_&lt;batch_date&gt;.extension
+</code></pre>
+<p>For example, data tranfered from Nordic recieved on 29/07/2024 in .csv format would be named:</p>
+<pre><code>nordic_biomarkers_20240729.csv
+</code></pre>
+<p>Since these files are not uploaded to GitHub, it is necessary to manually place them in the correct directory and format. Once this is done, the directory should be correctly configured.</p>
+<h2 id="mysql-connection-configuration">MySQL Connection Configuration</h2>
 <p>If you want to export the data warehouse to the MySQL DB (presumably yes), the MySQL connection parameters must be configured. Therefore, it is necessary to have MySQL installed (if you want to generate the DB locally) and to have a username and password. [A section explaining how to download MySQL and create a user is missing].</p>
 <p>Once these requirements are met, you need to configure the MySQL DB connection parameters. These are defined in the <code>config.connection_config</code> module, but for a quick configuration, you do not need to modify this file. Instead, you should create the following environment variables in your execution environment:</p>
 <ul>
@@ -277,7 +301,7 @@ other python modules
 <p>For more information on MySQL connection configuration, see the section <a href="../modules_documentation/configuration_module/#connection_config-module">Connection Config Module</a>.</p>
 <p>Once this is done, you should be able to run the code without any problems. In the <a href="#outputs-configuration">Outputs Configuration</a> section, you can find some useful parameters to determine which outputs you want to generate.</p>
 <p><strong>[A section explaining how to download MySQL and create a user is missing]</strong></p>
-<h2 id="outputs-configuration">Outputs Configuration<a class="headerlink" href="#outputs-configuration" title="Permanent link">&para;</a></h2>
+<h2 id="outputs-configuration">Outputs Configuration</h2>
 <p>There are some parameters in the <code>config.main_config</code> module that may be useful for users to quickly customize the outputs of the code execution:</p>
 <ul>
 <li><code>EXPORT_QC_RECORD (bool)</code>: With a value of <code>True</code>, it exports the data generated during quality control. For more details, see the section <a href="../modules_documentation/qc_checks_utils_doc/">Quality Control Utils</a>. With a value of <code>False</code>, quality control is still performed, but the generated data is not saved after execution (except for those printed in the log).</li>
@@ -288,14 +312,14 @@ other python modules
 <blockquote>
 <p>Note: This list is not exhaustive. For more information, see the <a href="../modules_documentation/configuration_module/">Configuration Module</a> section.</p>
 </blockquote>
-<h2 id="creating-environment-variables">Creating Environment Variables<a class="headerlink" href="#creating-environment-variables" title="Permanent link">&para;</a></h2>
+<h2 id="creating-environment-variables">Creating Environment Variables</h2>
 <p><span style="color:red"> <em>Pending</em> </span></p>
-<h1 id="enviroment-setup">Enviroment setup<a class="headerlink" href="#enviroment-setup" title="Permanent link">&para;</a></h1>
+<h1 id="enviroment-setup">Enviroment setup</h1>
 <p>In this section, we explain how to set up the virtual environment to run the source code (and generate the data warehouse).</p>
 <blockquote>
 <p><strong><em>Important Notice:</em></strong> It is recommended to work in an active virtual environment when installing the requirements and running the code. This isolates the project and its configuration, ensuring that it does not interfere with other projects. Make sure a Python virtual environment is set up and active before continuing with the <strong><em>setup</em></strong>. If you haven't done so yet, refer to the section <a href="#set-up-and-activate-a-virtual-environment">Set Up and Activate a Virtual Environment</a>.</p>
 </blockquote>
-<h2 id="basic-requirements">Basic Requirements<a class="headerlink" href="#basic-requirements" title="Permanent link">&para;</a></h2>
+<h2 id="basic-requirements">Basic Requirements</h2>
 <p>To run the code, you need to have the following installed:</p>
 <ul>
 <li><code>python</code> version 3.12.2 or higher.</li>
@@ -313,7 +337,7 @@ other python modules
 <blockquote>
 <p><strong>Note</strong>: It is possible that the code may work with earlier versions of Python, although this has not been tested. It is strongly recommended to update Python to a compatible version. </p>
 </blockquote>
-<h2 id="package-installation">Package Installation<a class="headerlink" href="#package-installation" title="Permanent link">&para;</a></h2>
+<h2 id="package-installation">Package Installation</h2>
 <p>All the packages required to run the code (and their respective versions) are listed in the <code>requirements.txt</code> file. When running the main code (<code>main.py</code>), it checks if these requirements are met. If any are not installed or have an earlier version than required, they will be installed and/or updated to the latest version. The <code>setup.py</code> module handles this process. For more details, see <a href="#module-setup">setup_utils</a>.</p>
 <p>However, it may be useful for the user to install the necessary packages beforehand. Run the following command to see the packages installed in the active environment:</p>
 <pre><code class="language-sh">pip list
@@ -353,13 +377,13 @@ typing_extensions      4.12.2
 tzdata                 2024.1
 </code></pre>
 <p>This is a way to verify that the packages have been installed correctly.</p>
-<h2 id="installing-requirements">Installing requirements<a class="headerlink" href="#installing-requirements" title="Permanent link">&para;</a></h2>
+<h2 id="installing-requirements">Installing requirements</h2>
 <p>If you don't have <code>python</code> (or <code>pip</code>), you can use the following resources:</p>
 <ul>
 <li><strong>Installing Python</strong>: You can download Python from the <a href="https://www.python.org/">official Python website</a>. To install it correctly, follow the instructions in the <a href="https://docs.python-guide.org/starting/installation/#installation">Python Installation Guide</a>.</li>
 <li><strong>Installing pip</strong>: If you have installed Python correctly from python.org, you should already have <code>pip</code>. To ensure it is installed or to fix any errors, you can check the guide <a href="https://packaging.python.org/en/latest/tutorials/installing-packages/">Installing Packages</a>.</li>
 </ul>
-<h2 id="set-up-and-activate-a-virtual-environment">Set Up and Activate a Virtual Environment<a class="headerlink" href="#set-up-and-activate-a-virtual-environment" title="Permanent link">&para;</a></h2>
+<h2 id="set-up-and-activate-a-virtual-environment">Set Up and Activate a Virtual Environment</h2>
 <p>To create and set up a Python virtual environment, we will use the <code>venv</code> module, which is included by default in Python starting from version 3.3. Other tools (e.g., the <code>virtualenv</code> module or the <code>conda</code> package manager) also allow you to create virtual environments, but they will not be covered in this documentation. The steps are as follows:</p>
 <ol>
 <li>
@@ -403,7 +427,7 @@ tzdata                 2024.1
 </code></pre>
 <p>Now all the packages you install will be isolated in this virtual environment and will not interfere with other projects. Additionally, if necessary, you can configure which version of Python you want to use in each virtual environment.</p>
 <p>To deactivate the virtual environment and return to the <em>global environment</em> or <em>system environment</em>, use the <code>deactivate</code> command in the terminal. You should see the environment name in parentheses disappear from the terminal.</p>
-<h2 id="cloning-github-repository">Cloning GitHub repository<a class="headerlink" href="#cloning-github-repository" title="Permanent link">&para;</a></h2>
+<h2 id="cloning-github-repository">Cloning GitHub repository</h2>
 <p>The GitHub repository that contains the code and configuration files to create the Data Warehouse is private. To clone it, your GitHub account must have access permissions to the repository.</p>
 <p>To clone the repository, open your terminal and navigate to the directory where you want to clone the repository. You can clone it using either an HTTPS or SSH connection:</p>
 <ul>
@@ -457,6 +481,8 @@ tzdata                 2024.1
     <script>var base_url = ".."</script>
     
     <script src="../js/base.js"></script>
+    <script src="../javascripts/mathjax.js"></script>
+    <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../search/main.js"></script>
 
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">

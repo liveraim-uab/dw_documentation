@@ -203,11 +203,13 @@
                 <li class="third-level"><a href="#level_data-column-variables">level_data column variables</a></li>
                 <li class="third-level"><a href="#panel_metadata-column-variables">panel_metadata column variables</a></li>
                 <li class="third-level"><a href="#final_data-column-variables">final_data column variables</a></li>
+            <li class="second-level"><a href="#ids_to_droptxt-file">ids_to_drop.txt File</a></li>
+                
     </ul>
 </div></div>
         <div class="col-md-9" role="main">
 
-<h1 id="config-package-documentation"><code>config</code> Package Documentation<a class="headerlink" href="#config-package-documentation" title="Permanent link">&para;</a></h1>
+<h1 id="config-package-documentation"><code>config</code> Package Documentation</h1>
 <p>The <code>config</code> module contains the parameters and variables required for the proper functioning of the code. These can be modified to adapt the execution to different environments, offer flexibility, and add future functionalities. This allows you to change the behavior of the program without needing to access and modify the source code. The module contains the following files:</p>
 <ul>
 <li><a href="#main_config-module"><code>main_config.py</code></a>: Main variables and parameters</li>
@@ -218,21 +220,23 @@
 <li><a href="#reference_names-module"><code>reference_names.py</code></a>: Names of the columns of the innitial data files (<code>var_data</code>, <code>level_data</code> and <code>panel_metadata</code>)</li>
 </ul>
 <p>The following sections describe the variables contained in each of these files, their purpose, and possible modifications.</p>
-<h2 id="main_config-module"><code>main_config</code> module<a class="headerlink" href="#main_config-module" title="Permanent link">&para;</a></h2>
-<h4 id="general-paremeters">General paremeters<a class="headerlink" href="#general-paremeters" title="Permanent link">&para;</a></h4>
+<h2 id="main_config-module"><code>main_config</code> module</h2>
+<h4 id="general-paremeters">General paremeters</h4>
 <ul>
 <li><code>EXECUTION_DATETIME (str)</code>: DateTime of the execution. Used for debugging, logging and exportation purposes. </li>
 <li><code>NUMERIC_TYPES (list)</code>: List of numeric python types compatibles with the databse. </li>
 <li><code>CONFIG_OBJ_NAMES (list)</code>: List with the names of the configuration data objects in the code (such as <code>var_data</code>, <code>level_data</code>, etc.)</li>
+<li><code>BUILD_DUMMIES</code> <code>(bool)</code>: Indicates wheter a dummy dataset of the execution must be build and exported to <code>.feather</code> files. </li>
 </ul>
-<h4 id="quality-control-paramenters">Quality control paramenters<a class="headerlink" href="#quality-control-paramenters" title="Permanent link">&para;</a></h4>
+<h4 id="quality-control-paramenters">Quality control paramenters</h4>
 <ul>
 <li><code>ALPHA (str)</code>: Error threshold used during the numeric QC checks.</li>
-<li><code>EXPORT_QC_RECORD (bool)</code>: With a value of <code>True</code>, it exports the data generated during the quality control process. For more details, see the section <a href="../qc_checks_utils_doc/">Quality Control Utils</a>. With a value of <code>False</code>, quality control is still performed, but the generated data is not saved after execution (except for what is printed in the log). </li>
+<li><code>EXPORT_QC_RECORD (bool)</code>: With a value of <code>True</code>, it exports the data generated during the quality control process. For more details, see the section <a href="../qc_checks_utils_doc/">Quality Control Utils</a>. With a value of <code>False</code>, quality control is still performed, but the generated data is not saved after execution (except for what is printed in the log).</li>
+<li><code>NAN_RECORD_EXPORT_FOLDER</code>: ...</li>
 <li><code>QC_REPORT_FOLDER (str)</code>: name of the folder taht centralizes the QC: it will contain the QC output and the code for processing this data and the rendered report.</li>
 <li><code>QC_DATA_FOLDER (str)</code>: name of the folder where all the data generated during the quality control checks will be dumped (if <code>EXPORT_QC_RECORD</code> is set to true). This folder is itended to be a subdirectory fo the directory above <code>QC_REPORT_FOLDER</code></li>
 </ul>
-<h4 id="variables-used-to-read-data-files-databases-var_data-level_data-panel_metadata">Variables used to read data files (databases, var_data, level_data, panel_metadata)<a class="headerlink" href="#variables-used-to-read-data-files-databases-var_data-level_data-panel_metadata" title="Permanent link">&para;</a></h4>
+<h4 id="variables-used-to-read-data-files-databases-var_data-level_data-panel_metadata">Variables used to read data files (databases, var_data, level_data, panel_metadata)</h4>
 <p>The following variables are mainly used in the module <a href="../file_reading_utils_doc/"><code>file_reading_utils</code></a>. </p>
 <ul>
 <li><code>PANEL_DATA_FILE_NAME (str)</code>: Name of the file containing the panel data (should be an .xlsx file).</li>
@@ -240,8 +244,10 @@
 <li><code>LIVERSCREEN_VAR_FILE_NAME (str)</code>: Name of the file containing the <code>var_data</code> for the <em>Liverscreen</em> cohort (should be an .xlsx file).</li>
 <li><code>GLUCOFIB_VAR_FILE_NAME (str)</code>: Name of the file containing the <code>var_data</code> for the <em>Glucofib</em> cohort (should be an .xlsx file).</li>
 <li><code>ALCOFIB_VAR_FILE_NAME (str)</code>: Name of the file containing the <code>var_data</code> for the <em>Alcofib</em> cohort (should be an .xlsx file).</li>
+<li><code>DECIDE_VAR_FILE_NAME (str)</code>: Name of the file containing the <code>var_data</code> for the <em>Decide</em> cohort (should be an .xlsx file).</li>
+<li><code>MARINA_VAR_FILE_NAME (str)</code>: Name of the file containing the <code>var_data</code> for the <em>Marina</em> cohort (should be an .xlsx file).</li>
 <li>
-<p><code>DECIDE_VAR_FILE_NAME (str)</code>: Name of the file containing the <code>var_data</code> for the <em>Decide</em> cohort (should be an .xlsx file).</p>
+<p><code>GALAALD_VAR_FILE_NAME (str)</code>: Name of the file containing the <code>var_data</code> for the <em>Galaald</em> cohort (should be an .xlsx file).</p>
 </li>
 <li>
 <p><code>VAR_FILE_NAMES (dict)</code>: Dictionary containing the cohort names (as defined in the <code>cohort_config</code> module) as keys, and the corresponding <code>var_data</code> file names as values (i.e., the names defined above). This dictionary <strong>should not be modified</strong> unless a new cohort is added: the dictionary is automatically generated using the other variables, ensuring it stays up to date.</p>
@@ -251,15 +257,36 @@
 </li>
 <li><code>GLUCOFIB_LEVEL_FILE_NAME (str)</code>: Name of the file containing the <code>level_data</code> for the <em>Glucofib</em> cohort (should be an .xlsx file).</li>
 <li><code>ALCOFIB_LEVEL_FILE_NAME (str)</code>: Name of the file containing the <code>level_data</code> for the <em>Alcofib</em> cohort (should be an .xlsx file).</li>
+<li><code>DECIDE_LEVEL_FILE_NAME (str)</code>: Name of the file containing the <code>level_data</code> for the <em>Decide</em> cohort (should be an .xlsx file).</li>
+<li><code>MARINA_LEVEL_FILE_NAME (str)</code>: Name of the file containing the <code>level_data</code> for the <em>Marina</em> cohort (should be an .xlsx file).</li>
 <li>
-<p><code>DECIDE_LEVEL_FILE_NAME (str)</code>: Name of the file containing the <code>level_data</code> for the <em>Decide</em> cohort (should be an .xlsx file).</p>
+<p><code>GALAALD_LEVEL_FILE_NAME (str)</code>: Name of the file containing the <code>level_data</code> for the <em>Galaald</em> cohort (should be an .xlsx file).</p>
 </li>
 <li>
 <p><code>LEVEL_FILE_NAMES (dict)</code>: Dictionary containing the cohort names (as defined in the <code>cohort_config</code> module) as keys, and the corresponding <code>level_data</code> file names as values (i.e., the names defined above). This dictionary <strong>should not be modified</strong> unless a new cohort is added: the dictionary is automatically generated using the other variables, ensuring it stays up to date.</p>
 </li>
+<li>
+<p><code>LIVERSCREEN_COMB_VARS_FILE_NAME (str)</code>: Name of the file containing the <code>var_comb_data</code> for the <em>Liverscreen</em> cohort (should be an .json file).</p>
+</li>
+<li><code>GLUCOFIB_COMB_VARS_FILE_NAME (str)</code>: Name of the file containing the <code>var_comb_data</code> for the <em>Glucofib</em> cohort (should be an .json file).</li>
+<li><code>ALCOFIB_COMB_VARS_FILE_NAME (str)</code>: Name of the file containing the <code>var_comb_data</code> for the <em>Alcofib</em> cohort (should be an .json file).</li>
+<li><code>MARINA1_COMB_VARS_FILE_NAME (str)</code>: Name of the file containing the <code>var_comb_data</code> for the <em>Marina</em> cohort (should be an .json file).</li>
+<li><code>DECIDE_COMB_VARS_FILE_NAME (str)</code>: Name of the file containing the <code>var_comb_data</code> for the <em>Decide</em> cohort (should be an .json file).</li>
+<li>
+<p><code>GALAALD_COMB_VARS_FILE_NAME (str)</code>: Name of the file containing the <code>var_comb_data</code> for the <em>Galaald</em> cohort (should be an .json file).</p>
+</li>
+<li>
+<p><code>COMB_VARS_FILE_NAMES (dict)</code>: Dictionary containing the cohort names (as defined in the <code>cohort_config</code> module) as keys, and the corresponding <code>comb_var_data</code> file names as values (i.e., the names defined above). This dictionary <strong>should not be modified</strong> unless a new cohort is added: the dictionary is automatically generated using the other variables, ensuring it stays up to date.</p>
+</li>
 </ul>
 <p>If you wish to use other <code>var_data</code>, <code>level_data</code>, or <code>panel_metadata</code> files (for testing, verification, etc.), you can modify the value of these variables to read those files.</p>
 <ul>
+<li>
+<p><code>COMMON_DATA_FOLDER (str)</code>: Name of the folder containing all the data. This folder is not tracked by git and must follow the structure described in <a href="../../quick_start_guide/#structure-of-datacohort_namedatabases-directory">Structure of data/cohort_name/ Directory</a>.</p>
+</li>
+<li>
+<p><code>DATABASES_FOLDER (str)</code>: Name of the folder, inside each cohort specific directory, that will contain the raw data recieved from the partners.</p>
+</li>
 <li>
 <p><code>READING_METHODS_DICT (dict)</code>: Dictionary containing strings as keys that indicate different types of files and their assiciated reading method as the value. </p>
 </li>
@@ -267,18 +294,29 @@
 <p><code>DATABASES_FORMAT (dict)</code>: Dictionary containig the name of each cohort as key and the type of file of their raw databases file. It is used with the <code>READING_METHODS_DICT</code> to read the cohorts databases properly. </p>
 </li>
 </ul>
-<h4 id="variables-used-to-export-data">Variables used to export data<a class="headerlink" href="#variables-used-to-export-data" title="Permanent link">&para;</a></h4>
+<h4 id="variables-used-to-export-data">Variables used to export data</h4>
 <ul>
 <li><code>EXPORT_FILES (bool)</code>: With a value of <code>True</code>, it exports the final data (the data warehouse, with the panel structure described in <a href="">???</a>) to .csv and .feather files. With a value of <code>False</code>, these files are not generated. For more details, see the section <a href="../file_exporting_utils_doc/">File Exporting Utils Module</a>.</li>
 <li><code>CREATE_SQL_DB (bool)</code>: Con un valor de <code>True</code> se exporta los datos a una base de datos MySQL (i.e. se crea el datawarehouse). Con un valor de <code>False</code> no se exportan los datos a MySQL.</li>
-<li><code>DATAWAREHOUSE_PATH (str)</code>: Name of the folder where the data warehouse in .csv and .feather will be exported.</li>
+<li>
+<p><code>DATAWAREHOUSE_PATH (str)</code>: Name of the folder where the data warehouse in .csv and .feather will be exported.</p>
+</li>
+<li>
+<p><strong><code>ANALYSIS_REPORT_SCRIPT_PATH (str)</code></strong>: absolute path to the <code>.Rmd</code> script used to generate the initial descriptive analysis of the data, in case the results are exported to files.</p>
+</li>
+<li>
+<p><strong><code>COLS_IN_PANELS (dict)</code></strong>: Dictionary mapping each panel name to the list of column names that should be exported for that panel in .feather/.csv files. Used to customize the structure of the data warehouse.</p>
+</li>
+<li>
+<p><code>COLS_IN_SQL_PANELS (dict)</code>: Dictionary mapping each panel name to the list of column names that should be exported for that panel in the SQL DB. Used to customize the structure of the data warehouse.</p>
+</li>
 </ul>
 <blockquote>
 <p><strong>Note</strong>: This module is usually imported using the abreviation <code>config</code>:</p>
 <pre><code>from config import main_config as config
 </code></pre>
 </blockquote>
-<h2 id="cohort_config-module"><code>cohort_config</code> module<a class="headerlink" href="#cohort_config-module" title="Permanent link">&para;</a></h2>
+<h2 id="cohort_config-module"><code>cohort_config</code> module</h2>
 <p>This module contians variables related to the configuration and instantiation of each Cohort. </p>
 <ul>
 <li><code>ALCOFIB_NAME (str)</code>: Name to be used to refer to the <em>Alcofib</em> cohort during the execution of the main code. </li>
@@ -287,29 +325,42 @@
 <li><code>DECIDE_NAME (str)</code>: Name to be used to refer to the <em>Decide</em> cohort during the execution of the main code.</li>
 <li><code>MARINA1_NAME (str)</code>: Name to be used to refer to the <em>Marina</em> cohort during the execution of the main code.</li>
 <li><code>LIVERAIM_NAME (str)</code>: Name to be used to refer to the <em>Liveraim</em> merged database during the execution of the main code.</li>
-<li><code>ALL_COHORTS (list)</code>: List of all the cohort names. This variable is created using the variables defined above and should be only modified to add new elements (i.e. new cohorts). </li>
+<li>
+<p><code>GALAALD_NAME (str)</code>: Name to be used to refer to the <em>Galaald</em> merged database during the execution of the main code.</p>
+</li>
+<li>
+<p><code>ALL_COHORTS (list)</code>: List of all the cohort names. This variable is created using the variables defined above and should be only modified to add new elements (i.e. new cohorts). </p>
+</li>
+<li><code>WP1_COHORT_NAME_LIST (list)</code>: List of cohort names that will be used for the processing of WP1. This variable is created using the variables defined above.</li>
+<li><code>WP2_COHORT_NAME_LIST (list)</code>: List of cohort names that will be used for the processing of WP2. This variable is created using the variables defined above.</li>
 </ul>
-<p>For each cohort, the following variables are also defined (for brevity, the term <code>COHORT_NAME</code> will be used to refer to the name of the specific cohort):</p>
+<p>For each cohort, the following variables are also defined (for brevity, the term <code>&lt;COHORT_NAME&gt;</code> will be used to refer to the name of the specific cohort):</p>
 <ul>
-<li><code>COHORT_NAME_INCL_DATE_VAR (str)</code>: Original name of the 'inclusion date' variable.</li>
-<li><code>COHORT_NAME_AGE_VAR (str)</code>: Original name of the 'age' variable.</li>
-<li><code>COHORT_NAME_ID_VAR (str)</code>: Original name of the 'identifier' variable.</li>
-<li><code>COHORT_NAME_COHORT_STATUS (str)</code>: Value of the categorical <code>status</code> variable. For more details about this variable, refer to the section on the <a href="#new_levels_config-module"><code>new_levels_config module</code></a>.</li>
-<li></li>
-<li><code>COHORTS_DATA (dict)</code>: A dictionary that contains the previously defined variables for each cohort. This dictionary is imported (instead of importing each variable individually) into the code, making it easier to access these variables. The dictionary keys are the names of each cohort, and the values are the corresponding variables for that cohort as described above.</li>
+<li><code>COHOR&lt;T_NAME&gt;_INCL_DATE_VAR (str)</code>: Original name of the 'inclusion date' variable.</li>
+<li><code>&lt;COHORT_NAME&gt;_AGE_VAR (str)</code>: Original name of the 'age' variable.</li>
+<li><code>&lt;COHORT_NAME&gt;_ID_VAR (str)</code>: Original name of the 'identifier' variable.</li>
+<li>
+<p><code>&lt;COHORT_NAME&gt;_COHORT_STATUS (str)</code>: Value of the categorical <code>status</code> variable. For more details about this variable, refer to the section on the <a href="#new_levels_config-module"><code>new_levels_config module</code></a>.</p>
+</li>
+<li>
+<p><code>COHORTS_DATA (dict)</code>: A dictionary that contains the previously defined variables for each cohort. This dictionary is imported (instead of importing each variable individually) into the code, making it easier to access these variables. The dictionary keys are the names of each cohort, and the values are the corresponding variables for that cohort as described above.</p>
+</li>
+<li>
+<p><code>PERCENT_VARS (list)</code>: List of variable names (using their common mapped name) that should be represented with percentage (%) units. This list is used during formatting and processing to handle inconsistencies in how these variables are expressed.</p>
+</li>
 </ul>
 <blockquote>
 <p><strong>Note</strong>: This module is usually imported using the abreviation <code>cc</code>:</p>
 <pre><code>from config import cohort_config as cc
 </code></pre>
 </blockquote>
-<h2 id="connection_config-module"><code>connection_config</code> module<a class="headerlink" href="#connection_config-module" title="Permanent link">&para;</a></h2>
+<h2 id="connection_config-module"><code>connection_config</code> module</h2>
 <p>This module defines:</p>
 <ul>
 <li>Database <a href="#connection-parameters">connection parameters</a> for MySQL.</li>
 <li><a href="#mapping-types-dictionaries">Dictionaries for mapping variable types</a> across platforms/languages.</li>
 </ul>
-<h4 id="connection-parameters">Connection Parameters<a class="headerlink" href="#connection-parameters" title="Permanent link">&para;</a></h4>
+<h4 id="connection-parameters">Connection Parameters</h4>
 <p>It's important to understand how the connection parameters for the MySQL database are managed. To connect to the database (as explained in the <a href="../../quick_start_guide/#mysql-connection-configuration">MySQL connection configuration</a> section), five parameters are required:</p>
 <ul>
 <li><strong>USER</strong>: The username used to connect to the database (must have appropriate permissions).</li>
@@ -357,7 +408,7 @@ HOST="REMOTE_HOST"
 <p>This way, we reference other environment variables (isolated from the code) that allow the connection to another database.</p>
 </li>
 </ol>
-<h4 id="mapping-types-dictionaries">Mapping types dictionaries<a class="headerlink" href="#mapping-types-dictionaries" title="Permanent link">&para;</a></h4>
+<h4 id="mapping-types-dictionaries">Mapping types dictionaries</h4>
 <p>Two main dictionaries are declared in this module:</p>
 <ul>
 <li><code>sql_type_mapping (dict)</code>: Used to map from python datatypes to SLQ datatyes. This dictionary is used while creating the tables for the SQL database, and indicate what SQL datatype corresponds with each python datatype. If new datatypes are added to the database, make sure to update the new information here. Also, the values (SQL datatypes) can be modified to fit better the data that is going to be stored (e.g. the datatype 'category' is currently mapped to 'String(255)', but it can be changed to <code>Strings(31)</code> instead, to reduce memory consumption).</li>
@@ -368,7 +419,7 @@ HOST="REMOTE_HOST"
 <pre><code>from config import connection_config as con_config
 </code></pre>
 </blockquote>
-<h2 id="new_var_config-module"><code>new_var_config</code> module<a class="headerlink" href="#new_var_config-module" title="Permanent link">&para;</a></h2>
+<h2 id="new_var_config-module"><code>new_var_config</code> module</h2>
 <p>During data preprocessing (see the <a href="../data_processing_utils_doc/"><code>data_processing_utils</code> module</a> section), some variables are added that do not appear in the initial <code>row_data</code> of the cohorts. These can be calculated or secondary variables, cohort indicators, etc. This module stores the data for these variables necessary to include them in the <code>var_data</code> object (refer to the <a href="../cohort_utils_doc/"><code>cohort_utils</code> module</a> for more information), which is essential for the creation of the database.</p>
 <p>For each new variable, the following parameters corresponding to the columns of the <code>var_data</code> object need to be added. The column names (defined in the <a href="#reference_names-module"><code>reference_names</code> module</a>) are used for this purpose. This module is usually imported in the code with the alias <code>rf</code>. The parameters to be added are as follows:</p>
 <ul>
@@ -402,25 +453,25 @@ HOST="REMOTE_HOST"
 <pre><code>from config import new_var_config as new_vars
 </code></pre>
 </blockquote>
-<h2 id="new_levels_config-module"><code>new_levels_config</code> module<a class="headerlink" href="#new_levels_config-module" title="Permanent link">&para;</a></h2>
+<h2 id="new_levels_config-module"><code>new_levels_config</code> module</h2>
 <p>This module has a structure and function similar to the <code>new_var_config</code> module. In this case, only new categorical variables are included, and the file contains the data needed to update the <code>level_data</code> object.</p>
 <blockquote>
 <p><strong>Note</strong>: To illustrate the addition of a categorical variable, we will use the <code>status</code> variable (already included in the module). This variable is of type string and has three levels: finished (coded as 0), ongoing (coded as 1), and withdrawn (coded as 2).</p>
 </blockquote>
 <p>The following describes what elements should be added to the <code>new_levels_config.py</code> file to include a new categorical variable:</p>
-<h4 id="level-codification">Level Codification<a class="headerlink" href="#level-codification" title="Permanent link">&para;</a></h4>
+<h4 id="level-codification">Level Codification</h4>
 <p>Since the different levels of a variable are coded as integers (generally starting from 0), each level should be listed as a variable. These variables should have their corresponding code as the value. The naming convention followed is <code>variable-name_level-name = code</code>. For example, if we are adding the <code>status</code> variable (which has three levels), we should include:</p>
 <pre><code>STATUS_FINISHED = '0'
 STATUS_ONGOING = '1'
 STATUS_WITHDRAWN = '2'
 </code></pre>
-<h4 id="level-mapping">Level Mapping<a class="headerlink" href="#level-mapping" title="Permanent link">&para;</a></h4>
+<h4 id="level-mapping">Level Mapping</h4>
 <p>Next, a dictionary must be created to map the levels of this variable, following the naming convention <code>VARIABLE-NAME_LEVELS</code>. In this case:</p>
 <pre><code>STATUS_LEVELS = {STATUS_FINISHED: 'finished',
                 STATUS_ONGOING: 'ongoing',
                 STATUS_WITHDRAWN: 'withdrawn'}
 </code></pre>
-<h4 id="creation-of-new-level_data-rows">Creation of New <code>level_data</code> Rows<a class="headerlink" href="#creation-of-new-level_data-rows" title="Permanent link">&para;</a></h4>
+<h4 id="creation-of-new-level_data-rows">Creation of New <code>level_data</code> Rows</h4>
 <p>Finally, a list of dictionaries is created (each dictionary corresponds to a row in <code>level_data</code>, where the key is the column name and the value is the value of that row for that column). This list will be imported wherever these metadata need to be included in the <code>level_data</code> object. (For more information on the structure of this object, you can refer to the <a href="../../liveraim_data_warehouse_specifications/#initial-data-and-configuration-data">Initial data and configuration data</a> section). In summary, for each level, a row must be included in the <code>level_data</code> object. Each row should contain the corresponding information for each of the columns in that object (to do this, as in the <code>var_data</code> module, the <code>reference_names</code> module is used to reference the column names), specifically:</p>
 <ul>
 <li><code>rf.LEVEL_ORIGINAL_NAME_COLUMN</code>: Column with the original cohort name of the variable to which the level belongs.</li>
@@ -446,21 +497,21 @@ STATUS_WITHDRAWN = '2'
 <pre><code>from config import new_levels_config as new_levels
 </code></pre>
 </blockquote>
-<h2 id="reference_names-module"><code>reference_names</code> module<a class="headerlink" href="#reference_names-module" title="Permanent link">&para;</a></h2>
+<h2 id="reference_names-module"><code>reference_names</code> module</h2>
 <blockquote>
-<p><strong>Note</strong>: Es recomendable haber consultado al menos la sección <a href="../../liveraim_data_warehouse_specifications/#initial-data-and-configuration-data">initial data and configuration</a> antes de seguir leyendo este apartado. </p>
+<p><strong>Note</strong>: It is recommended to read the section <a href="../../liveraim_data_warehouse_specifications/#initial-data-and-configuration-data">Initial data and configuration</a> before continuing with this section.</p>
 </blockquote>
-<p>En este módulo se listan las variables que hacen referencia a los nombres de las columnas de los tres archivos de metadatos iniciales, a saber:</p>
+<p>This module lists the variables that reference the column names of the three initial metadata files, namely:</p>
 <ul>
 <li><code>level_data</code></li>
 <li><code>var_data</code></li>
 <li><code>panel_metadata</code></li>
 </ul>
-<p>Estos nombres se usan ampliamente en el código. Los nombres de las variables siguen una nomenclatura concreta: la primera palabra de la variable hace referencia al archivo/objeto en cuestión. La última palabra es <code>COLUMN</code>, haciendo referencia a que la variable lleva el nombre de uan columna de un archivo .xlsx (o un DataFrame), con el objetivo de diferenciarla de otras variables parecidas. </p>
-<p>Así, por ejemplo, la variable que contiene el nombre de la columna del archivo <code>var_data</code> en la que aparece la descripción de cada variable lleva el nombre de <code>VAR_DESCRIPTION_COLUMN</code>.</p>
-<p>A riesgo de ser redundante, se listan a continuación las variables definidas en el módulo: </p>
-<h4 id="var_data-column-variables"><code>var_data</code> column variables<a class="headerlink" href="#var_data-column-variables" title="Permanent link">&para;</a></h4>
-<p>Variables que referencian las columnas del archivo/objeto <code>var_data</code> (hay que recordar que cada fila corresponde a una variable):</p>
+<p>These names are widely used throughout the code. The variables follow a specific naming convention: the first part of the variable name refers to the file/object it belongs to, and the last part is <code>COLUMN</code>, indicating that the variable contains the name of a column from a <code>.xlsx</code> file (or a DataFrame). This helps differentiate them from similar variables.</p>
+<p>For instance, the variable that stores the name of the column in the <code>var_data</code> file containing the description of each variable is named <code>VAR_DESCRIPTION_COLUMN</code>.</p>
+<p>At the risk of being redundant, the variables defined in this module are listed below:</p>
+<h4 id="var_data-column-variables"><code>var_data</code> column variables</h4>
+<p>Variables that reference the columns of the <code>var_data</code> file/object (note that each row corresponds to a variable):</p>
 <ul>
 <li><code>VAR_ORIGINAL_NAME_COLUMN</code>: Name of the column where the variable's original name in the cohort is defined.</li>
 <li><code>VAR_LIVERAIM_NAME_COLUMN</code>: Name of the column where the final name (in the common format) of the variable is defined.</li>
@@ -473,7 +524,7 @@ STATUS_WITHDRAWN = '2'
 <li><code>VAR_UPPER_BOUND_COLUMN</code>: Name of the column where the acceptable upper bound for the variable's values is defined.</li>
 <li><code>VAR_CONVERSION_FACTOR_COLUMN</code>: Name of the column where the conversion factor used to transform values from the original cohort to the final units is defined.</li>
 </ul>
-<h4 id="level_data-column-variables"><code>level_data</code> column variables<a class="headerlink" href="#level_data-column-variables" title="Permanent link">&para;</a></h4>
+<h4 id="level_data-column-variables"><code>level_data</code> column variables</h4>
 <p>Variables que referencian las columnas del archivo/objeto <code>level_data</code> (hay que recordar que cada fila corresponde a un nivel de una variable):</p>
 <ul>
 <li><code>LEVEL_ORIGINAL_NAME_COLUMN</code>: Name of the column where the original name of the variable in the cohort is defined.</li>
@@ -483,19 +534,22 @@ STATUS_WITHDRAWN = '2'
 <li><code>LEVEL_DESCRIPTION_COLUMN</code>: Name of the column where the variable is described.</li>
 <li><code>LEVEL_ORIGINAL_DATA_TYPE_COLUMN</code>: Name of the column where the data type of the variable in the original cohort is defined.</li>
 </ul>
-<h4 id="panel_metadata-column-variables"><code>panel_metadata</code> column variables<a class="headerlink" href="#panel_metadata-column-variables" title="Permanent link">&para;</a></h4>
+<h4 id="panel_metadata-column-variables"><code>panel_metadata</code> column variables</h4>
 <p>Variables that reference the columns of the <code>panel_metadata</code> file/object. This file is composed of different tabs, each describing a panel. Each row in each tab corresponds to a variable that should appear in the panel (whether in long or wide format):</p>
 <ul>
 <li><code>PANEL_VAR_NAME_COLUMN</code>: Name of the column containing the variable names (in the common format) that will appear in the panel.</li>
 <li><code>PANEL_MELT_COLUMN</code>: Name of the column that indicates whether the variable should appear in long or wide format.</li>
 </ul>
-<h4 id="final_data-column-variables"><code>final_data</code> column variables<a class="headerlink" href="#final_data-column-variables" title="Permanent link">&para;</a></h4>
+<h4 id="final_data-column-variables"><code>final_data</code> column variables</h4>
 <p>The following variables specify the names of some of the columns in the tables with the final data (the final DB). In particular, they describe the names of the columns in the 'long' format tables that will contain the variable name and its corresponding value.</p>
 <ul>
 <li><code>FINAL_DATA_VARIABLE_NAME</code>: Name of the column in the final long-format tables where the variable names will appear.</li>
 <li><code>FINAL_DATA_VALUE_NAME</code>: Name of the column in the final long-format tables where the variable values will appear.</li>
 </ul>
-<p>This module should only be changed if the column names in <code>level_data</code>, <code>var_data</code> and <code>panel_metadata</code> are changed. </p></div>
+<p>This module should only be changed if the column names in <code>level_data</code>, <code>var_data</code> and <code>panel_metadata</code> are changed.</p>
+<h2 id="ids_to_droptxt-file"><code>ids_to_drop.txt</code> File</h2>
+<p>Inside the configuration module directory, a file named <code>ids_to_drop.txt</code> can be placed (this file is not tracked by Git). It should contain a raw list of patient identifiers, one per line. Each patient listed in this file will be excluded from the data warehouse during data processing.</p>
+<p>This provides a simple way to remove specific patients from the data warehouse—e.g., due to incorrect identification, misspelled IDs, duplicates, or ID collisions—by adding them to this list.</p></div>
         
         
     </div>
@@ -526,6 +580,8 @@ STATUS_WITHDRAWN = '2'
     <script>var base_url = "../.."</script>
     
     <script src="../../js/base.js"></script>
+    <script src="../../javascripts/mathjax.js"></script>
+    <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../search/main.js"></script>
 
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">

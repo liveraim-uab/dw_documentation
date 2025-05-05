@@ -186,6 +186,7 @@
                 <li class="third-level"><a href="#classes">Classes</a></li>
                 <li class="third-level"><a href="#class-bmkdatareader">Class BMKDataReader</a></li>
                 <li class="third-level"><a href="#class-bmkdataprocessor">Class BMKDataProcessor</a></li>
+                <li class="third-level"><a href="#class-bmkcalculator">Class BMKCalculator</a></li>
             <li class="second-level"><a href="#general-operation">General Operation</a></li>
                 
                 <li class="third-level"><a href="#biomarker-data-reading-checks">Biomarker Data Reading Checks</a></li>
@@ -195,8 +196,8 @@
 </div></div>
         <div class="col-md-9" role="main">
 
-<h1 id="biomarker_utils-documentation"><code>biomarker_utils</code> Documentation<a class="headerlink" href="#biomarker_utils-documentation" title="Permanent link">&para;</a></h1>
-<h2 id="general-sturcture">General Sturcture<a class="headerlink" href="#general-sturcture" title="Permanent link">&para;</a></h2>
+<h1 id="biomarker_utils-documentation"><code>biomarker_utils</code> Documentation</h1>
+<h2 id="general-sturcture">General Sturcture</h2>
 <p>This module defines the following classes:</p>
 <ul>
 <li><code>BMKDataReader</code>: Responsible for centralizing the process of reading biomarker data.</li>
@@ -204,9 +205,9 @@
   The resulting data is ready for export in <code>.csv</code> or <code>feather</code> format as well as to a 
   <strong>MySQL database</strong>.</li>
 </ul>
-<h2 id="functions-and-classes">Functions and Classes<a class="headerlink" href="#functions-and-classes" title="Permanent link">&para;</a></h2>
+<h2 id="functions-and-classes">Functions and Classes</h2>
 <p>In this sections are described the classes and functions defined in the module:</p>
-<h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
+<h3 id="functions">Functions</h3>
 <ul>
 <li>
 <p><strong><code>test_BMKDataReader() -&gt; None</code></strong></p>
@@ -221,11 +222,11 @@
 </ul>
 </li>
 </ul>
-<h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">&para;</a></h3>
-<h3 id="class-bmkdatareader">Class <code>BMKDataReader</code><a class="headerlink" href="#class-bmkdatareader" title="Permanent link">&para;</a></h3>
-<h4 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h4>
+<h3 id="classes">Classes</h3>
+<h3 id="class-bmkdatareader">Class <code>BMKDataReader</code></h3>
+<h4 id="description">Description</h4>
 <p>Reads all the data related to the biomarkers. It is responsible for reading and and organizing the files in a data dictionary, by version. This class is file-name dependant, so the files in the folder bmk-data_directory must meet the nomenclature (see read_bmk_data).</p>
-<h4 id="attributes">Attributes<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h4>
+<h4 id="attributes">Attributes</h4>
 <ul>
 <li>
 <p><strong><code>bmk_data_directory</code> (str)</strong>: directory where de bmk raw data is stored. Variable exported from the bmk configuration file.</p>
@@ -237,7 +238,7 @@
 <p><strong><code>bmk_data_dict</code> (str):</strong> dict whit all the read bmk data. Keys are each bmk version (date it was recieved) and values are the data read in DataFrame format. Initialized as None.</p>
 </li>
 </ul>
-<h4 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h4>
+<h4 id="methods">Methods</h4>
 <ul>
 <li>
 <p><strong><code>read_bmk_data(self) -&gt; 'BMKDataReader':</code></strong></p>
@@ -251,9 +252,9 @@ The method stores the read data in a dictionary, where keys are the different ve
 </ul>
 </li>
 </ul>
-<h3 id="class-bmkdataprocessor">Class <code>BMKDataProcessor</code><a class="headerlink" href="#class-bmkdataprocessor" title="Permanent link">&para;</a></h3>
+<h3 id="class-bmkdataprocessor">Class <code>BMKDataProcessor</code></h3>
 <p>Processes the biomarker data to meet the proper format and merges all the versions (data batches). It also includes a QC checks and manages the exportation of the QC results.</p>
-<h4 id="attributes_1">Attributes<a class="headerlink" href="#attributes_1" title="Permanent link">&para;</a></h4>
+<h4 id="attributes_1">Attributes</h4>
 <ul>
 <li><strong><code>cohort_ids_dict</code> (dict)</strong>: dictionary to map the cohort ids to the common liveraim ids. </li>
 <li><strong><code>cohort_ids</code> (set)</strong>: set of original ids of all patients in liveraim database. </li>
@@ -265,7 +266,7 @@ The method stores the read data in a dictionary, where keys are the different ve
 <li><strong><code>bmk_summary_dict</code> (dict[str, pd.DataFrame])</strong>: dict of dataframes with the qc reports 
 of the bmk data.</li>
 </ul>
-<h4 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">&para;</a></h4>
+<h4 id="methods_1">Methods</h4>
 <ul>
 <li>
 <p><strong><code>check_bmk_structure(self, df: pd.DataFrame) -&gt; None:</code></strong></p>
@@ -586,7 +587,8 @@ Once created, the dictionary is assigned to the <code>bmk_bounds</code> attribut
 </ul>
 </li>
 </ul>
-<h2 id="general-operation">General Operation<a class="headerlink" href="#general-operation" title="Permanent link">&para;</a></h2>
+<h3 id="class-bmkcalculator">Class <code>BMKCalculator</code></h3>
+<h2 id="general-operation">General Operation</h2>
 <p>This module centralizes the reading, processing, and quality control of biomarker data (unlike other modules, where these functionalities are separate). The biomarker data reading is managed by the <code>BMKDataReader</code> class (and not by the <a href="../file_reading_utils_doc/#class-datareader"><code>DataReader</code></a> class). Once the class is instantiated, biomarker data can be read by calling the <code>read_bmk_data</code> method (it is important to verify the directory structure and file naming conventions before reading the data). Once read, the data is stored in the <code>bmk_data_dict</code> attribute (to ensure data is read correctly, see the section <a href="#biomarker-data-reading-checks">Biomarker Data Reading Checks</a>).</p>
 <p>To obtain processed biomarker data ready for export, the <code>BMKDataProcessor</code> class is required. Instantiating the class requires:</p>
 <ul>
@@ -594,7 +596,7 @@ Once created, the dictionary is assigned to the <code>bmk_bounds</code> attribut
 <li><code>cohort_ids_dict</code> (dict): A dictionary mapping cohort-specific identifiers (keys) to the common liveraim identifiers (values).</li>
 </ul>
 <p>Once instantiated, the <code>process()</code> method centralizes the processing, transformation, and verification of biomarker data. The merged and formatted biomarker data is stored as a <code>pd.DataFrame</code> in the <code>formatted_bmk_data</code> attribute. This DataFrame is ready to be exported to <code>.csv</code>, <code>.feather</code>, or to a MySQL database. The method <code>export_qc_report</code> is resposible for exporting the data to the specified file types. <code>SQLExporter</code> is respondible of exporting data to MySQL database.</p>
-<h3 id="biomarker-data-reading-checks">Biomarker Data Reading Checks<a class="headerlink" href="#biomarker-data-reading-checks" title="Permanent link">&para;</a></h3>
+<h3 id="biomarker-data-reading-checks">Biomarker Data Reading Checks</h3>
 <p>To verify that the biomarker data reading configuration is correct, the <code>test_BMKDataReader()</code> function can be called. If any errors occur during reading, it will log them. If there are no errors, it will print the names of the files read (presumably all batches of biomarker data) and their respective hashes. Alternatively, you can execute the <code>biomarker_utils</code> module directly from the terminal to achieve the same effect:</p>
 <pre><code class="language-bash">python biomarkers_utils.py
 </code></pre>
@@ -606,7 +608,7 @@ Data successfully read:
 
 {'file_name': 'biomarker_data_20241016.xls', 'hash': 'e79002b53b2214e72643158dc033affe9ca43b443c7b912c03179ed215ef6b6c'}
 </code></pre>
-<h2 id="usage-in-main-execution">Usage in main execution<a class="headerlink" href="#usage-in-main-execution" title="Permanent link">&para;</a></h2>
+<h2 id="usage-in-main-execution">Usage in main execution</h2>
 <pre><code class="language-python">
 ... # Reading of cohorts data
 
@@ -659,6 +661,8 @@ sql_exporter.export_df_to_sql(bmk_processed_data, &quot;biomarkers&quot;)
     <script>var base_url = "../.."</script>
     
     <script src="../../js/base.js"></script>
+    <script src="../../javascripts/mathjax.js"></script>
+    <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../search/main.js"></script>
 
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">

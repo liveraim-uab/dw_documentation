@@ -201,8 +201,8 @@
 </div></div>
         <div class="col-md-9" role="main">
 
-<h1 id="qc_checks_utils-documentation"><code>qc_checks_utils</code> Documentation<a class="headerlink" href="#qc_checks_utils-documentation" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<h1 id="qc_checks_utils-documentation"><code>qc_checks_utils</code> Documentation</h1>
+<h2 id="overview">Overview</h2>
 <p>The <code>qc_checks_utils</code> module is responsible for performing the various quality control and validation checks that are conducted before, during, and after data processing. The module also handles the export of the quality controls records and logs the relevant alerts in the execution log.</p>
 <p>The module includes the following checks:</p>
 <ul>
@@ -213,7 +213,7 @@
 </ul>
 <p>Each of these checks is managed by a class ('checker' from now on) designed specifically for that purpose. A final object, <code>QCChecker</code>, is responsible for coordinating all the aforementioned classes and functionalities.</p>
 <p>Quality control is performed on a Cohort object, utilizing its attributes to conduct the various checks. For more information about this class, refer to the <a href="../cohort_utils_doc/">cohort_utils</a> section.</p>
-<h2 id="general-structure">General Structure<a class="headerlink" href="#general-structure" title="Permanent link">&para;</a></h2>
+<h2 id="general-structure">General Structure</h2>
 <p>The module has the following general structure, based on the following classes:</p>
 <ul>
 <li><code>GeneralChecker</code>: This class serves as a base template for all other "checker" classes. It requires a <code>Cohort</code> object as a parameter for initialization and sets the common attributes that all checker classes need, such as the cohort name, raw data, homogeneous data, among others.</li>
@@ -230,11 +230,11 @@
 <p><a href="#qcchecker"><code>QCChecker</code></a>: This class centralizes all quality control (QC) checks by integrating the specific checker classes. It coordinates the execution of all checks and exports the results. Inherits from <code>GeneralChecker</code>.</p>
 </li>
 </ul>
-<h2 id="checkers-description">Checkers description<a class="headerlink" href="#checkers-description" title="Permanent link">&para;</a></h2>
-<h3 id="generalchecker"><strong><code>GeneralChecker</code></strong><a class="headerlink" href="#generalchecker" title="Permanent link">&para;</a></h3>
-<h4 id="description">Description:<a class="headerlink" href="#description" title="Permanent link">&para;</a></h4>
+<h2 id="checkers-description">Checkers description</h2>
+<h3 id="generalchecker"><strong><code>GeneralChecker</code></strong></h3>
+<h4 id="description">Description:</h4>
 <p>The <code>GeneralChecker</code> class serves as a general template for all the "checker" classes in the quality control module. It acts as the base class (or parent class) from which all other specific checker classes inherit. It provides a common structure and essential attributes (extracted from the <code>Cohort</code> class) for performing quality control checks on data.</p>
-<h4 id="attributes">Attributes:<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h4>
+<h4 id="attributes">Attributes:</h4>
 <ul>
 <li><strong><code>name</code> (str)</strong>: The name of the cohort being checked.</li>
 <li><strong><code>raw_data</code> (pandas.DataFrame)</strong>: A DataFrame containing the raw data from the cohort. This is the original, unprocessed dataset.</li>
@@ -247,21 +247,21 @@
 <li><strong><code>alpha</code> (float)</strong>: A parameter used as a threshold for detecting discrepancies in numerical conversions. Ideally, any difference greater than 0 should be reported. However, as some rounding errors are introduced while performin datatype adjustment and conversions, small differences between the expected and the real value can be due to this errors. If a discrepancy is bigger than alpha it is reported. Otherwise it is ignored. </li>
 <li><strong><code>exporting_exceptions</code> (tuple)</strong>: A tuple containing common exceptions that might occur during the data export process. This includes <code>FileNotFoundError</code>, <code>PermissionError</code>, <code>OSError</code>, among others.</li>
 </ul>
-<h4 id="methods">Methods:<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h4>
+<h4 id="methods">Methods:</h4>
 <p>The <code>GeneralChecker</code> class does not define specific methods, as its main purpose is to provide common structure and attributes for the derived classes. The specific methods for quality control checks are implemented in the subclasses.</p>
-<h4 id="usage">Usage:<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h4>
+<h4 id="usage">Usage:</h4>
 <p><code>GeneralChecker</code> is used as a base class for all other checker classes in the module. </p>
-<h4 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h4>
+<h4 id="logs">Logs</h4>
 <p>This class does not generate any logs.</p>
-<h3 id="nonnumericchecker"><strong><code>NonNumericChecker</code></strong><a class="headerlink" href="#nonnumericchecker" title="Permanent link">&para;</a></h3>
-<h4 id="description_1">Description:<a class="headerlink" href="#description_1" title="Permanent link">&para;</a></h4>
+<h3 id="nonnumericchecker"><strong><code>NonNumericChecker</code></strong></h3>
+<h4 id="description_1">Description:</h4>
 <p>The <code>NonNumericChecker</code> class is used to check, report, and export information about non-numeric values (such as <code>-inf</code> and <code>inf</code>) in the cohort <code>homogeneous_data</code>. This class inherits from <code>GeneralChecker</code> and handles the detection of non-numeric values in the numeric variables of the homogenized data. Non-numeric values (such as <code>-inf</code> and <code>inf</code>) behave differently than <code>NaN</code> values, so they are detected and managed separately.</p>
-<h4 id="attributes_1">Attributes:<a class="headerlink" href="#attributes_1" title="Permanent link">&para;</a></h4>
+<h4 id="attributes_1">Attributes:</h4>
 <ul>
 <li><strong>Attributes inherited from <code>GeneralChecker</code></strong>: All attributes from the <code>GeneralChecker</code> class.</li>
 <li><strong><code>non_numeric_record</code> (pandas.DataFrame)</strong>: A DataFrame containing the count of non-numeric values for each numeric variable in the homogenized data of the cohort.</li>
 </ul>
-<h4 id="methods_1">Methods:<a class="headerlink" href="#methods_1" title="Permanent link">&para;</a></h4>
+<h4 id="methods_1">Methods:</h4>
 <ul>
 <li>
 <p><strong><code>check_non_numeric_values()</code></strong>: This method checks for non-numeric values (e.g., <code>-inf</code>, <code>inf</code>, but not <code>NaN</code>) in every numeric variable (all the variables whose final datatype is in <code>main_config.NUMERIC_TYPES</code>) in the homogenized data. If non-numeric values are found, they are recorded in a list of errors and returned as a DataFrame.</p>
@@ -286,7 +286,7 @@
 </ul>
 </li>
 </ul>
-<h4 id="logs_1">Logs<a class="headerlink" href="#logs_1" title="Permanent link">&para;</a></h4>
+<h4 id="logs_1">Logs</h4>
 <ul>
 <li>In method <code>check_non_numeric_values</code>: <ul>
 <li>If a variable being analyzed does not appear in the data, a warning is logged.</li>
@@ -295,10 +295,10 @@
 </li>
 <li>In method <code>export_qc_data</code>: If there is any error while exporting generated data, an Error is logged. </li>
 </ul>
-<h3 id="nanchecker"><strong><code>NaNChecker</code></strong><a class="headerlink" href="#nanchecker" title="Permanent link">&para;</a></h3>
-<h4 id="description_2">Description:<a class="headerlink" href="#description_2" title="Permanent link">&para;</a></h4>
+<h3 id="nanchecker"><strong><code>NaNChecker</code></strong></h3>
+<h4 id="description_2">Description:</h4>
 <p>The <code>NaNChecker</code> class is responsible for analyzing the presence of <code>NaN</code> values in both the raw data (<code>raw_data</code>) and the homogenized data (<code>homogeneous_data</code>) of a cohort. This class inherits from <code>GeneralChecker</code> and provides functionality to check, compare, and export information about missing (<code>NaN</code>) values. It also compares the <code>NaN</code> counts between the raw and homogenized data to detect any discrepancies that might have occurred during data processing.</p>
-<h4 id="attributes_2">Attributes:<a class="headerlink" href="#attributes_2" title="Permanent link">&para;</a></h4>
+<h4 id="attributes_2">Attributes:</h4>
 <ul>
 <li><strong>Attributes inherited from <code>GeneralChecker</code></strong>: All attributes from the <code>GeneralChecker</code> class.</li>
 <li><strong><code>raw_nan_record_df</code> (pandas.DataFrame)</strong>: A DataFrame containing the count of <code>NaN</code> values for each selected variable in the raw data.</li>
@@ -307,7 +307,7 @@
 <li><strong><code>homogeneous_nan_record_dict</code> (dict)</strong>: A dictionary containing the count of <code>NaN</code> values for each selected variable in the homogenized data.</li>
 <li><strong><code>nan_diff_record_dict</code> (dict)</strong>: A dictionary that stores the differences in <code>NaN</code> counts between the raw and homogenized data for each variable.</li>
 </ul>
-<h4 id="methods_2">Methods:<a class="headerlink" href="#methods_2" title="Permanent link">&para;</a></h4>
+<h4 id="methods_2">Methods:</h4>
 <ul>
 <li>
 <p><strong><code>get_df_nan_record(df: pandas.DataFrame, column_list: list = None) -&gt; tuple[pandas.DataFrame, dict]</code></strong>: 
@@ -350,7 +350,7 @@
 </ul>
 </li>
 </ul>
-<h4 id="logs_2">Logs:<a class="headerlink" href="#logs_2" title="Permanent link">&para;</a></h4>
+<h4 id="logs_2">Logs:</h4>
 <ul>
 <li>
 <p>In method <code>get_df_nan_record</code>:</p>
@@ -373,10 +373,10 @@
 </ul>
 </li>
 </ul>
-<h3 id="conversionchecker"><strong><code>ConversionChecker</code></strong><a class="headerlink" href="#conversionchecker" title="Permanent link">&para;</a></h3>
-<h4 id="description_3">Description:<a class="headerlink" href="#description_3" title="Permanent link">&para;</a></h4>
+<h3 id="conversionchecker"><strong><code>ConversionChecker</code></strong></h3>
+<h4 id="description_3">Description:</h4>
 <p>The <code>ConversionChecker</code> class is responsible for performing conversion checks in the cohort data. This class verifies if both numerical and categorical variables have been properly formatted during data processing. It inherits from <code>GeneralChecker</code>. Checks for discrepancies in numerical values (comparing means between the raw and homogenized data) and in categorical values (comparing category counts between the raw and homogenized data). It also allows exporting the results of these checks.</p>
-<h4 id="attributes_3">Attributes:<a class="headerlink" href="#attributes_3" title="Permanent link">&para;</a></h4>
+<h4 id="attributes_3">Attributes:</h4>
 <ul>
 <li><strong>Attributes inherited from <code>GeneralChecker</code></strong>: All attributes from the <code>GeneralChecker</code> class.</li>
 <li><strong><code>mean_diff_dict</code> (dict)</strong>: A dictionary containing the difference between means for each numerical variable in the raw data and the homogenized data.</li>
@@ -394,7 +394,7 @@
 </code></pre>
 </li>
 </ul>
-<h4 id="methods_3">Methods:<a class="headerlink" href="#methods_3" title="Permanent link">&para;</a></h4>
+<h4 id="methods_3">Methods:</h4>
 <ul>
 <li>
 <p><strong><code>check_numeric_conversion(var: str, mean_diff_dict: dict) -&gt; tuple[bool, float]</code></strong>: 
@@ -453,7 +453,7 @@
 </ul>
 </li>
 </ul>
-<h4 id="logs_3">Logs:<a class="headerlink" href="#logs_3" title="Permanent link">&para;</a></h4>
+<h4 id="logs_3">Logs:</h4>
 <ul>
 <li>
 <p>In method <code>check_numeric_conversion</code>:</p>
@@ -482,14 +482,14 @@
 </ul>
 </li>
 </ul>
-<h3 id="consistancychecker"><strong><code>ConsistancyChecker</code></strong><a class="headerlink" href="#consistancychecker" title="Permanent link">&para;</a></h3>
-<h4 id="description_4">Description:<a class="headerlink" href="#description_4" title="Permanent link">&para;</a></h4>
+<h3 id="consistancychecker"><strong><code>ConsistancyChecker</code></strong></h3>
+<h4 id="description_4">Description:</h4>
 <p>The <code>ConsistancyChecker</code> class is responsible for verifying the consistency of the cohort data. It checks if the final data (homogenized data) complies with the structure defined in the initial metadata (such as <code>var_data</code>, <code>level_data</code>, and <code>panel_data</code> files). This includes checking data types and ensuring that melted variables within panels have consistent data types. The class inherits from <code>GeneralChecker</code> and logs any discrepancies found during the consistency checks.</p>
-<h4 id="attributes_4">Attributes:<a class="headerlink" href="#attributes_4" title="Permanent link">&para;</a></h4>
+<h4 id="attributes_4">Attributes:</h4>
 <ul>
 <li><strong>Attributes inherited from <code>GeneralChecker</code></strong>: All attributes from the <code>GeneralChecker</code> class.</li>
 </ul>
-<h4 id="methods_4">Methods:<a class="headerlink" href="#methods_4" title="Permanent link">&para;</a></h4>
+<h4 id="methods_4">Methods:</h4>
 <ul>
 <li>
 <p><strong><code>check_data_types() -&gt; None</code></strong>: 
@@ -517,7 +517,7 @@
 </ul>
 </li>
 </ul>
-<h4 id="logs_4">Logs:<a class="headerlink" href="#logs_4" title="Permanent link">&para;</a></h4>
+<h4 id="logs_4">Logs:</h4>
 <ul>
 <li>
 <p>In method <code>check_data_types</code>:</p>
@@ -532,16 +532,16 @@
 </ul>
 </li>
 </ul>
-<h3 id="outlierschecker"><strong><code>OutliersChecker</code></strong><a class="headerlink" href="#outlierschecker" title="Permanent link">&para;</a></h3>
-<h4 id="description_5">Description:<a class="headerlink" href="#description_5" title="Permanent link">&para;</a></h4>
+<h3 id="outlierschecker"><strong><code>OutliersChecker</code></strong></h3>
+<h4 id="description_5">Description:</h4>
 <p>The <code>OutliersChecker</code> class inherits from the <code>GeneralChecker</code> class and is responsible for detecting outliers in numerical data using a z-score threshold (&gt; 2) and reporting the main percentiles for each variable. This class extends the functionality of <code>GeneralChecker</code> to enable comprehensive outlier detection across all numerical columns in the dataset.</p>
-<h4 id="attributes_5">Attributes:<a class="headerlink" href="#attributes_5" title="Permanent link">&para;</a></h4>
+<h4 id="attributes_5">Attributes:</h4>
 <ul>
 <li><strong>Attributes inherited from <code>GeneralChecker</code></strong>: All attributes from the <code>GeneralChecker</code> class.</li>
 <li><strong><code>cohort_outliers_z_score</code></strong> (<code>dict</code>): A dictionary containing outliers for all numerical variables in the dataset. Each key represents a variable name, and its value represents the outliers count according to the set threshold (Default set to 2)</li>
 <li><strong><code>cohort_outliers_percentile</code></strong> (<code>dict</code>): A dictionary containing the main percentiles for each numerical variable.</li>
 </ul>
-<h4 id="methods_5">Methods:<a class="headerlink" href="#methods_5" title="Permanent link">&para;</a></h4>
+<h4 id="methods_5">Methods:</h4>
 <ul>
 <li>
 <p><strong><code>get_column_outliers_percentile(df: pd.DataFrame,</code>
@@ -617,17 +617,17 @@
 </ul>
 </li>
 </ul>
-<h4 id="logs_5">Logs:<a class="headerlink" href="#logs_5" title="Permanent link">&para;</a></h4>
+<h4 id="logs_5">Logs:</h4>
 <ul>
 <li>In method <code>export_qc_data</code>:<ul>
 <li>If there is any error while exporting the outlier data to the file, an error is logged with the relevant details.</li>
 </ul>
 </li>
 </ul>
-<h3 id="qcchecker"><strong><code>QCChecker</code></strong><a class="headerlink" href="#qcchecker" title="Permanent link">&para;</a></h3>
-<h4 id="description_6">Description:<a class="headerlink" href="#description_6" title="Permanent link">&para;</a></h4>
+<h3 id="qcchecker"><strong><code>QCChecker</code></strong></h3>
+<h4 id="description_6">Description:</h4>
 <p>The <code>QCChecker</code> class centralizes the quality control (QC) checks for the cohort data. This class orchestrates the execution of all other checker classes, including <code>NonNumericChecker</code>, <code>NaNChecker</code>, <code>ConversionChecker</code>, <code>ConsistancyChecker</code> and <code>OtuliersChecker</code> to ensure data quality. It also provides methods to generate cohort reports and export QC results. The class inherits from <code>GeneralChecker</code>.</p>
-<h4 id="attributes_6">Attributes:<a class="headerlink" href="#attributes_6" title="Permanent link">&para;</a></h4>
+<h4 id="attributes_6">Attributes:</h4>
 <ul>
 <li><strong>Attributes inherited from <code>GeneralChecker</code></strong>: All attributes from the <code>GeneralChecker</code> class.</li>
 <li><strong><code>non_numeric_checker</code></strong>: An instance of the <code>NonNumericChecker</code> class, responsible for checking non-numeric values in the cohort data.</li>
@@ -637,7 +637,7 @@
 <li><strong><code>outlier_checker</code></strong>: An instance of the <code>OutliersChecker</code> class, responsible for recording the count of outliers for each numerical variable (and the corresponding ID's).</li>
 <li><strong><code>export_qc_record</code> (bool)</strong>: A boolean value indicating whether the QC records should be exported. This is configured via the <code>config</code> module.</li>
 </ul>
-<h4 id="methods_6">Methods:<a class="headerlink" href="#methods_6" title="Permanent link">&para;</a></h4>
+<h4 id="methods_6">Methods:</h4>
 <ul>
 <li>
 <p><strong><code>cohort_report() -&gt; None</code></strong>: 
@@ -675,7 +675,7 @@
 </ul>
 </li>
 </ul>
-<h4 id="logs_6">Logs:<a class="headerlink" href="#logs_6" title="Permanent link">&para;</a></h4>
+<h4 id="logs_6">Logs:</h4>
 <ul>
 <li>
 <p>In method <code>cohort_report</code>:</p>
@@ -690,7 +690,7 @@
 </ul>
 </li>
 </ul>
-<h2 id="output-description">Output Description<a class="headerlink" href="#output-description" title="Permanent link">&para;</a></h2>
+<h2 id="output-description">Output Description</h2>
 <p>Several results generated during quality controls are exported if the <code>QC_EXPORT_RECORD</code> variable (declared in the <a href="../configuration_module/#main_config-module"><code>main_config</code></a> module) is set to <code>True</code>.</p>
 <p>The <code>QC_REPORT_FOLDER</code> directory stores all results related to quality control. This directory contains the code necessary to create the QC report if desired. <code>QC_REPORT_FOLDER</code> also contains a subfolder, defined by the <code>QC_DATA_FOLDER</code> variable, where all the raw outputs generated during QC are saved. Each execution (if <code>QC_EXPORT_RECORD</code> is set to <code>True</code>) will generate a directory within <code>QC_DATA_FOLDER</code> named:</p>
 <pre><code>qc_execution_yyyy-mm-dd_hh-mm-ss
@@ -963,12 +963,12 @@
 </code></pre>
 </li>
 </ul>
-<h2 id="usage-in-main-execution">Usage in main execution<a class="headerlink" href="#usage-in-main-execution" title="Permanent link">&para;</a></h2>
+<h2 id="usage-in-main-execution">Usage in main execution</h2>
 <p>The use of this module during the main execution of the code is through the instantiation of the <code>QCChecker</code>. Each time a <code>Cohort</code> class is instantiated (and the database is internally processed to obtain the <code>homogeneous_data</code>), a <code>QCChecker</code> object is created for that cohort (i.e., for each cohort listed in <code>COHORT_NAME_LIST</code> from the <a href="../configuration_module/#cohort_config-module"><code>cohort_config</code></a> module).</p>
 <p>When <code>QCChecker</code> is instantiated, it automatically creates instances of all the classes responsible for various validations and checks as its attributes (see <a href="#qcchecker"><code>QCChecker</code> class</a>). Each of these attributes will execute its respective validation and check methods automatically, storing the generated records in their own attributes.</p>
 <p>If the <code>QC_EXPORT_RECORD</code> variable from the <a href="../configuration_module/#main_config-module"><code>main_config</code></a> module is set to <code>True</code>, the <code>export_qc_reports</code> method of the <code>QCChecker</code> will be executed in the main code and quality control records for this specific cohort will be exported (see <a href="#output-description">output descrption</a>). </p>
 <p>After all the cohorts have been created and merged into the final <em>Liveraim</em> cohort, another instance of the <code>QCChecker</code> class is created to perform a quality control check on this final cohort. In this case, quality control checks related to the structure of the final panels will also be applied through the <code>panel_consistancy_datatypes_check</code> method of the <code>ConsistancyChecker</code> class.</p>
-<h2 id="other-complementary-functions">Other complementary functions<a class="headerlink" href="#other-complementary-functions" title="Permanent link">&para;</a></h2>
+<h2 id="other-complementary-functions">Other complementary functions</h2>
 <p><em>Not yet implemented</em></p></div>
         
         
@@ -1000,6 +1000,8 @@
     <script>var base_url = "../.."</script>
     
     <script src="../../js/base.js"></script>
+    <script src="../../javascripts/mathjax.js"></script>
+    <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../search/main.js"></script>
 
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">

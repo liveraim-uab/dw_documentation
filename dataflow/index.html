@@ -184,6 +184,7 @@
                 
             <li class="second-level"><a href="#data-preprocessing">Data Preprocessing</a></li>
                 
+                <li class="third-level"><a href="#creation-of-vardata-object">Creation of VarData object</a></li>
                 <li class="third-level"><a href="#merging-database-versions">Merging database versions</a></li>
                 <li class="third-level"><a href="#id-transformations">ID transformations</a></li>
                 <li class="third-level"><a href="#ids-dropping">IDs dropping</a></li>
@@ -196,6 +197,13 @@
                 
             <li class="second-level"><a href="#cohort-merging">Cohort Merging</a></li>
                 
+            <li class="second-level"><a href="#biomarker-data-management">Biomarker data management</a></li>
+                
+                <li class="third-level"><a href="#data-reading_1">Data Reading</a></li>
+                <li class="third-level"><a href="#data-processing">Data Processing</a></li>
+                <li class="third-level"><a href="#provider-specific-transformations">Provider-specific transformations</a></li>
+            <li class="second-level"><a href="#calculation-of-computed-biomarkers">Calculation of computed Biomarkers</a></li>
+                
             <li class="second-level"><a href="#exportation-to-files">Exportation to Files</a></li>
                 
             <li class="second-level"><a href="#exportation-to-mysql-database">Exportation to MySQL Database</a></li>
@@ -204,9 +212,8 @@
 </div></div>
         <div class="col-md-9" role="main">
 
-<h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h1>
-<p>hola oscar</p>
-<h2 id="dataflow">Dataflow<a class="headerlink" href="#dataflow" title="Permanent link">&para;</a></h2>
+<h1 id="overview">Overview</h1>
+<h2 id="dataflow">Dataflow</h2>
 <p>This section describes the data flow and ETL process, from the data reading to data export in various formats.</p>
 <p>The data processing follows these steps, which are explained in detail in this document:</p>
 <ul>
@@ -219,12 +226,13 @@
 <li>The different panels (in <code>DataFrame</code> format) that will later be exported are created.</li>
 </ul>
 </li>
+<li><a href="#biomarker-data-management"><strong>Biomarker data management</strong></a>: </li>
 <li><a href="#exportation-to-files"><strong>Exportation to Files</strong></a>: The created panels are exported as <code>.feather</code> and <code>.csv</code> files for further analysis.</li>
 <li><a href="#exportation-to-mysql-database"><strong>Exportation to MySQL Database</strong></a>: A connection is made to MySQL, where the various tables and relationships of the schema are created, and the data is exported to SQL format.</li>
 </ul>
 <p>The following image describes schematically the ETL process:</p>
 <p><img alt="ETL-scheme" src="../images/ETL-scheme_v1.png" /></p>
-<h2 id="data-reading">Data Reading<a class="headerlink" href="#data-reading" title="Permanent link">&para;</a></h2>
+<h2 id="data-reading">Data Reading</h2>
 <p>Data reading is handled through the <a href="../modules_documentation/file_reading_utils_doc/"><code>DataReader</code></a> class. This class is responsible for reading the following files for each cohort:</p>
 <ul>
 <li><strong><code>var_data (.xlsx)</code></strong>: A .xlsx file that is loaded into the code as a <code>DataFrame</code>.</li>
@@ -248,17 +256,19 @@
   ...
   panel_data: &lt;panel_data_file&gt;         # Dictionary with panel_data information  
 </code></pre>
-<p>This process is carried out for the data of each WP. In particular, each WP will contain not only the different data related to the cohort databases and configuration files but will also have its own panel configuration document, which may be different from those of other WPs.</p>
+<p>This process is carried out for the data of each WP. In particular, each WP will contain not only the various data related to the cohort databases and configuration files but will also have its own panel configuration document, which may differ from those of other WPs. Therefore, when using the <code>DataReader</code> class, one must specify both the list of cohort names to be read and the WP they belong to (currently, only <code>WP1</code> and <code>WP2</code> can be specified).</p>
 <blockquote>
-<p><strong>Note</strong>: The data warehouse will be created using all versions of the cohort databases, up to the most recent one. This allows for more detailed tracking of patients who have entered and exited in each version. How the different versions are managed is explained in the next section, <a href="#data-preprocessing">Data Preprocessing</a>.</p>
+<p><strong>Note 1</strong>: Currently, only data from the same WP1 can be read at once due to the structure of the code. In future versions, reading all cohorts at once will be possible (probably if no WP is provided).</p>
+<p><strong>Note 2</strong>: The data warehouse will be created using all versions of the cohort databases, up to the most recent one. This allows for more detailed tracking of patients who have entered and exited in each version. How the different versions are managed is explained in the next section, <a href="#data-preprocessing">Data Preprocessing</a>.</p>
 </blockquote>
 <p>These files described above are essential for the correct processing of the data. To see the structure of these files, refer to the section <a href="../liveraim_data_warehouse_specifications/#initial-data-and-configuration-data">initial_data_configuration</a>.</p>
 <p>The variables that store the filenames to be read, as well as the directories where these files are located, are defined in the module <a href="../modules_documentation/configuration_module/#main_config-module"><code>main_config</code></a>.</p>
 <p>Refer to <a href="../modules_documentation/file_reading_utils_doc/"><code>data_reading_utils</code></a> for more details on the internal workings of <code>DataReader</code> and the data reading process.</p>
-<h2 id="data-preprocessing">Data Preprocessing<a class="headerlink" href="#data-preprocessing" title="Permanent link">&para;</a></h2>
+<h2 id="data-preprocessing">Data Preprocessing</h2>
 <p>Once the initial data is loaded, an instance of the <code>DataPreprocessor</code> class is created for each cohort. This instance takes as parameters all the elements from <code>all_data[cohort_name]</code>, as well as the name of the respective cohort. This data is stored in the atributes <code>cohort_databases</code>, <code>vara_data</code>, <code>level_data</code>, <code>var_comb_data</code> and <code>cohort_name</code> respectively. </p>
 <p><code>DataPreprocessor</code> performs the following actions:</p>
 <ul>
+<li><a href="#creation-of-vardata-object">Creation of <code>VarData</code> object</a></li>
 <li><a href="#merging-database-versions">Merging database versions</a></li>
 <li><a href="#id-transformations">ID transformations</a></li>
 <li><a href="#addition-of-new-variables">Addition of new variables</a></li>
@@ -267,7 +277,11 @@
 <li><a href="#cohort-specific-transformations">Cohort-specific transformations</a></li>
 </ul>
 <p>The aim of this class is to prepare the data from each cohort for the formatting and homogenization process, which requires a specific structure. This class is designed to handle each cohort individually and allows for specific adjustments to be made for each cohort, adapting to the particularities of each one.</p>
-<h4 id="merging-database-versions">Merging database versions<a class="headerlink" href="#merging-database-versions" title="Permanent link">&para;</a></h4>
+<h4 id="creation-of-vardata-object">Creation of <code>VarData</code> object</h4>
+<p>The <code>VarData</code> object is responsible for centralizing all the configuration data and metadata of the core variables (both the variables from the original cohort and those calculated during execution). It allows easy access to every variable property and facilitates the merging of different cohorts into one. For further information on the <code>VarData</code> object, its configuration, and functionality, please check the section <a href="../modules_documentation/metadata_utils_doc/#vardata">VarData</a>.</p>
+<p>This object is instantiated for each cohort using the data contained in the <code>var_data</code> and <code>level_data</code> dataframes, as well as the <code>var_comb_dict</code> dictionary. Once created, it will be used to perform the proper transformation of the raw data (i.e., the previously mentioned objects <code>var_data</code>, <code>level_data</code>, and <code>var_comb_data</code> will no longer be used).</p>
+<p>This object will be stored in the attribute <code>DataPreprocessor.varData</code> of the class to be used during data harmonization, quality control, and exportation.</p>
+<h4 id="merging-database-versions">Merging database versions</h4>
 <p>The dictionary containing the cohort database versions is stored in the attribute <code>DataPreprocessor.cohort_databases</code>. From the dataframes of each version, a <strong>single dataframe</strong> will be generated that contains, for each patient present in at least one of the versions, the latest available data (i.e., the data from the most recent version in which they appear).</p>
 <p>Additionally, the variable <code>status</code> is added. This categorical variable can take 3 values:</p>
 <ul>
@@ -277,7 +291,7 @@
 </ul>
 <p>The variable <code>date_version (str)</code> is also added, indicating the version from which each patient's data is extracted.</p>
 <blockquote>
-<p><strong>Note</strong>: During this process, it is required that the variables in the databases (and their names) do not change between versions. Checks are performed to ensure compatibility between versions, and if they are not compatible, only the latest version will be used, and the previous ones will be ignored.</p>
+<p><strong>Note</strong>: During this process, it is required that the variables in the databases (and their names) do not change between versions. Checks are performed to ensure compatibility between versions, and if they are not compatible, only the DataFrame form the latest version will be used, and the previous ones will be ignored.</p>
 </blockquote>
 <p>To obtain this <strong>single dataframe</strong>, the following steps are followed:</p>
 <ul>
@@ -287,9 +301,9 @@
 <li>Rows with duplicate values in the <code>id_var</code> column (the patient identifier) are removed, keeping the latest <code>date_version</code>.</li>
 <li>The <code>status</code> variable is added by verifying if the <code>date_version</code> of each patient corresponds to the latest version.</li>
 </ul>
-<p>Since <code>status</code> will be one of the core variables in the data warehouse, the <code>var_data</code> and <code>level_data</code> attributes are updated to include this variable.</p>
-<p>this new dataframe is stored in <code>data</code> atribute.</p>
-<h4 id="id-transformations">ID transformations<a class="headerlink" href="#id-transformations" title="Permanent link">&para;</a></h4>
+<p>Since <code>status</code> will be one of the core variables in the data warehouse, the <code>varData</code> attribute is updated to include this variable.</p>
+<p>this new dataframe is stored in <code>data</code> attribute.</p>
+<h4 id="id-transformations">ID transformations</h4>
 <p>The format of patient identification variables can vary significantly between cohorts (even at the intra-cohort level), and the identifiers from laboratories may present (and do present) certain inconsistencies and errors compared to the cohort identifiers.<br />
 To address this issue, the ID variables of all cohorts are transformed, ensuring that there is a correspondence between the IDs from the cohorts and those from the laboratory data. The following transformations are performed:</p>
 <ul>
@@ -298,20 +312,21 @@ To address this issue, the ID variables of all cohorts are transformed, ensuring
 <li><strong><code>Deletion of typos</code></strong>: Some symbols, such as <code>º, $</code>, etc., are considered typos and are removed from the ID if present.</li>
 <li><strong><code>Uppercasing</code></strong>: All letters in the identifiers are converted to uppercase (if they are not already). Thus, the identifiers such as <code>glu1234</code> and <code>GLU1234</code> would both be transformed into <code>GLU1234</code>.</li>
 </ul>
-<h4 id="ids-dropping">IDs dropping<a class="headerlink" href="#ids-dropping" title="Permanent link">&para;</a></h4>
+<h4 id="ids-dropping">IDs dropping</h4>
 <p>Some patients must be removed from the database, often because they have duplicate entries for certain values. This may occur, for example, due to errors when entering IDs into the databases. The file <code>ids_to_drop.txt</code>, located in the <code>data</code> directory (see <a href="../quick_start_guide/#structure-of-the-project-directory">Structure of the Project Directory</a>), contains the list of IDs that must be removed from the final DW.  </p>
-<p>During the preprocessing of each cohort, the system checks whether these identifiers are present in the database, and if so, their entries are deleted.</p>
-<h4 id="addition-of-new-variables">Addition of new variables<a class="headerlink" href="#addition-of-new-variables" title="Permanent link">&para;</a></h4>
-<p>Once a single dataframe with the database is created, the following variables will be added to the <code>data</code> attribute:</p>
+<p>During the preprocessing of each cohort, the system checks whether the identifiers listed in this file are present in the database, and if so, their entries are deleted.</p>
+<h4 id="addition-of-new-variables">Addition of new variables</h4>
+<p>Once a single dataframe with the database is created, the following variables are added to the <code>data</code> dataframe attribute:</p>
 <ul>
 <li><code>birth_date</code>: Obtained by combining the patient's age with the date of entry into the cohort.</li>
 <li><code>exit_date</code>: Date of exit from the cohort if the patient is not ongoing, or the current date at the time of code execution otherwise.</li>
 <li><code>cohort</code>: The name of the cohort to which the data belongs.</li>
+<li><code>work_package</code>: The work package which the cohort comes from. </li>
 </ul>
 <blockquote>
-<p><strong>Note</strong>: Just as with the <code>status</code> variable, since these new variables will be core variables, the <code>var_data</code> attribute will be updated (adding the metadata of the respective variable). In addittion if a categorical variable is added, the <code>level_data</code> attribute will also be updated accordingly.</p>
+<p><strong>Note</strong>: Just as with the <code>status</code> variable, since these new variables will be core variables, the <code>varData</code> attribute will be updated accordingly (adding the metadata of the respective variable).</p>
 </blockquote>
-<h4 id="combination-of-variables">Combination of variables<a class="headerlink" href="#combination-of-variables" title="Permanent link">&para;</a></h4>
+<h4 id="combination-of-variables">Combination of variables</h4>
 <p>If the <code>var_comb_data</code> parameter is passed during the initialization of <code>DataPreprocessor</code>, it will be used to combine the variables specified in that parameter. The primary goal here is to reduce the number of missing values by using variables that refer to the same magnitude but have different units.</p>
 <p>To achieve this, <code>DataPreprocessor</code> utilizes the <code>VarCombiner</code> class, which is instantiated with a dataframe (in this case, the <code>data</code> attribute) and a dictionary that defines the variable combinations (in this case the <code>var_comb_dict</code> attribute). It is recommended to consult the section <a href="../liveraim_data_warehouse_specifications/#comb_var_data-file"><code>comb_var_data</code> file</a> for details on the internal structure of the dictionary. Additionally, refer to the section <a href="../modules_documentation/data_processing_utils_doc/#class-varcombiner"><code>Class VarCombiner</code></a> for more information on how the class works.</p>
 <p>For each variable to be combined, <code>VarCombiner</code> sequentially checks whether a variable with a certain magnitude is missing. If it is not missing, the value of that variable is taken as the final value (applying the appropriate conversion factor). If the value is missing, it moves on to the next variable referring to the same magnitude (but with different units) and performs the same check. If all variables in the iteration are missing, <code>NaN</code> is assigned as the final value.</p>
@@ -330,50 +345,221 @@ To address this issue, the ID variables of all cohorts are transformed, ensuring
 <p>This indicates that two variables should be combined: <code>glc</code> (using <code>glc</code> and <code>glc_mg_dl</code>) and <code>crea_mg_dl</code> (using <code>creat</code> and <code>crea_mg_dl</code>). <code>VarCombiner</code> will first iterate over the pair <code>"glc": {"glc": 1, "glc_mg_dl": 0.055}</code>. The <code>glc</code> variable (the first key) will be calculated as described above: if <code>glc</code> (in this case, the key in the pair <code>"glc": 1</code>) is not missing, this value will be used for the <code>glc</code> variable. Otherwise, it will check if <code>glc_mg_dl</code> is missing. If it is not missing, the value of <code>glc_mg_dl</code> multiplied by 0.055 will be used as the final value (where 0.055 is the conversion factor to convert <code>glc_mg_dl</code> units to <code>glc</code> units).</p>
 <p>The processing for <code>crea_mg_dl</code> is entirely analogous.</p>
 <p>The final result is that in the <code>data</code> attribute, the <code>glc</code> and <code>crea_mg_dl</code> variables will be populated with values from other <em>compatible</em> variables.</p>
-<h4 id="cohort-specific-transformations">Cohort-specific transformations<a class="headerlink" href="#cohort-specific-transformations" title="Permanent link">&para;</a></h4>
-<p>A continuación se describen las modificaciones que se aplican, de forma específica, a cad Cohorte:</p>
-<h5 id="liverscreen">Liverscreen<a class="headerlink" href="#liverscreen" title="Permanent link">&para;</a></h5>
+<h4 id="cohort-specific-transformations"><strong>Cohort-specific transformations</strong></h4>
+<p>The following section describes the specific modifications applied to each cohort:</p>
+<h5 id="liverscreen"><strong>Liverscreen</strong></h5>
 <p><em>Temporary</em>: Currently, one of the database versions (<code>20241223</code>) includes the <code>Ever smoker</code> level in the <code>smoke</code> variable, which was not present in previous versions. This level is encoded with the value <code>1.5</code>. These values are mapped to the string <code>"Ever smoker"</code>, a notation that is more consistent with the rest of the versions.  </p>
-<h5 id="decide">Decide<a class="headerlink" href="#decide" title="Permanent link">&para;</a></h5>
+<h5 id="decide"><strong>Decide</strong></h5>
 <p>Some patients in the Decide cohort are also present in the Liverscreen cohort (those whose ID starts with <code>1056</code>). These patients are removed from the cohort to avoid duplicates.</p>
-<h2 id="cohort-instantiation-and-processing">Cohort Instantiation and Processing<a class="headerlink" href="#cohort-instantiation-and-processing" title="Permanent link">&para;</a></h2>
-<p>Once the cohort data has been preprocessed, it is formatted so that all cohorts have a homogeneous structure and can be subsequently combined. The central element of this processing is the <code>Cohort</code> class, and the <code>var_data</code> and <code>level_data</code> objects mentioned earlier are essential for its correct operation.</p>
-<p>For each cohort, a <code>Cohort</code> object is instantiated, which uses the (already preprocessed) attributes of <code>DataPreprocessor</code>: <code>data</code> (as the <code>raw_data</code> parameter), <code>var_data</code>, and <code>level_data</code>. It is important to note that each row in the <code>var_data</code> DataFrame corresponds to one of the selected core variables. For each of these variables, this DataFrame contains configuration data about how they should be transformed:</p>
+<h5 id="alcofib"><strong>Alcofib</strong></h5>
+<p>Some heterogeneity in variables with percentage units can be found at the cohort level. This means that, for the same variable (with percentage units), some values are given as actual <code>%</code>, while others appear to be given per unit (i.e., as a proportion). To address this issue, the <code>harmonize_percent</code> function is called, which transforms all the values into percentages. </p>
+<p>To achieve this, the function multiplies by 100 all the values below a certain threshold (currently set to 1), assuming that any value lower than 1 is given as a proportion rather than a percentage.</p>
+<blockquote>
+<p><strong>Warning</strong>: This "two units" situation is inferred from the nature of the data and the variables. This means that there has been no strict confirmation of this issue yet. However, as it is the best explanation for the inconsistency, the transformation is applied. Ideally, this should be verified with the individuals responsible for the cohorts where these transformations are performed.</p>
+</blockquote>
+<h5 id="glucofib"><strong>Glucofib</strong></h5>
+<p>Similarly to the Alcofib cohort, some heterogeneity in variables with percentage units can be found at the cohort level. This means that, for the same variable (with percentage units), some values are given as actual <code>%</code>, while others appear to be given per unit (i.e., as a proportion). To address this issue, the <code>harmonize_percent</code> function is called, which transforms all the values into percentages. </p>
+<p>To achieve this, the function multiplies by 100 all the values below a certain threshold (currently set to 1), assuming that any value lower than 1 is given as a proportion rather than a percentage.</p>
+<blockquote>
+<p><strong>Warning</strong>: This "two units" situation is inferred from the nature of the data and the variables. This means that there has been no strict confirmation of this issue yet. However, as it is the best explanation for the inconsistency, the transformation is applied. Ideally, this should be verified with the individuals responsible for the cohorts where these transformations are performed.</p>
+</blockquote>
+<h5 id="marina1"><strong>Marina1</strong></h5>
+<p>No transformations specific to this cohort are currently performed.</p>
+<h5 id="metronord"><strong>Metronord</strong></h5>
+<p>No transformations specific to this cohort are currently performed.</p>
+<h5 id="gala-ald"><strong>Gala-ald</strong></h5>
+<p>No transformations specific to this cohort are currently performed.</p>
+<h2 id="cohort-instantiation-and-processing">Cohort Instantiation and Processing</h2>
+<p>Once the cohort data has been preprocessed, it is formatted so that all cohorts have a homogeneous structure and can be subsequently combined. The central element of this processing is the <code>Cohort</code> class, and the <code>VarData</code> object mentioned earlier is essential for its correct operation.</p>
+<p>For each cohort, a <code>Cohort</code> object is instantiated, which uses the (already preprocessed) attributes of <code>DataPreprocessor</code>: <code>data</code> (as the <code>raw_data</code> parameter), and <code>VarData</code>. It is important to note that the <code>VarData</code> object contains a dictionary of <code>Var</code> objects (for further information, check the section <a href="../modules_documentation/metadata_utils_doc/#var">Var</a>). Each of these <code>Var</code> objects contains data from a particular variable that will be used during the harmonization process. It contains the following information (it is not an exhaustive list):</p>
 <ul>
 <li>Initial variable name in the cohort.</li>
 <li>Final variable name in the common database.</li>
 <li>Final variable datatype.</li>
 <li>Conversion factor (if needed).</li>
+<li>mapping dictionary for categorical variables</li>
+<li>...</li>
 </ul>
 <p>Additionally, the cohort name (parameter <code>cohort_name</code>), the ID variable name (parameter <code>id_variable</code>), the inclusion date variable name (parameter <code>date_variable</code>), and the cohort status (parameter <code>status</code>) are introduced as parameters. Optionally, a dictionary with the structure of <code>comb_var_data</code> can also be provided. For more detailed information about these objects, refer to the section <a href="../liveraim_data_warehouse_specifications/#comb_var_data-file"><code>initial_data_configuration</code></a>.</p>
 <p>The instantiation of the cohort concludes with a call to the <code>Cohort.homogenize_data</code> method. This method creates a copy of the <code>raw_data</code> attribute (which was initialized with the preprocessed cohort database, i.e., the <code>raw_data</code> parameter), formats it, and stores it in the <code>homogeneous_data</code> attribute. In general terms, the data formatting follows these steps:</p>
 <ol>
 <li><strong>Selection</strong> of the subset of <code>raw_data</code> with the core variables.</li>
-<li><strong>Translation</strong> of the variable names (columns of the DataFrame) to the final names defined in <code>var_data</code>.</li>
-<li><strong>Formatting</strong> of the variables. It iterates over each of the selected variables and:<ol>
-<li>Verifies the datatype assigned in <code>var_data</code> and applies the appropriate datatype to that column.</li>
+<li><strong>Translation</strong> of the variable names (columns of the DataFrame) to the final names defined in <code>VarData</code>.</li>
+<li><strong>Formatting</strong> of the variables. It iterates over the <code>VarData</code> for each of the selected variables and:<ol>
+<li>Verifies the datatype assigned in <code>Var</code> and applies the appropriate datatype to that column.</li>
 <li>If the variable is numeric, applies the appropriate conversion factor.</li>
-<li>If the variable is categorical, maps the original levels to the final levels. This mapping is defined in <code>level_data</code>.</li>
+<li>If the variable is categorical, maps the original levels to the final levels. This mapping is defined in the attribute <code>Var.var_map</code>.</li>
 </ol>
 </li>
 </ol>
-<p>The result for each cohort should be the same: a DataFrame with the same structure, variables, and format stored in the <code>homogeneous_data</code> attribute. The only difference between cohorts would be the number of patients.</p>
+<p>The result for each cohort should be the same: a DataFrame with the same structure and format stored in the <code>homogeneous_data</code> attribute. Currently, the structure of the database allows cohorts with different variables each.</p>
 <p>For more details on the specific implementation of the <code>Cohort</code> class and its methods, refer to the section dedicated to the <a href="../modules_documentation/cohort_utils_doc/">cohort_utils</a>.</p>
-<h2 id="cohort-quality-control">Cohort Quality Control<a class="headerlink" href="#cohort-quality-control" title="Permanent link">&para;</a></h2>
-<p>For more details on the specific implementation of the QC checks, refer to the section  <a href="../modules_documentation/qc_checks_utils_doc/">qc_checks_utils_doc</a>.</p>
-<h2 id="cohort-merging">Cohort Merging<a class="headerlink" href="#cohort-merging" title="Permanent link">&para;</a></h2>
+<h2 id="cohort-quality-control">Cohort Quality Control</h2>
+<p>After the creation and harmonization of each <code>cohort</code> object, a quality control check is performed and stored in an instance of <code>QCchecker</code> object. For more details on the specific implementation of the QC checks, refer to the section  <a href="../modules_documentation/qc_checks_utils_doc/">qc_checks_utils_doc</a>.</p>
+<h2 id="cohort-merging">Cohort Merging</h2>
 <p>Once all cohorts have been formatted, they are merged using the <code>merge_cohorts</code> function, defined in the <a href="../modules_documentation/cohort_utils_doc/"><code>cohort_utils</code></a> module. <code>merge_cohorts</code> takes a list of already instantiated cohorts (i.e., they contain the <code>homogeneous_data</code> attribute) and performs the following actions:</p>
 <ol>
 <li>Concatenates (vertically) the <code>homogeneous_data</code> attributes (DataFrames) from each cohort, ensuring that the resulting DataFrame combines all the data from the individual cohorts.</li>
-<li>Merges the <code>var_data</code> attributes (DataFrames) from each cohort, ensuring that the resulting DataFrame is consistent with the merged database and that any discrepancies are handled.</li>
-<li>Merges the <code>level_data</code> attributes (DataFrames) from each cohort, ensuring that the resulting DataFrame is consistent with the merged database and that categorical variables are properly aligned across cohorts.</li>
-<li>Instantiates a new <code>Cohort</code> object using the previously created merged elements. This cohort is named <code>liveraim</code> from now on. </li>
+<li>Instantiates a ConfigDataManager object, which allows to merge properly all the <code>VarData</code> objects from each cohort.</li>
+<li>Instantiates a new <code>Cohort</code> object using the previously created merged elements. This cohort is named <code>liveraim</code> from now on.</li>
 </ol>
+<p>Once the new <code>cohort</code> object is created, the <code>set_id</code> method is called. This method generates a new column in the <code>homogeneous_data</code> dataframe attribute, populated with a unified ID for each patient. The structure of this new ID follows the format <code>LAxxxxx</code>, where <code>xxxxx</code> is a sequential number starting from 1 and increasing up to the total number of rows in the dataframe (i.e., the position of the last patient in the dataframe). The IDs are assigned in ascending order throughout the dataframe.</p>
+<blockquote>
+<p><strong>Warning</strong>: As a result, the correspondence between the original ID (referred to here as <code>cohort_id</code>) and the unified ID (referred to here as <code>liveraim_id</code>) may vary depending on the position of each patient’s data within the <code>homogeneous_data</code> dataframe. This implies that the mapping between <code>cohort_id</code> and <code>liveraim_id</code> can change between executions.</p>
+</blockquote>
 <p>For more details on the functionality of this process, refer to the section <a href="../modules_documentation/cohort_utils_doc/#merge_cohorts-function"><code>merge_cohorts</code> function</a>.</p>
-<p><span style="color:red">falta indicar que se añade la variable id</span></p>
-<h2 id="exportation-to-files">Exportation to Files<a class="headerlink" href="#exportation-to-files" title="Permanent link">&para;</a></h2>
+<h2 id="biomarker-data-management">Biomarker data management</h2>
+<p>To check the structure of the processed biomarkers data panel check the subsection <a href="../liveraim_data_warehouse_specifications/#table-biomarkers">Biomarkers table</a>. There are two different sources of biomarkers data:</p>
+<ul>
+<li>
+<p><strong>Partners</strong>: third party partners (name Nordic, Roche and Hospital Clínic) are responsible for the analysis and transfer of the biomarkers data, that will be then processed and integrated into the data warehouse. This process is described in the following sections <a href="#data-reading-1">Data Reading</a> and <a href="#data-processing">Data Processing</a>.</p>
+</li>
+<li>
+<p><strong>Data Warehouse</strong>: Some biomarkes are computed using the variables from the data warehouse, formatted and merged with the biomarkers data obtained from the partners. This process is briefly described in <a href="#calculation-of-computed-biomarkers">Calculation of computed Biomarkers</a>.</p>
+</li>
+</ul>
+<h4 id="data-reading_1">Data Reading</h4>
+<p>The processing of biomarker data is performed immediately after the processing of cohort data, as the cohort IDs are used to validate the IDs in the biomarker data.</p>
+<p>Biomarker data is received from different providers, namely Nordic, Roche, and Hospital Clínic, in the current version. Since each provider may send the data split into different batches, and similarly to the cohort data case, the reading process for biomarker data is handled by the <code>BMKDataReader</code> class. For each provider, an instance of <code>BMKDataReader</code> is created, resulting in a dictionary (stored in the <code>bmk_data_dict</code> attribute) where the keys are the version dates (batches) and the values are the dataframes containing the data. </p>
+<p>For more details on the organization of the biomarker data directory and the specifics of the reading process, please check the section <a href="../modules_documentation/biomarker_utils_doc/#class-bmkdatareader">class <code>DataReader</code></a>.</p>
+<h4 id="data-processing">Data Processing</h4>
+<p>Once read, an instance of <code>BMKDataProcessor</code> is created for each provider. This instance is responsible for harmonizing and processing the biomarker data so it can be merged with data from other biomarkers. To instantiate this object, two main parameters are required, in addition to the <code>biomarkers_data</code>: the name of the provider (which allows calling the specific configuration class to process its data) and the set of common Liveraim IDs from the cohort database. The following section describes the general transformations applied to the data from each provider:</p>
+<ul>
+<li>
+<p>For each version/batch received from the provider, the following transformations are applied:</p>
+<ul>
+<li>
+<p>The columns of the DataFrame are <strong>renamed</strong> to follow a common naming convention.</p>
+</li>
+<li>
+<p><strong>Provider-specific transformations</strong> are applied via the <code>BMKHarmonizer</code> class. This will be covered in more detail below. The result of this transformation is a DataFrame with a common format and structure, both among batches from the same provider and between different providers.</p>
+</li>
+<li>
+<p>The <strong>original IDs are stored</strong> to generate a mapping between these IDs and the harmonized ones. This is mainly for debugging and traceability purposes — it allows tracing back the original IDs in the biomarker data that do not match the IDs in the cohort database.</p>
+</li>
+<li>
+<p><strong>ID harmonization</strong>: The IDs are transformed to fix inconsistencies between cohort data and biomarker data. The transformations applied are described in the section <a href="#id-transformations"><strong>ID transformations</strong></a>.</p>
+</li>
+<li>
+<p><strong>Duplicate removal</strong>: If any duplicate records for ID and biomarker are found within a batch, they are dropped and removed from the DataFrame, retaining none of them.</p>
+</li>
+<li>
+<p><strong>Blinding of biomarkers</strong>: The biomarker names (column <code>variable</code>) are mapped to anonymize them. In the current version, they are mapped to uppercase letters.</p>
+</li>
+<li>
+<p>A <strong>quality control</strong> process is performed on the transformed data and stored as a DataFrame in a dictionary, whose key will be the version/batch name. These checks are detailed below.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>The DataFrames from each version are then concatenated (vertically) to obtain a single DataFrame (which may contain duplicates).</p>
+</li>
+<li>The dictionary mapping the original IDs to the transformed IDs is created and stored in the <code>ids_transformation_dict</code> attribute.</li>
+<li>The appropriate data type is applied to each column.</li>
+<li>
+<p><strong>Consistency checks</strong>: Two main checks are performed at this point:</p>
+<ul>
+<li>
+<p><strong>ID matching</strong>: The IDs in the biomarker data are matched with those provided from the cohort data. If an ID from the biomarker data does not match any of the cohort IDs, it is dropped from the DataFrame and ignored.</p>
+</li>
+<li>
+<p><strong>Duplicate removal</strong>: If any duplicates are found for the same biomarker and ID, the duplicates are dropped (currently keeping only the entry with the latest <code>validation_date</code>). This is due to the fact that there may be patient overlap between batches from the same provider.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>A new column (<code>liveraim_id</code> by default) is generated by mapping the transformed IDs to the Liveraim IDs from the cohort database. At this point, some identifiers might not match any of the provided Liveraim IDs (and will be subsequently dropped from the final data).</p>
+</li>
+<li>
+<p><strong>Missing values drop</strong>: Rows with missing numeric values for a given biomarker are excluded from the DataFrame.</p>
+</li>
+<li>
+<p><strong>Scaling</strong>: The values for each biomarker (currently in the <code>value</code> column) are scaled into a specified range ([0, 1] by default). The current version uses a Min-Max scaling method:</p>
+</li>
+</ul>
+<div class="arithmatex">\[
+X'_i = \frac{X_i - X_{min}}{X_{max} - X_{min}}
+\]</div>
+<ul>
+<li>
+<p><strong>Normalization</strong>: The z-score of the numeric value (grouped by biomarker) is computed and added as a column. To do so, the following formula is used:</p>
+<div class="arithmatex">\[
+X'_i = \frac{X_i - \mu}{\sigma}
+\]</div>
+<p>Where:</p>
+<ul>
+<li><span class="arithmatex">\(\mu\)</span> is the mean of the values for the given biomarker.  </li>
+<li><span class="arithmatex">\(\sigma\)</span> is the standard deviation of the values for the given biomarker.  </li>
+</ul>
+</li>
+<li>
+<p><strong>Quintiles</strong>: quintiles are computed (grouped by biomarker) and added as a column. Labelled from 1 to 5. </p>
+</li>
+</ul>
+<p>As mentioned above, this process is performed separately for the data from each provider. Finally, all the DataFrames (with compatible structures) are merged into a single one, ready to be exported.</p>
+<h4 id="provider-specific-transformations">Provider-specific transformations</h4>
+<h5 id="hospital-clinic"><strong>Hospital Clínic</strong></h5>
+<p>The raw data from this provider may include the symbols <code>&lt;</code> or <code>&gt;</code> in the numeric value field of some biomarkers. These symbols indicate whether the value is below or above the quantification limit. Values without any symbol are considered to fall within the detectable range. Accordingly, the main specific transformations applied are:</p>
+<ul>
+<li>
+<p><strong>Comments column</strong>: A new column called <code>comments</code> is created based on the biomarker value column. If any of the above symbols are present, the corresponding comment is added to this column. If no symbol is found, the default value is an empty string.</p>
+</li>
+<li>
+<p><strong>Symbols processing</strong>: The symbol (if any) is extracted from the biomarker value and stored in a new column named <code>limit_detect</code>, which contains only the symbol. If no symbol is present, the default value is <code>pd.NA</code>. Additionally, a new column called <code>numeric_value</code> is created, containing only the numeric part of the biomarker value (as <code>float</code> type).</p>
+</li>
+</ul>
+<h5 id="nordic"><strong>Nordic</strong></h5>
+<ul>
+<li>
+<p><strong>Biomarker value formatting</strong>: In the biomarker value column, values with the string "ND" (indicating a missing value) are replaced with an empty string. Then, the column is converted to <code>float</code>, assigning <code>np.nan</code> to empty strings.</p>
+</li>
+<li>
+<p><strong>Addition of <code>limit_detect</code> column</strong>: Based on the <code>comments</code> column in the raw data provided by Nordic, the new column called <code>limit_detect</code> is created, following the convention described in <a href="#hospital-clínic">Hospital Clínic transformations</a>.</p>
+</li>
+<li>
+<p><strong>Comments mapping</strong>: Comments in the <code>comments</code> column are mapped to numeric codes using dictionaries defined in the configuration module.</p>
+</li>
+<li>
+<p><strong>Value clipping</strong>: The raw data from Nordic includes the value of the analysis (<code>numeric_value</code>), even when it falls outside the detection range. To ensure consistency and preserve the structure of the panel, values outside the detection limits (those bounds have been provided by Nordic) are replaced with the appropriate limit value:</p>
+<ul>
+<li>Values below the detection limit are replaced with the lower detection limit.</li>
+<li>Values above the detection limit are replaced with the upper detection limit.</li>
+</ul>
+</li>
+</ul>
+<h5 id="roche"><strong>Roche</strong></h5>
+<p><strong><em>No data from Roche has been received yet - Not yet implemented</em></strong></p>
+<h2 id="calculation-of-computed-biomarkers">Calculation of computed Biomarkers</h2>
+<p>As some biomarkers are analyzed and provided by external partners, certain biomarkers need to be computed using variables from the current data warehouse. The following section briefly describes the process of computing and formatting these biomarkers.</p>
+<p>The class responsible for performing these computations is <code>BMKCalculator</code>, which is instantiated with the already processed data warehouse (in particular, with a <code>Cohort</code> object). For more details on the implementation of this class, refer to the section <a href="../modules_documentation/biomarker_utils_doc/#class-bmkcalculator"><code>BMKCalculator</code> class</a>.</p>
+<p>For each biomarker that needs to be computed, a specific Python function has been implemented. This function returns a <code>pd.Series</code> object with the computed values. The following steps are performed to obtain a compatible DataFrame that can be merged with the one generated by <code>BMKDataProcessor</code>:</p>
+<ul>
+<li>
+<p>A biomarker-specific function (already defined) is applied to compute the values using the harmonized data warehouse. The resulting values are stored in the <code>numeric_value</code> column.</p>
+</li>
+<li>
+<p>The <code>variable</code> column, containing the name of the biomarker (in the "blinded" form), is added.</p>
+</li>
+<li>
+<p>The required columns (<code>liveraim_id</code>, <code>inclusion_date</code>, <code>numeric_value</code>, and <code>variable</code>) are selected and assembled into a DataFrame.</p>
+<blockquote>
+<p><strong>Note</strong>: Date used as <code>validation_date</code> variable for computed biomarkers will be, at this version, the <code>inclusion_date</code> variable.</p>
+</blockquote>
+</li>
+<li>
+<p>The columns <code>scaled_value</code>, <code>quintiles</code>, and <code>z_score</code> are added as described in the <a href="#data-processing">Biomarker Data Processing</a> section.</p>
+</li>
+<li>
+<p>The columns <code>comments</code> and <code>limit_detect</code> are added to match the common structure.</p>
+<blockquote>
+<p><strong>Warning</strong>: In the current version, no detection limits are available for the computed biomarkers. Accordingly, all records will contain default values in the <code>limit_detect</code> and <code>comments</code> columns (<code>pd.NA</code> and <code>""</code>, respectively). Furthermore, no clipping is applied to the biomarker values.</p>
+</blockquote>
+</li>
+</ul>
+<p>Each biomarker data results in an individual DataFrame. These DataFrames are then merged into a single, consistent DataFrame that can be seamlessly combined with those produced by <code>BMKDataProcessor</code>.</p>
+<h2 id="exportation-to-files">Exportation to Files</h2>
 <p>If the variable <code>EXPORT_FILES</code> defined in the <code>main_config</code> module is set to <code>True</code>, the data for each of the final panels will be exported as files. In the current version, the data is exported to <code>.csv</code> and <code>.feather</code> formats.</p>
-<h2 id="exportation-to-mysql-database">Exportation to MySQL Database<a class="headerlink" href="#exportation-to-mysql-database" title="Permanent link">&para;</a></h2>
+<h2 id="exportation-to-mysql-database">Exportation to MySQL Database</h2>
 <p>After exporting the database as files, the MySQL database is created. The module responsible for handling this export is <a href="../modules_documentation/sql_exporting_utils_doc/"><code>sql_exporting_utils</code></a>. Specifically, the <code>SQLExporter</code> class, defined in this module, centralizes the connection to the database, the creation of tables, and the export of data.</p>
 <p>The <code>SQLExporter</code> class is initialized using the <code>panel_metadata</code> DataFrame dictionary (this object has not been modified at any point). This dictionary specifies the structure of each of the final panels in the database. For more information on the structure of the <code>panel_metadata</code> file (and the corresponding <code>panel_metadata</code> object), see the section <a href="../liveraim_data_warehouse_specifications/#panel_data-file"><code>panel_data</code> file</a>.</p>
 <p><code>SQLExporter</code> performs the following actions sequentially:</p>
@@ -416,6 +602,8 @@ To address this issue, the ID variables of all cohorts are transformed, ensuring
     <script>var base_url = ".."</script>
     
     <script src="../js/base.js"></script>
+    <script src="../javascripts/mathjax.js"></script>
+    <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../search/main.js"></script>
 
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">

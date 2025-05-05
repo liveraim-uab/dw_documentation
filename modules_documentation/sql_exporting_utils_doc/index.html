@@ -201,20 +201,20 @@
 </div></div>
         <div class="col-md-9" role="main">
 
-<h1 id="sql_exporting_utils-documentation"><code>sql_exporting_utils</code> Documentation<a class="headerlink" href="#sql_exporting_utils-documentation" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<h1 id="sql_exporting_utils-documentation"><code>sql_exporting_utils</code> Documentation</h1>
+<h2 id="overview">Overview</h2>
 <p>The <code>SQLExporter</code> module is responsible for creating the structure of a MySQL database, handling connections, and exporting processed data into the database. It relies on SQLAlchemy ORM for creating tables, establishing relationships, and managing connections to the database. The primary functionality of this module is centralized in the <code>SQLExporter</code> class.</p>
-<h2 id="general-structure">General Structure<a class="headerlink" href="#general-structure" title="Permanent link">&para;</a></h2>
+<h2 id="general-structure">General Structure</h2>
 <p>The module defines the following key components:</p>
 <ul>
 <li><strong><code>Base</code></strong>: This is the base class used by SQLAlchemy for defining metadata and creating the ORM mappings. All table classes in this module inherit from this base class. For further information, visit the <a href="https://docs.sqlalchemy.org/en/20/">SQLAlchemy documentation</a>. </li>
 <li><strong><code>SQLExporter</code></strong>: This is the main class that manages the creation of tables, connection to the database, and the export of cohort data to the MySQL database. It uses SQLAlchemy's ORM to handle the database schema and pandas to export dataframes.</li>
 </ul>
-<h2 id="class-description">Class Description<a class="headerlink" href="#class-description" title="Permanent link">&para;</a></h2>
-<h3 id="sqlexporter"><strong><code>SQLExporter</code></strong><a class="headerlink" href="#sqlexporter" title="Permanent link">&para;</a></h3>
-<h4 id="description">Description:<a class="headerlink" href="#description" title="Permanent link">&para;</a></h4>
+<h2 id="class-description">Class Description</h2>
+<h3 id="sqlexporter"><strong><code>SQLExporter</code></strong></h3>
+<h4 id="description">Description:</h4>
 <p>The <code>SQLExporter</code> class handles the creation of MySQL tables based on the cohort data, establishes a connection to the MySQL database, and exports processed cohort data to the database. It uses the SQLAlchemy ORM to define the table schema and manage database interactions.</p>
-<h4 id="attributes">Attributes:<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h4>
+<h4 id="attributes">Attributes:</h4>
 <ul>
 <li><strong><code>panel_data_json</code> (dict)</strong>: A dictionary containing metadata about the cohort panels (tables) and their columns.</li>
 <li><strong><code>engine</code> (Engine)</strong>: The SQLAlchemy engine object that manages the connection to the MySQL database.</li>
@@ -222,7 +222,7 @@
 <li><strong><code>metadata</code> (MetaData)</strong>: SQLAlchemy's metadata object, which contains information about all the tables defined in the schema.</li>
 <li><strong><code>type_mapping</code> (dict)</strong>: A dictionary that maps Python data types to SQLAlchemy data types.</li>
 </ul>
-<h4 id="methods">Methods:<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h4>
+<h4 id="methods">Methods:</h4>
 <ul>
 <li>
 <p><strong><code>set_engine() -&gt; Engine</code></strong>:<br />
@@ -342,7 +342,7 @@
     Tests the connection to the MySQL database by executing a simple query. Returns <code>True</code> if the connection is successful, <code>False</code> otherwise.</p>
 </li>
 </ul>
-<h2 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h2>
+<h2 id="logs">Logs</h2>
 <ul>
 <li>In method <code>set_engine</code>:<ul>
 <li>Logs an error if any enviroment variable needed for the connection couldn't be called. </li>
@@ -385,7 +385,7 @@
 </ul>
 </li>
 </ul>
-<h2 id="general-operation">General operation<a class="headerlink" href="#general-operation" title="Permanent link">&para;</a></h2>
+<h2 id="general-operation">General operation</h2>
 <p>It is important to mention that <code>SQLExporter</code> utilizes the ORM (Object-Relational Mapping) framework provided by SQLAlchemy. This means that future SQL database tables must be treated as Python classes in the code. For example, if you wish to create a table called <code>population</code>, you must first define a Python class (which, for technical reasons, should inherit from <code>Base</code>), let's call it <code>Population</code>. This class will define the metadata for the table through its attributes.</p>
 <p>When an instance of the <code>SQLExporter</code> class is created (which requires an object of the <code>panel_data</code> type), an <code>Engine</code> object is automatically created. The <code>Engine</code> is responsible for managing database connections as they are needed.</p>
 <blockquote>
@@ -401,8 +401,8 @@
 </ol>
 <p>Once the tables are created and stored in <code>Base</code>, the <code>create_all</code> method is called. At this point, the first explicit connection to the database is made: the tables stored in <code>Base</code> (along with their respective configurations) are now created in the actual MySQL database.</p>
 <p>Finally, the <code>export_data_to_sql</code> method (called from <code>main</code>) is executed, taking as a parameter the final data that needs to be exported to SQL. This method reconnects to the database and loads the data into the corresponding tables.</p>
-<h2 id="example-usage">Example Usage<a class="headerlink" href="#example-usage" title="Permanent link">&para;</a></h2>
-<h3 id="creating-and-exporting-data">Creating and Exporting Data<a class="headerlink" href="#creating-and-exporting-data" title="Permanent link">&para;</a></h3>
+<h2 id="example-usage">Example Usage</h2>
+<h3 id="creating-and-exporting-data">Creating and Exporting Data</h3>
 <pre><code class="language-python">from sql_exporter import SQLExporter
 import pandas as pd
 
@@ -429,13 +429,13 @@ sql_exporter.create_all()
 # Export the data to MySQL
 sql_exporter.export_data_to_sql(final_data)
 </code></pre>
-<h3 id="testing-the-connection">Testing the connection:<a class="headerlink" href="#testing-the-connection" title="Permanent link">&para;</a></h3>
+<h3 id="testing-the-connection">Testing the connection:</h3>
 <p>You can test if the connection cnfiguration is correct by calling the method <code>test_connection</code> or by executiong the module as the main program. To do so, just execute the following comand in the terminal (make sure you are in the proper directory)ç</p>
 <pre><code class="language-bash">python sql_exporting_utils.py
 </code></pre>
-<h2 id="output-description">Output Description<a class="headerlink" href="#output-description" title="Permanent link">&para;</a></h2>
+<h2 id="output-description">Output Description</h2>
 <p>Consulta la sección </p>
-<h2 id="usage-in-the-main-execution">Usage in the main execution<a class="headerlink" href="#usage-in-the-main-execution" title="Permanent link">&para;</a></h2>
+<h2 id="usage-in-the-main-execution">Usage in the main execution</h2>
 <p>In the context of database creation, an instance of the <code>SQLExporter</code> class is created using <code>liveraim.panel_data_json</code> as a parameter. Next, the database tables are created, and finally, the final data (previously created and stored in the <code>Liveraim.final_data</code> attribute) is exported.</p>
 <pre><code class="language-python">if config.CREATE_SQL_DB:
         sql_exporter = SQLExporter(liveraim.panel_data_json)
@@ -472,6 +472,8 @@ sql_exporter.export_data_to_sql(final_data)
     <script>var base_url = "../.."</script>
     
     <script src="../../js/base.js"></script>
+    <script src="../../javascripts/mathjax.js"></script>
+    <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../search/main.js"></script>
 
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">

@@ -200,6 +200,7 @@
                 <li class="third-level"><a href="#table-medical_history">Table: medical_history</a></li>
                 <li class="third-level"><a href="#table-blood_test_numerical">Table: blood_test_numerical</a></li>
                 <li class="third-level"><a href="#table-blood_test_categorical">Table: blood_test_categorical</a></li>
+                <li class="third-level"><a href="#table-biomarkers">Table: biomarkers</a></li>
             <li class="second-level"><a href="#varibles-description">Varibles description</a></li>
                 
             <li class="second-level"><a href="#b-configuration-tables-description">b. Configuration Tables Description</a></li>
@@ -209,7 +210,7 @@
 </div></div>
         <div class="col-md-9" role="main">
 
-<h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h1>
+<h1 id="overview">Overview</h1>
 <p>This section describes the structure, tables, and relationships within the data warehouse.</p>
 <p>The data warehouse is composed of several tables that can be divided into two groups: the database itself, which we will simply call <code>database</code>, and the <code>configuration data</code> tables, where information about the variables, the structure of the database, mapping dictionaries, etc., is stored. The database, in its first version (prior to receiving biomarker data), consists of the following tables:</p>
 <ul>
@@ -368,7 +369,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 <blockquote>
 <p><strong>Note</strong>: The variables in the <code>variable</code> column (the "melted" variables) of each <code>long</code> table must be of the same data type. This is because SQL does not allow values with different data types in the same column. This adds robustness to the database at the cost of having to create additional tables. For example, in the case of blood test data, two tables are needed: <code>blood_test_numerical</code> and <code>blood_test_categorical</code>.</p>
 </blockquote>
-<h1 id="initial-data-and-configuration-data">Initial data and configuration data<a class="headerlink" href="#initial-data-and-configuration-data" title="Permanent link">&para;</a></h1>
+<h1 id="initial-data-and-configuration-data">Initial data and configuration data</h1>
 <p>This section describes the initial data recieved from the partners and teh configuration files that the program needs to build the database. For each cohort, there are four types of files, which are described below:</p>
 <ul>
 <li><a href="#database-files"><code>database</code></a>: contains the raw data of the cohort</li>
@@ -377,14 +378,14 @@ Transforming a wide table into a long table is a straightforward process (if the
 <li><a href="#comb_var_data-file"><code>comb_var_data</code></a>: For the variables that need to be combined, it contains the necessary data to perform this process.</li>
 </ul>
 <p>Finally, an other file, <a href="#panel_data-file"><code>panel_data</code></a> is needed for the proper creation of the data warehouse. In this file the structure of the final panels is described. </p>
-<h2 id="database-files"><code>Database</code> files<a class="headerlink" href="#database-files" title="Permanent link">&para;</a></h2>
+<h2 id="database-files"><code>Database</code> files</h2>
 <p>The files we refer to as <em>database</em> files contain the raw database of the cohort. These are the files that the partners responsible for each cohort have sent us with the patient data.</p>
 <p>The content of these files is never modified, neither manually nor through the code: all data processing is done after reading these files, which remain intact after each execution. The only modification they receive is a renaming necessary for their correct reading. For more details, see the section <a href="../quick_start_guide/#structure-of-datacohort_namedatabases-directory">Structure of <code>data/cohort_name/databases/</code> directory</a>.</p>
 <p>The format of these files varies depending on the cohort. For more information on reading the data, see the section <a href="../modules_documentation/file_reading_utils_doc/">File reading utils</a>. When this files are read, they are loaded into the code as <code>pandas.DataFrame</code> objects. </p>
 <blockquote>
 <p><strong>Note</strong>: For obvious data privacy reasons, these files are not uploaded to GitHub.</p>
 </blockquote>
-<h2 id="var_data-files"><code>var_data</code> files<a class="headerlink" href="#var_data-files" title="Permanent link">&para;</a></h2>
+<h2 id="var_data-files"><code>var_data</code> files</h2>
 <p>This file, along with level_data, is essential for the creation of the data warehouse. It is an Excel file (.xlsx) where each row corresponds to one of the selected/core variables. It contains the following columns:</p>
 <ul>
 <li><code>original_name (str)</code>: Name of the core variable in the original database. It varies between cohorts.</li>
@@ -405,7 +406,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 <p><strong>Note 1</strong>: There must be certain coherence between the var_data files from each cohort: the number of variables in each file (i.e., the number of rows) should be the same. In addition, the set of variables in <code>liveraim_name</code> should be the same between cohorts, and the <code>final_data</code> column should be consistent. Although this is checked in the code, making sure that there are no errors is recomended. </p>
 <p><strong>Note 2</strong>: If needed, addition of other columns is possible and should not create incompatibilities (but the management of those new columns should be implemented).</p>
 </blockquote>
-<h2 id="level_data-files"><code>level_data</code> files<a class="headerlink" href="#level_data-files" title="Permanent link">&para;</a></h2>
+<h2 id="level_data-files"><code>level_data</code> files</h2>
 <p>This file, along with <code>var_data</code>, is essential for the creation of the data warehouse. These files describe the different levels of the categorical core variables. In this case, each row does not correspond to a variable, but to a level of the original variable. The file contains the following columns:</p>
 <ul>
 <li><code>original_name (str)</code>: Name of the core variable in the original database. It varies between cohorts.</li>
@@ -421,7 +422,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 <blockquote>
 <p><strong>Note</strong>: There must be certain coherence between the <code>level_data</code> files from each cohort: In this case, the number of rows in each file does not need to match, as in some cohorts two or more different levels might coincide in the same final level. However, the <code>original_name</code>, <code>liveraim_name</code>, and <code>liveraim_level_value</code> columns should be consistent between files. Although this is checked in the code, it is recommended to ensure there are no errors.</p>
 </blockquote>
-<h2 id="comb_var_data-file"><code>comb_var_data</code> file<a class="headerlink" href="#comb_var_data-file" title="Permanent link">&para;</a></h2>
+<h2 id="comb_var_data-file"><code>comb_var_data</code> file</h2>
 <p>This is a <code>json</code> file that will be loaded into the code as a dictionary. It contains the necessary information to obtain a final variable by combining original variables present in the database. For more information about this process, see the section <a href="../modules_documentation/data_processing_utils_doc/"><code>data_processing_utils</code></a>, subsection <a href="../modules_documentation/data_processing_utils_doc/#class-varcombiner"><code>class VarCombiner</code></a>. This section describes the class responsible for combining the variables listed in <code>comb_var_data</code> according to the specified configuration.</p>
 <p>The primary goal of this dictionary is to combine variables that refer to the same magnitude but use different units. Combining these variables helps reduce the number of missing values. For example, in the LIVERSCREEN cohort, for the magnitude blood glucose (in visit 1), there are the variables <code>glc</code> (expressed in mmol/L) and <code>glc_mg_dl</code> (expressed in mg/dL). Both will be combined to fill missing at least one of the variables have a proper value.</p>
 <blockquote>
@@ -460,7 +461,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 </code></pre>
 <p>In this case, it indicates that the <code>glc</code> variable will be created by combining the <code>glc</code> itself and <code>glc_mg_dl</code> variables. Specifically, the value of <code>glc</code> will be used if it exists, and if not, the value of <code>glc_mg_dl</code> will be used, multiplied by the corresponding conversion factor (in this case, 0.055). A similar procedure will be aplied to <code>crea_mg_dl</code>.</p>
 <p>These files are tracked in GitHub like the rest of the scripts, so there is no need to create them from scratch, and they should work fine if the repository is cloned.</p>
-<h2 id="panel_data-file">panel_data file<a class="headerlink" href="#panel_data-file" title="Permanent link">&para;</a></h2>
+<h2 id="panel_data-file">panel_data file</h2>
 <p>This file is not specific to any cohort and is used as a guide to create and structure the different final panels. The file <code>panel_metadata.xlsx</code> is an Excel file that contains a sheet for each final panel. Each of these panels includes the following columns:</p>
 <ul>
 <li><code>var_name (str)</code>: Name of the variable (in the common liveraim format).</li>
@@ -476,7 +477,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 <p>When this file is read, since it is an .xlsx file with multiple sheets, it is loaded into the code as a dictionary of <code>pandas.DataFrames</code>. Each sheet name becomes a key, and the corresponding table becomes its value (a <code>DataFrame</code>). Throughout the documentation, we will refer to this dictionary as <code>panel_metadata</code>.</p>
 <p>It is important to maintain the structure of this file (and the previously described). Changes can be easily made to modify the final structure of the data warehouse by adding new sheets to the file (i.e., adding new panels), adding variables to a panel, or changing their structure (long or wide format).</p>
 <p>For more information about the structure of the final data, check the next section <a href="#liveraim-data-warehouse-structure">LIVERAIM DATA WAREHOUSE STRUCTURE</a>.</p>
-<h1 id="liveraim-data-warehouse-structure">Liveraim Data Warehouse Structure<a class="headerlink" href="#liveraim-data-warehouse-structure" title="Permanent link">&para;</a></h1>
+<h1 id="liveraim-data-warehouse-structure">Liveraim Data Warehouse Structure</h1>
 <p>The <strong>LIVERAIM DATA WAREHOUSE v0.1</strong> is composed by the following tables:</p>
 <p>a. <strong>Database</strong></p>
 <ul>
@@ -496,8 +497,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <li><code>comb_var_data</code></li>
 <li><code>dictionaries</code></li>
 </ul>
-<h2 id="a-database-tables-description">a. Database Tables Description<a class="headerlink" href="#a-database-tables-description" title="Permanent link">&para;</a></h2>
-<h3 id="table-sources">Table sources:<a class="headerlink" href="#table-sources" title="Permanent link">&para;</a></h3>
+<h2 id="a-database-tables-description">a. Database Tables Description</h2>
+<h3 id="table-sources">Table sources:</h3>
 <p>For each cohort, there is at least one raw database containing patient data. Each database corresponds to a single file, and for some cohorts, different versions of the same database are available. If multiple versions are available, the data from the latest version for each patient will be used. During the data processing phase, the databases are merged into a single table, which is later split and restructured into the various tables of the final database.</p>
 <p>From each raw database, a subset of variables is selected. These variables must be common across all cohort databases (although the variable names may differ), ensuring that patient data from different cohorts can be merged. Thus, all variables that appear in the final database are either secondary variables created during the code execution, or they originate from one of the four cohorts (depending on the patient's source) used to construct the final database. For more information about the dataflow go to <a href="../dataflow/">dataflow</a> section.</p>
 <p>A summary of the data sources is presented below:</p>
@@ -513,13 +514,13 @@ Transforming a wide table into a long table is a straightforward process (if the
 <tbody>
 <tr>
 <td>liverscreen</td>
-<td>4</td>
+<td>7</td>
 <td>stata file (<code>.dta</code>)</td>
 <td><code>pd.read_stata</code></td>
 </tr>
 <tr>
 <td>alcofib</td>
-<td>1</td>
+<td>2</td>
 <td>sav file (<code>.sav</code>)</td>
 <td><code>pyreadstat.read_sav</code></td>
 </tr>
@@ -532,8 +533,20 @@ Transforming a wide table into a long table is a straightforward process (if the
 <tr>
 <td>decide</td>
 <td>1</td>
-<td>-</td>
-<td>-</td>
+<td>stata file (<code>.dta</code>)</td>
+<td><code>pd.read_stata</code></td>
+</tr>
+<tr>
+<td>galaald</td>
+<td>1</td>
+<td>stata file (<code>.dta</code>)</td>
+<td><code>pd.read_stata</code></td>
+</tr>
+<tr>
+<td>marina</td>
+<td>2</td>
+<td>sav file (<code>.sav</code>)</td>
+<td><code>pyreadstat.read_sav</code></td>
 </tr>
 </tbody>
 </table>
@@ -541,7 +554,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 <p><strong>Note 1</strong>: Some of the information below may be redundant, as certain variables appear in many or all panels. However, redundancies have been intentionally kept for the sake of clarity and readability.</p>
 <p><strong>Note 2</strong>: As three of the four used cohorts have been previously managed isnod RedCap, many RedCap names in the final database have been kept as standard (sometimes with few changes). </p>
 </blockquote>
-<h3 id="table-population">Table: <code>population</code><a class="headerlink" href="#table-population" title="Permanent link">&para;</a></h3>
+<h3 id="table-population">Table: <code>population</code></h3>
 <ul>
 <li><strong>Description:</strong> Defines the population of patients within different cohorts.</li>
 <li><strong>Fields:</strong><ul>
@@ -558,7 +571,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 <li><strong>Primary Key:</strong> (<code>liveraim_id</code>, <code>cohort_id</code>)</li>
 <li><strong>Relations:</strong> Central table that relates to all other tables using <code>liveraim_id</code> and <code>cohort_id</code>.</li>
 </ul>
-<h4 id="actions-and-specification-tables">Actions and specification tables<a class="headerlink" href="#actions-and-specification-tables" title="Permanent link">&para;</a></h4>
+<h4 id="actions-and-specification-tables">Actions and specification tables</h4>
 <table>
 <thead>
 <tr>
@@ -645,7 +658,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 </tr>
 </tbody>
 </table>
-<h3 id="table-physical_exam">Table: <code>physical_exam</code><a class="headerlink" href="#table-physical_exam" title="Permanent link">&para;</a></h3>
+<h3 id="table-physical_exam">Table: <code>physical_exam</code></h3>
 <ul>
 <li><strong>Description:</strong> Stores physical exam results.</li>
 <li><strong>Fields:</strong><ul>
@@ -668,7 +681,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 </li>
 <li><strong>Relations:</strong> Relates to the <code>population</code> table via <code>liveraim_id</code> and <code>cohort_id</code>.</li>
 </ul>
-<h4 id="actions-and-specification-tables_1">Actions and specification tables<a class="headerlink" href="#actions-and-specification-tables_1" title="Permanent link">&para;</a></h4>
+<h4 id="actions-and-specification-tables_1">Actions and specification tables</h4>
 <table>
 <thead>
 <tr>
@@ -756,7 +769,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 </tr>
 </tbody>
 </table>
-<h5 id="melted-variables-metadata">Melted variables metadata<a class="headerlink" href="#melted-variables-metadata" title="Permanent link">&para;</a></h5>
+<h5 id="melted-variables-metadata">Melted variables metadata</h5>
 <table>
 <thead>
 <tr>
@@ -808,7 +821,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 </tr>
 </tbody>
 </table>
-<h3 id="table-demographics">Table: <code>demographics</code><a class="headerlink" href="#table-demographics" title="Permanent link">&para;</a></h3>
+<h3 id="table-demographics">Table: <code>demographics</code></h3>
 <ul>
 <li><strong>Description:</strong> Contains demographic information of patients.</li>
 <li>
@@ -828,7 +841,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 <li><strong>Primary Key:</strong> (<code>liveraim_id</code>, <code>cohort_id</code>)</li>
 <li><strong>Relations:</strong> Relates to the <code>population</code> table via <code>liveraim_id</code> and <code>cohort_id</code>.</li>
 </ul>
-<h4 id="actions-and-specification-tables_2">Actions and specification tables<a class="headerlink" href="#actions-and-specification-tables_2" title="Permanent link">&para;</a></h4>
+<h4 id="actions-and-specification-tables_2">Actions and specification tables</h4>
 <table>
 <thead>
 <tr>
@@ -895,7 +908,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 </tr>
 </tbody>
 </table>
-<h3 id="table-fibroscan">Table: <code>fibroscan</code><a class="headerlink" href="#table-fibroscan" title="Permanent link">&para;</a></h3>
+<h3 id="table-fibroscan">Table: <code>fibroscan</code></h3>
 <ul>
 <li><strong>Description:</strong> Records fibroscan exam results.</li>
 <li><strong>Fields:</strong><ul>
@@ -914,7 +927,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 <li><strong>Primary Key:</strong> (<code>liveraim_id</code>, <code>cohort_id</code>, <code>variable</code>)</li>
 <li><strong>Relations:</strong> Relates to the <code>population</code> table via <code>liveraim_id</code> and <code>cohort_id</code>.</li>
 </ul>
-<h4 id="actions-and-specification-tables_3">Actions and specification tables<a class="headerlink" href="#actions-and-specification-tables_3" title="Permanent link">&para;</a></h4>
+<h4 id="actions-and-specification-tables_3">Actions and specification tables</h4>
 <table>
 <thead>
 <tr>
@@ -1002,7 +1015,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 </tr>
 </tbody>
 </table>
-<h5 id="melted-variables-metadata_1">Melted variables metadata<a class="headerlink" href="#melted-variables-metadata_1" title="Permanent link">&para;</a></h5>
+<h5 id="melted-variables-metadata_1">Melted variables metadata</h5>
 <table>
 <thead>
 <tr>
@@ -1036,7 +1049,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 </tr>
 </tbody>
 </table>
-<h3 id="table-medical_history">Table: <code>medical_history</code><a class="headerlink" href="#table-medical_history" title="Permanent link">&para;</a></h3>
+<h3 id="table-medical_history">Table: <code>medical_history</code></h3>
 <p><span style="color:red">This table structure must be reviewed.</span></p>
 <ul>
 <li><strong>Description:</strong> Stores medical history of patients.</li>
@@ -1060,7 +1073,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 <li><strong>Primary Key:</strong> (<code>liveraim_id</code>, <code>cohort_id</code>)</li>
 <li><strong>Relations:</strong> Relates to the <code>population</code> table via <code>liveraim_id</code> and <code>cohort_id</code>.</li>
 </ul>
-<h4 id="actions-and-specification-tables_4">Actions and specification tables<a class="headerlink" href="#actions-and-specification-tables_4" title="Permanent link">&para;</a></h4>
+<h4 id="actions-and-specification-tables_4">Actions and specification tables</h4>
 <table>
 <thead>
 <tr>
@@ -1167,7 +1180,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 </tr>
 </tbody>
 </table>
-<h3 id="table-blood_test_numerical">Table: <code>blood_test_numerical</code><a class="headerlink" href="#table-blood_test_numerical" title="Permanent link">&para;</a></h3>
+<h3 id="table-blood_test_numerical">Table: <code>blood_test_numerical</code></h3>
 <ul>
 <li><strong>Description:</strong> Stores numerical blood test results.</li>
 <li><strong>Fields:</strong><ul>
@@ -1190,7 +1203,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 </li>
 <li><strong>Relations:</strong> Relates to the <code>population</code> table via <code>liveraim_id</code> and <code>cohort_id</code>.</li>
 </ul>
-<h4 id="actions-and-specification-tables_5">Actions and specification tables<a class="headerlink" href="#actions-and-specification-tables_5" title="Permanent link">&para;</a></h4>
+<h4 id="actions-and-specification-tables_5">Actions and specification tables</h4>
 <table>
 <thead>
 <tr>
@@ -1278,7 +1291,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 </tr>
 </tbody>
 </table>
-<h5 id="melted-variables-metadata_2">Melted variables metadata<a class="headerlink" href="#melted-variables-metadata_2" title="Permanent link">&para;</a></h5>
+<h5 id="melted-variables-metadata_2">Melted variables metadata</h5>
 <table>
 <thead>
 <tr>
@@ -1492,7 +1505,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 </tr>
 </tbody>
 </table>
-<h3 id="table-blood_test_categorical">Table: <code>blood_test_categorical</code><a class="headerlink" href="#table-blood_test_categorical" title="Permanent link">&para;</a></h3>
+<h3 id="table-blood_test_categorical">Table: <code>blood_test_categorical</code></h3>
 <ul>
 <li><strong>Description:</strong> Stores categorical blood test results.</li>
 <li><strong>Fields:</strong><ul>
@@ -1511,7 +1524,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 <li><strong>Primary Key:</strong> (<code>liveraim_id</code>, <code>cohort_id</code>, <code>variable</code>)</li>
 <li><strong>Relations:</strong> Relates to the <code>population</code> table via <code>liveraim_id</code> and <code>cohort_id</code>.</li>
 </ul>
-<h4 id="actions-and-specification-tables_6">Actions and specification tables<a class="headerlink" href="#actions-and-specification-tables_6" title="Permanent link">&para;</a></h4>
+<h4 id="actions-and-specification-tables_6">Actions and specification tables</h4>
 <table>
 <thead>
 <tr>
@@ -1608,7 +1621,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 </tr>
 </tbody>
 </table>
-<h5 id="melted-variables-metadata_3">Melted variables metadata<a class="headerlink" href="#melted-variables-metadata_3" title="Permanent link">&para;</a></h5>
+<h5 id="melted-variables-metadata_3">Melted variables metadata</h5>
 <table>
 <thead>
 <tr>
@@ -1645,7 +1658,172 @@ Transforming a wide table into a long table is a straightforward process (if the
 </tr>
 </tbody>
 </table>
-<h2 id="varibles-description">Varibles description<a class="headerlink" href="#varibles-description" title="Permanent link">&para;</a></h2>
+<h3 id="table-biomarkers">Table: <code>biomarkers</code></h3>
+<ul>
+<li><strong>Description:</strong> Stores biomarkers results, both from external providers (Nordic, Roche and Hospital Clínic) and calculated using the data warehouse data.<ul>
+<li><code>liveraim_id</code> (VARCHAR(255)): Common liveraim identifier for the patient. Unique within the data warehouse. </li>
+<li><code>variable</code> (VARCHAR(255)): Blinded using a map from biomarker names to upper case letters. Codified/blinded name of the biomarker</li>
+<li><code>numeric_value</code> (FLOAT):value/result of the e of biomarker analysis or calculation (in <code>variable</code> column)</li>
+<li><code>scaled_value</code> (FLOAT): numeric value scaled to [0, 1] range.</li>
+<li><code>z_score</code> (FLOAT): z_score of numeric_value</li>
+<li><code>quintiles</code> (FLOAT): quintiles of numeric_value (from 1 to 5)</li>
+<li><code>limit_detect</code> (VARCHAR(255)): Character indicating if the value in numeric_value is below (<code>&lt;</code>) or above (<code>&gt;</code>). Missing if it is in range. </li>
+<li><code>validation_date</code> (DATETIME): validation_date of numeric_value results. For calculated biomarkers the <code>inclusion_date</code> is used as validation date</li>
+<li><code>comments</code> (FLOAT): comments (see table of comments)</li>
+</ul>
+</li>
+<li><strong>Format</strong>: long.</li>
+<li><strong>Variables in <code>varible</code> column</strong>: biomarker blinded codes (from <code>A</code> to <code>K</code>).</li>
+<li><strong>Primary Key:</strong> (<code>liveraim_id</code>, <code>variable</code>)</li>
+<li><strong>Relations:</strong> Relates to the <code>population</code> table via <code>liveraim_id</code>.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>Column name</strong></th>
+<th><strong>SQL data type</strong></th>
+<th><strong>Data type</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>Rule/Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>liveraim_id</code></td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td>Intra-cohort identification code.</td>
+<td>Created dynamically after merging cohorts.</td>
+</tr>
+<tr>
+<td><code>variable</code></td>
+<td>VARCHAR(255)</td>
+<td>category</td>
+<td>Codified/blinded name of the biomarker.</td>
+<td>Blinded using a map from biomarker names to uppercase letters.</td>
+</tr>
+<tr>
+<td><code>numeric_value</code></td>
+<td>FLOAT</td>
+<td>float</td>
+<td>Value of biomarker (in <code>variable</code> column).</td>
+<td>Different transformations depending on data origin. Values clipped using detection limits.</td>
+</tr>
+<tr>
+<td><code>scaled_value</code></td>
+<td>FLOAT</td>
+<td>float</td>
+<td>Numeric value scaled to [0, 1] range.</td>
+<td>Computed from <code>numeric_value</code> using the min-max scaling method.</td>
+</tr>
+<tr>
+<td><code>z_score</code></td>
+<td>FLOAT</td>
+<td>float</td>
+<td>Z-score of <code>numeric_value</code>.</td>
+<td>Computed from <code>numeric_value</code>.</td>
+</tr>
+<tr>
+<td><code>quintiles</code></td>
+<td>FLOAT</td>
+<td>float</td>
+<td>Quintiles of <code>numeric_value</code> (from 1 to 5).</td>
+<td>Computed from <code>numeric_value</code>.</td>
+</tr>
+<tr>
+<td><code>limit_detect</code></td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td>String indicating if <code>numeric_value</code> is below (<code>&lt;</code>) or above (<code>&gt;</code>).</td>
+<td>Computed using detection ranges. Missing if value is within range. No limits for calculated biomarkers.</td>
+</tr>
+<tr>
+<td><code>validation_date</code></td>
+<td>DATETIME</td>
+<td>datetime</td>
+<td>Validation date of <code>numeric_value</code> results.</td>
+<td>Date when result was validated. For calculated biomarkers, <code>inclusion_date</code> is used.</td>
+</tr>
+<tr>
+<td><code>comments</code></td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td>Comments (see table of comments).</td>
+<td>Mapped from their description to an integer. Concatenated if multiple per record.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="comments-description">Comments description</h4>
+<table>
+<thead>
+<tr>
+<th><strong>Comment</strong></th>
+<th><strong>Provider</strong></th>
+<th style="text-align: right;"><strong>Map Code</strong></th>
+<th><strong>Note</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Muestra insuficiente</td>
+<td>Hospital Clínic</td>
+<td style="text-align: right;">6</td>
+<td>The associated value is missing.</td>
+</tr>
+<tr>
+<td>No calculable</td>
+<td>Hospital Clínic</td>
+<td style="text-align: right;">8</td>
+<td>The associated value is missing.</td>
+</tr>
+<tr>
+<td>Below Lower Limit of Quantification</td>
+<td>Nordic</td>
+<td style="text-align: right;">1</td>
+<td></td>
+</tr>
+<tr>
+<td>Hemolysis</td>
+<td>Nordic</td>
+<td style="text-align: right;">3</td>
+<td></td>
+</tr>
+<tr>
+<td>Insufficient sample amount</td>
+<td>Nordic</td>
+<td style="text-align: right;">6</td>
+<td>The associated value is missing.</td>
+</tr>
+<tr>
+<td>Lipemic</td>
+<td>Nordic</td>
+<td style="text-align: right;">5</td>
+<td></td>
+</tr>
+<tr>
+<td>Missing sample</td>
+<td>Nordic</td>
+<td style="text-align: right;">8</td>
+<td>The associated value is missing.</td>
+</tr>
+<tr>
+<td>Severe hemolysis</td>
+<td>Nordic</td>
+<td style="text-align: right;">4</td>
+<td>The associated value is missing.</td>
+</tr>
+<tr>
+<td>Unreliable test result and not reported</td>
+<td>Nordic</td>
+<td style="text-align: right;">7</td>
+<td>The associated value is missing.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note</strong>: In the current version, missings in <code>numeric_value</code> are dropped. Accordingly, code messages <strong>4, 6, 7, 8</strong> should not be found in the database.</p>
+</blockquote>
+<h2 id="varibles-description">Varibles description</h2>
 <table>
 <thead>
 <tr>
@@ -2009,9 +2187,9 @@ Transforming a wide table into a long table is a straightforward process (if the
 </tr>
 </tbody>
 </table>
-<h2 id="b-configuration-tables-description">b. Configuration Tables Description<a class="headerlink" href="#b-configuration-tables-description" title="Permanent link">&para;</a></h2>
+<h2 id="b-configuration-tables-description">b. Configuration Tables Description</h2>
 <p>For further information about the structure of this configuration data go to <a href="#initial-data-and-configuration-data">initial data configuration</a> section. </p>
-<h1 id="general-relationships-in-the-schema">General Relationships in the Schema<a class="headerlink" href="#general-relationships-in-the-schema" title="Permanent link">&para;</a></h1>
+<h1 id="general-relationships-in-the-schema">General Relationships in the Schema</h1>
 <ul>
 <li><strong>Central Tables:</strong> The <code>population</code> table acts as the central table in the schema, relating to all other tables through <code>liveraim_id</code> and <code>cohort_id</code>.</li>
 <li><strong>Foreign Keys:</strong> Tables containing specific data (such as <code>fiscal_exam</code>, <code>fibroscan</code>, <code>blood_test_numerical</code>, and <code>blood_test_categorical</code>) use <code>liveraim_id</code> and <code>cohort_id</code> as foreign keys pointing to the <code>population</code> table.</li>
@@ -2046,6 +2224,8 @@ Transforming a wide table into a long table is a straightforward process (if the
     <script>var base_url = ".."</script>
     
     <script src="../js/base.js"></script>
+    <script src="../javascripts/mathjax.js"></script>
+    <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../search/main.js"></script>
 
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
