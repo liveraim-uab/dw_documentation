@@ -199,7 +199,6 @@
                 <li class="third-level"><a href="#table-fibroscan">Table: fibroscan</a></li>
                 <li class="third-level"><a href="#table-medical_history">Table: medical_history</a></li>
                 <li class="third-level"><a href="#table-blood_test_numerical">Table: blood_test_numerical</a></li>
-                <li class="third-level"><a href="#table-blood_test_categorical">Table: blood_test_categorical</a></li>
                 <li class="third-level"><a href="#table-biomarkers">Table: biomarkers</a></li>
             <li class="second-level"><a href="#varibles-description">Varibles description</a></li>
                 
@@ -215,12 +214,12 @@
 <p>The data warehouse is composed of several tables that can be divided into two groups: the database itself, which we will simply call <code>database</code>, and the <code>configuration data</code> tables, where information about the variables, the structure of the database, mapping dictionaries, etc., is stored. The database, in its first version (prior to receiving biomarker data), consists of the following tables:</p>
 <ul>
 <li><code>population</code>: Contains basic information about each patient, such as gender, status, cohort membership, etc.</li>
-<li><code>blood_test_categorical</code>: Contains categorical variables extracted from the blood test (at <code>dat_0</code>).</li>
-<li><code>blood_test_numerical</code>: Contains numerical variables extracted from the blood test (at <code>dat_0</code>).</li>
+<li><code>blood_test</code>: Contains variables extracted from the blood test (at <code>date_0</code>), both categorical and numerical.</li>
 <li><code>demographics</code>: Contains demographic information about the patient, such as gender, ethnicity, etc.</li>
 <li><code>fibroscan</code>: Contains information related to the fibroscan test results for each patient.</li>
 <li><code>physical_exam</code>: Contains information obtained from the physical examination, including variables such as weight, height, etc.</li>
 <li><code>medical_history</code>: Contains information about each patient's medical history, including relevant comorbidities, etc.</li>
+<li><code>biomarkers</code>: Contains data from biomarker measurements provided by CDB, Nordic, and Roche, as well as data from the computed biomarkers.</li>
 </ul>
 <p>We will refer to these tables as panels or tables interchangeably. The <code>population</code> panel acts as the core of the database: the other panels are linked to this primary one (see <a href="#general-relationships-in-the-schema">General Relationships in the Schema</a>).
  The following image schematically depicts the structure and relationships of the data warehouse:</p>
@@ -252,10 +251,10 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>LA---</td>
 <td>-----</td>
 <td>alb</td>
-<td>NaN</td>
+<td>43</td>
 <td>g/L</td>
-<td></td>
-<td></td>
+<td>10</td>
+<td>55</td>
 </tr>
 <tr>
 <td>2023-01-19 00:00:00</td>
@@ -264,8 +263,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>alk</td>
 <td>41</td>
 <td>U/L</td>
-<td></td>
-<td></td>
+<td>20</td>
+<td>150</td>
 </tr>
 <tr>
 <td>2023-01-19 00:00:00</td>
@@ -274,8 +273,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>alt</td>
 <td>21</td>
 <td>UI/L</td>
-<td></td>
-<td></td>
+<td>5 0</td>
+<td>500</td>
 </tr>
 <tr>
 <td>2023-01-19 00:00:00</td>
@@ -284,8 +283,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>ast</td>
 <td>20</td>
 <td>U/L</td>
-<td></td>
-<td></td>
+<td>5.0</td>
+<td>1000.0</td>
 </tr>
 <tr>
 <td>2023-01-19 00:00:00</td>
@@ -294,18 +293,18 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>bili</td>
 <td>0.6</td>
 <td>mg/dL</td>
-<td></td>
-<td></td>
+<td>0.2</td>
+<td>9.99</td>
 </tr>
 <tr>
 <td>2023-01-19 00:00:00</td>
 <td>LA---</td>
 <td>-----</td>
 <td>cb</td>
-<td>NaN</td>
+<td>8.7</td>
 <td>mg/dL</td>
-<td></td>
-<td></td>
+<td>0.2</td>
+<td>9.99</td>
 </tr>
 <tr>
 <td>2023-01-19 00:00:00</td>
@@ -314,8 +313,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>chol</td>
 <td>236</td>
 <td>mg/dL</td>
-<td></td>
-<td></td>
+<td>100</td>
+<td>700</td>
 </tr>
 <tr>
 <td>2023-01-19 00:00:00</td>
@@ -324,8 +323,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>crea</td>
 <td>1.1</td>
 <td>mg/dL</td>
-<td>0</td>
-<td>10</td>
+<td>0.3</td>
+<td>9.99</td>
 </tr>
 <tr>
 <td>2023-01-19 00:00:00</td>
@@ -334,8 +333,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>crp</td>
 <td>NaN</td>
 <td>mg/dL</td>
-<td></td>
-<td></td>
+<td>0.0</td>
+<td>9.99</td>
 </tr>
 <tr>
 <td>2023-01-19 00:00:00</td>
@@ -344,8 +343,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>ferritin</td>
 <td>146</td>
 <td>ng/mL</td>
-<td></td>
-<td></td>
+<td>10</td>
+<td>999</td>
 </tr>
 <tr>
 <td>...</td>
@@ -367,7 +366,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 </blockquote>
 <p>It is important to clarify the difference between <code>cohort_id</code> and <code>liveraim_id</code>. <code>cohort_id</code> is the patient-specific identifier within each cohort. The encoding of these identifiers is heterogeneous, varies between cohorts, and originates from the original data. <code>liveraim_id</code> is a new variable generated during the execution of <code>main.py</code>, which assigns a unique identifier to each patient across all cohorts at the data warehouse level, following a common format. There is a bijective correspondence between these two variables.</p>
 <blockquote>
-<p><strong>Note</strong>: The variables in the <code>variable</code> column (the "melted" variables) of each <code>long</code> table must be of the same data type. This is because SQL does not allow values with different data types in the same column. This adds robustness to the database at the cost of having to create additional tables. For example, in the case of blood test data, two tables are needed: <code>blood_test_numerical</code> and <code>blood_test_categorical</code>.</p>
+<p><strong>Note</strong>: The variables in the <code>variable</code> column (the "melted" variables) of each <code>long</code> table must be of the same data type. This is because SQL does not allow values with different data types in the same column. This adds robustness to the database at the cost of having to create additional tables. For example, in the case of blood test data, categorical variables have been transformed to numeric (as they are encoded with integers).</p>
 </blockquote>
 <h1 id="initial-data-and-configuration-data">Initial data and configuration data</h1>
 <p>This section describes the initial data recieved from the partners and teh configuration files that the program needs to build the database. For each cohort, there are four types of files, which are described below:</p>
@@ -403,8 +402,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 <p>These files are tracked in GitHub like the rest of the scripts, so there is no need to create them from scratch, and they should work fine if the repository is cloned. </p>
 <p>When this file is read, it is loaded into the code as a <code>pandas.DataFrame</code> object. Throughout all the documentation, we will refer to this DataFrame also as <code>var_data</code>.</p>
 <blockquote>
-<p><strong>Note 1</strong>: There must be certain coherence between the var_data files from each cohort: the number of variables in each file (i.e., the number of rows) should be the same. In addition, the set of variables in <code>liveraim_name</code> should be the same between cohorts, and the <code>final_data</code> column should be consistent. Although this is checked in the code, making sure that there are no errors is recomended. </p>
-<p><strong>Note 2</strong>: If needed, addition of other columns is possible and should not create incompatibilities (but the management of those new columns should be implemented).</p>
+<p><strong>Note</strong>: If needed, addition of other columns is possible and should not create incompatibilities (but the management of those new columns should be implemented).</p>
 </blockquote>
 <h2 id="level_data-files"><code>level_data</code> files</h2>
 <p>This file, along with <code>var_data</code>, is essential for the creation of the data warehouse. These files describe the different levels of the categorical core variables. In this case, each row does not correspond to a variable, but to a level of the original variable. The file contains the following columns:</p>
@@ -478,16 +476,16 @@ Transforming a wide table into a long table is a straightforward process (if the
 <p>It is important to maintain the structure of this file (and the previously described). Changes can be easily made to modify the final structure of the data warehouse by adding new sheets to the file (i.e., adding new panels), adding variables to a panel, or changing their structure (long or wide format).</p>
 <p>For more information about the structure of the final data, check the next section <a href="#liveraim-data-warehouse-structure">LIVERAIM DATA WAREHOUSE STRUCTURE</a>.</p>
 <h1 id="liveraim-data-warehouse-structure">Liveraim Data Warehouse Structure</h1>
-<p>The <strong>LIVERAIM DATA WAREHOUSE v0.1</strong> is composed by the following tables:</p>
+<p>The <strong>LIVERAIM DATA WAREHOUSE v2</strong> is composed by the following tables:</p>
 <p>a. <strong>Database</strong></p>
 <ul>
 <li><code>population</code></li>
-<li><code>blood_test_categorical</code></li>
-<li><code>blood_test_numerical</code></li>
+<li><code>blood_test</code></li>
 <li><code>demographics</code></li>
 <li><code>fibroscan</code></li>
 <li><code>physical_exam</code></li>
 <li><code>medical_history</code></li>
+<li><code>biomarkers</code></li>
 </ul>
 <p>b. <strong>Configuration Data</strong></p>
 <ul>
@@ -500,7 +498,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 <h2 id="a-database-tables-description">a. Database Tables Description</h2>
 <h3 id="table-sources">Table sources:</h3>
 <p>For each cohort, there is at least one raw database containing patient data. Each database corresponds to a single file, and for some cohorts, different versions of the same database are available. If multiple versions are available, the data from the latest version for each patient will be used. During the data processing phase, the databases are merged into a single table, which is later split and restructured into the various tables of the final database.</p>
-<p>From each raw database, a subset of variables is selected. These variables must be common across all cohort databases (although the variable names may differ), ensuring that patient data from different cohorts can be merged. Thus, all variables that appear in the final database are either secondary variables created during the code execution, or they originate from one of the four cohorts (depending on the patient's source) used to construct the final database. For more information about the dataflow go to <a href="../dataflow/">dataflow</a> section.</p>
+<p>From each raw database, a subset of variables is selected. In the current version, not all variables are required to be present in every cohort: some variables may be available in one cohort but absent in others. In the final panels, this results in missing values for those variables in the corresponding cohorts. Therefore, all variables present in the final database either originate from one of the six source cohorts (depending on the patient's origin) or are secondary variables generated during code execution. For more information about the data flow, refer to the <a href="../dataflow/">dataflow</a> section.</p>
 <p>A summary of the data sources is presented below:</p>
 <table>
 <thead>
@@ -514,13 +512,13 @@ Transforming a wide table into a long table is a straightforward process (if the
 <tbody>
 <tr>
 <td>liverscreen</td>
-<td>7</td>
+<td>8</td>
 <td>stata file (<code>.dta</code>)</td>
 <td><code>pd.read_stata</code></td>
 </tr>
 <tr>
 <td>alcofib</td>
-<td>2</td>
+<td>3</td>
 <td>sav file (<code>.sav</code>)</td>
 <td><code>pyreadstat.read_sav</code></td>
 </tr>
@@ -544,7 +542,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 </tr>
 <tr>
 <td>marina</td>
-<td>2</td>
+<td>1</td>
 <td>sav file (<code>.sav</code>)</td>
 <td><code>pyreadstat.read_sav</code></td>
 </tr>
@@ -552,7 +550,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 </table>
 <blockquote>
 <p><strong>Note 1</strong>: Some of the information below may be redundant, as certain variables appear in many or all panels. However, redundancies have been intentionally kept for the sake of clarity and readability.</p>
-<p><strong>Note 2</strong>: As three of the four used cohorts have been previously managed isnod RedCap, many RedCap names in the final database have been kept as standard (sometimes with few changes). </p>
+<p><strong>Note 2</strong>: As four of the six used cohorts have been previously managed isnod RedCap, many RedCap names in the final database have been kept as standard (sometimes with few changes). </p>
 </blockquote>
 <h3 id="table-population">Table: <code>population</code></h3>
 <ul>
@@ -572,6 +570,79 @@ Transforming a wide table into a long table is a straightforward process (if the
 <li><strong>Relations:</strong> Central table that relates to all other tables using <code>liveraim_id</code> and <code>cohort_id</code>.</li>
 </ul>
 <h4 id="actions-and-specification-tables">Actions and specification tables</h4>
+<!-- | **Liveraim name** | **Liverscreen name** | **Alcofib name**        | **Glucofib name** | **Decide name** | **SQL data type** | **data type** | **Rule/Notes**                                                                                                                                                                                                                                                                     |
+| ----------------- | -------------------- | ----------------------- | ----------------- | --------------- | ----------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| liveraim_id       | -                    | -                       | -                 | -               | VARCHAR(255)      | str           | Created dynamically after merging cohorts.                                                                                                                                                                                                                                         |
+| cohort_id         | id                   | Codigo_deidentificacion | id                | id              | VARCHAR(255)      | str           |                                                                                                                                                                                                                                                                                    |
+| gender            | gender               | Sexe                    | gender            | gender          | FLOAT             | category      | Applied a mapping (to homogenize level codification) defined in `level_data`.                                                                                                                                                                                                      |
+| birth_date        | -                    | -                       | -                 | -               | DATETIME          | datetime      | Variable calculated from patient's age and date_0 (inclusion date).                                                                                                                                                                                                                |
+| date_0            | date_0               | Fecha_V1                | date_0            | date_0          | DATETIME          | datetime      |                                                                                                                                                                                                                                                                                    |
+| status            | -                    | -                       | -                 | -               | VARCHAR(8)        | category      | Calculated variable. If cohort recruitment is ongoing, it is set to *ongoing*. If cohort recruitment is finished, it is set to *finished*. If the patient has left the cohort (in cases where more than one version is available), it is set to *withdrawn*.                       |
+| exit_date         | -                    | -                       | -                 | -               | DATETIME          | datetime      | Calculated variable. If the patient's status is ongoing, it is set to the current date (execution date). If the status is finished, it is set to the date of the last version. If the status is withdrawn, it is set to the date of the last version in which the patient appears. | -->
+
+<table>
+<thead>
+<tr>
+<th><strong>Liveraim name</strong></th>
+<th><strong>SQL data type</strong></th>
+<th><strong>data type</strong></th>
+<th><strong>calculated</strong></th>
+<th><strong>Rule/Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>liveraim_id</td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td>true</td>
+<td>Created dynamically after merging cohorts.</td>
+</tr>
+<tr>
+<td>cohort_id</td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td>false</td>
+<td></td>
+</tr>
+<tr>
+<td>gender</td>
+<td>FLOAT</td>
+<td>category</td>
+<td>false</td>
+<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code>.</td>
+</tr>
+<tr>
+<td>birth_date</td>
+<td>DATETIME</td>
+<td>datetime</td>
+<td>true</td>
+<td>Variable calculated from patient's age and date_0 (inclusion date).</td>
+</tr>
+<tr>
+<td>date_0</td>
+<td>DATETIME</td>
+<td>datetime</td>
+<td>false</td>
+<td></td>
+</tr>
+<tr>
+<td>status</td>
+<td>VARCHAR(8)</td>
+<td>category</td>
+<td>true</td>
+<td>Calculated variable. If cohort recruitment is ongoing, it is set to <em>ongoing</em>. If cohort recruitment is finished, it is set to <em>finished</em>. If the patient has left the cohort (in cases where more than one version is available), it is set to <em>withdrawn</em>.</td>
+</tr>
+<tr>
+<td>exit_date</td>
+<td>DATETIME</td>
+<td>datetime</td>
+<td>true</td>
+<td>Calculated variable. If the patient's status is ongoing, it is set to the current date (execution date). If the status is finished, it is set to the date of the last version. If the status is withdrawn, it is set to the date of the last version in which the patient appears.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="variable-names-per-cohort">Variable names per cohort</h4>
 <table>
 <thead>
 <tr>
@@ -580,9 +651,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <th><strong>Alcofib name</strong></th>
 <th><strong>Glucofib name</strong></th>
 <th><strong>Decide name</strong></th>
-<th><strong>SQL data type</strong></th>
-<th><strong>data type</strong></th>
-<th><strong>Rule/Notes</strong></th>
+<th><strong>Marina name</strong></th>
+<th><strong>Galaald name</strong></th>
 </tr>
 </thead>
 <tbody>
@@ -592,29 +662,26 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>-</td>
 <td>-</td>
 <td>-</td>
-<td>VARCHAR(255)</td>
-<td>str</td>
-<td>Created dynamically after merging cohorts.</td>
+<td>-</td>
+<td>-</td>
 </tr>
 <tr>
 <td>cohort_id</td>
 <td>id</td>
-<td>Codigo_deidentificacion</td>
+<td>Codigo_Muestras</td>
+<td>code</td>
 <td>id</td>
+<td>Codi_mostra</td>
 <td>id</td>
-<td>VARCHAR(255)</td>
-<td>str</td>
-<td></td>
 </tr>
 <tr>
 <td>gender</td>
 <td>gender</td>
 <td>Sexe</td>
 <td>gender</td>
+<td>sex</td>
+<td>SEXE</td>
 <td>gender</td>
-<td>FLOAT</td>
-<td>category</td>
-<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code>.</td>
 </tr>
 <tr>
 <td>birth_date</td>
@@ -622,19 +689,17 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>-</td>
 <td>-</td>
 <td>-</td>
-<td>DATETIME</td>
-<td>datetime</td>
-<td>Variable calculated from patient's age and date_0 (inclusion date).</td>
+<td>-</td>
+<td>-</td>
 </tr>
 <tr>
-<td>date_0</td>
+<td>inclusion_date</td>
 <td>date_0</td>
 <td>Fecha_V1</td>
 <td>date_0</td>
-<td>date_0</td>
-<td>DATETIME</td>
-<td>datetime</td>
-<td></td>
+<td>incl_date</td>
+<td>DATA_INCLUSIO</td>
+<td>date_incl</td>
 </tr>
 <tr>
 <td>status</td>
@@ -642,9 +707,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>-</td>
 <td>-</td>
 <td>-</td>
-<td>VARCHAR(8)</td>
-<td>category</td>
-<td>Calculated variable. If cohort recruitment is ongoing, it is set to <em>ongoing</em>. If cohort recruitment is finished, it is set to <em>finished</em>. If the patient has left the cohort (in cases where more than one version is available), it is set to <em>withdrawn</em>.</td>
+<td>-</td>
+<td>-</td>
 </tr>
 <tr>
 <td>exit_date</td>
@@ -652,9 +716,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>-</td>
 <td>-</td>
 <td>-</td>
-<td>DATETIME</td>
-<td>datetime</td>
-<td>Calculated variable. If the patient's status is ongoing, it is set to the current date (execution date). If the status is finished, it is set to the date of the last version. If the status is withdrawn, it is set to the date of the last version in which the patient appears.</td>
+<td>-</td>
+<td>-</td>
 </tr>
 </tbody>
 </table>
@@ -686,90 +749,63 @@ Transforming a wide table into a long table is a straightforward process (if the
 <thead>
 <tr>
 <th><strong>Liveraim name</strong></th>
-<th><strong>Liverscreen name</strong></th>
-<th><strong>Alcofib name</strong></th>
-<th><strong>Glucofib name</strong></th>
-<th><strong>Decide name</strong></th>
 <th><strong>Data type</strong></th>
+<th><strong>calculated</strong></th>
 <th><strong>Rule/Notes</strong></th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>liveraim_id</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
 <td>VARCHAR(255)</td>
+<td>False</td>
 <td>Created dynamically after merging cohorts.</td>
 </tr>
 <tr>
 <td>cohort_id</td>
-<td>id</td>
-<td>Codigo_deidentificacion</td>
-<td>id</td>
-<td>id</td>
 <td>VARCHAR(255)</td>
+<td>False</td>
 <td></td>
 </tr>
 <tr>
 <td>date_0</td>
-<td>date_0</td>
-<td>Fecha_V1</td>
-<td>date_0</td>
-<td>date_0</td>
 <td>DATETIME</td>
+<td>False</td>
 <td></td>
 </tr>
 <tr>
 <td>variable</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
 <td>VARCHAR(255)</td>
+<td>True</td>
 <td>Obtained from melting the variables <code>weight</code>, <code>height</code>, <code>bmi</code>, <code>hip</code></td>
 </tr>
 <tr>
 <td>value</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
 <td>FLOAT</td>
+<td>True</td>
 <td>Obtained from melting the variables <code>weight</code>, <code>height</code>, <code>bmi</code>, <code>hip</code></td>
 </tr>
 <tr>
 <td>final_units</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
 <td>VARCHAR(255)</td>
+<td>True</td>
 <td></td>
 </tr>
 <tr>
 <td>lower_bound</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
 <td>FLOAT</td>
+<td>True</td>
 <td></td>
 </tr>
 <tr>
 <td>upper_bound</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
 <td>FLOAT</td>
+<td>True</td>
 <td></td>
 </tr>
 </tbody>
 </table>
-<h5 id="melted-variables-metadata">Melted variables metadata</h5>
+<h5 id="variable-names-per-cohort-and-melted-variables">Variable names per cohort (and melted variables)</h5>
 <table>
 <thead>
 <tr>
@@ -778,6 +814,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <th><strong>Alcofib name</strong></th>
 <th><strong>Glucofib name</strong></th>
 <th><strong>Decide name</strong></th>
+<th><strong>Marina name</strong></th>
+<th><strong>Galaald name</strong></th>
 <th><strong>Data type</strong></th>
 <th><strong>Rule/Notes</strong></th>
 </tr>
@@ -789,6 +827,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>Peso_V1</td>
 <td>weight</td>
 <td>weight</td>
+<td>PES</td>
+<td>weight</td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
 </tr>
@@ -797,6 +837,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>height</td>
 <td>Talla_V1</td>
 <td>height</td>
+<td>height</td>
+<td>TALLA_METRES</td>
 <td>height</td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
@@ -807,8 +849,10 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>BMI_V1</td>
 <td>bmi</td>
 <td>bmi</td>
+<td>IMC</td>
+<td>bmi</td>
 <td>float</td>
-<td>Data type modification<br>Apply conversion factor</td>
+<td>This variable is recomputed using weight and height and compared with the provided variable</td>
 </tr>
 <tr>
 <td>hip</td>
@@ -816,8 +860,32 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>diametro_cintura</td>
 <td>hip</td>
 <td>hip</td>
+<td>P_CINTURA</td>
+<td>hip</td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
+</tr>
+<tr>
+<td>cohort_id</td>
+<td>id</td>
+<td>Codigo_Muestras</td>
+<td>code</td>
+<td>id</td>
+<td>Codi_mostra</td>
+<td>id</td>
+<td>VARCHAR(255)</td>
+<td></td>
+</tr>
+<tr>
+<td>inclusion_date</td>
+<td>date_0</td>
+<td>Fecha_V1</td>
+<td>date_0</td>
+<td>incl_date</td>
+<td>DATA_INCLUSIO</td>
+<td>date_incl</td>
+<td>DATETIME</td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -846,13 +914,61 @@ Transforming a wide table into a long table is a straightforward process (if the
 <thead>
 <tr>
 <th><strong>Liveraim name</strong></th>
+<th><strong>SQL data type</strong></th>
+<th><strong>data type</strong></th>
+<th><strong>Rule/Notes</strong></th>
+<th><strong>Calculated</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>liveraim_id</td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td>Created dynamically after merging cohorts.</td>
+<td>True</td>
+</tr>
+<tr>
+<td>cohort_id</td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td></td>
+<td>False</td>
+</tr>
+<tr>
+<td>date_0</td>
+<td>DATETIME</td>
+<td>datetime</td>
+<td></td>
+<td>False</td>
+</tr>
+<tr>
+<td>ethnicity</td>
+<td>VARCHAR(255)</td>
+<td>category</td>
+<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code></td>
+<td>False</td>
+</tr>
+<tr>
+<td>gender</td>
+<td>VARCHAR(255)</td>
+<td>category</td>
+<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code></td>
+<td>False</td>
+</tr>
+</tbody>
+</table>
+<h5 id="variable-names-per-cohort_1">Variable names per cohort</h5>
+<table>
+<thead>
+<tr>
+<th><strong>Liveraim name</strong></th>
 <th><strong>Liverscreen name</strong></th>
 <th><strong>Alcofib name</strong></th>
 <th><strong>Glucofib name</strong></th>
 <th><strong>Decide name</strong></th>
-<th><strong>SQL data type</strong></th>
-<th><strong>data type</strong></th>
-<th><strong>Rule/Notes</strong></th>
+<th><strong>Marina name</strong></th>
+<th><strong>Galaald name</strong></th>
 </tr>
 </thead>
 <tbody>
@@ -862,9 +978,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>-</td>
 <td>-</td>
 <td>-</td>
-<td>VARCHAR(255)</td>
-<td>str</td>
-<td>Created dynamically after merging cohorts.</td>
+<td>-</td>
+<td>-</td>
 </tr>
 <tr>
 <td>cohort_id</td>
@@ -872,19 +987,17 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>Codigo_deidentificacion</td>
 <td>id</td>
 <td>id</td>
-<td>VARCHAR(255)</td>
-<td>str</td>
-<td></td>
+<td>Codi_mostra</td>
+<td>id</td>
 </tr>
 <tr>
 <td>date_0</td>
 <td>date_0</td>
 <td>Fecha_V1</td>
 <td>date_0</td>
-<td>date_0</td>
-<td>DATETIME</td>
-<td>datetime</td>
-<td></td>
+<td>incl_date</td>
+<td>DATA_INCLUSIO</td>
+<td>date_incl</td>
 </tr>
 <tr>
 <td>ethnicity</td>
@@ -892,9 +1005,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>Etnia</td>
 <td>ethnicity</td>
 <td>ethnicity</td>
-<td>VARCHAR(255)</td>
-<td>category</td>
-<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code></td>
+<td>-</td>
+<td>-</td>
 </tr>
 <tr>
 <td>gender</td>
@@ -902,9 +1014,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>Sexe</td>
 <td>gender</td>
 <td>gender</td>
-<td>VARCHAR(255)</td>
-<td>category</td>
-<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code></td>
+<td>SEXE</td>
+<td>gender</td>
 </tr>
 </tbody>
 </table>
@@ -932,90 +1043,72 @@ Transforming a wide table into a long table is a straightforward process (if the
 <thead>
 <tr>
 <th><strong>Liveraim name</strong></th>
-<th><strong>Liverscreen name</strong></th>
-<th><strong>Alcofib name</strong></th>
-<th><strong>Glucofib name</strong></th>
-<th><strong>Decide name</strong></th>
-<th><strong>Data type</strong></th>
+<th><strong>SQL data type</strong></th>
+<th><strong>data type</strong></th>
 <th><strong>Rule/Notes</strong></th>
+<th><strong>Calculated</strong></th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>liveraim_id</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
 <td>VARCHAR(255)</td>
+<td>str</td>
 <td>Created dynamically after merging cohorts.</td>
+<td>True</td>
 </tr>
 <tr>
 <td>cohort_id</td>
-<td>id</td>
-<td>Codigo_deidentificacion</td>
-<td>id</td>
-<td>id</td>
 <td>VARCHAR(255)</td>
+<td>str</td>
 <td></td>
+<td>False</td>
 </tr>
 <tr>
 <td>date_0</td>
-<td>date_0</td>
-<td>Fecha_V1</td>
-<td>date_0</td>
-<td>date_0</td>
 <td>DATETIME</td>
+<td>datetime</td>
 <td></td>
+<td>False</td>
 </tr>
 <tr>
 <td>variable</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
 <td>VARCHAR(255)</td>
+<td>str</td>
 <td>Obtained from melting the variables <code>te</code>, <code>cap</code>.</td>
+<td>True</td>
 </tr>
 <tr>
 <td>value</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
 <td>FLOAT</td>
+<td>float</td>
 <td>Obtained from melting the variables <code>te</code>, <code>cap</code>.</td>
+<td>True</td>
 </tr>
 <tr>
 <td>final_units</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
 <td>VARCHAR(255)</td>
+<td>str</td>
 <td></td>
+<td>True</td>
 </tr>
 <tr>
 <td>lower_bound</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
 <td>FLOAT</td>
+<td>float</td>
 <td></td>
+<td>True</td>
 </tr>
 <tr>
 <td>upper_bound</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
 <td>FLOAT</td>
+<td>float</td>
 <td></td>
+<td>True</td>
 </tr>
 </tbody>
 </table>
-<h5 id="melted-variables-metadata_1">Melted variables metadata</h5>
+<h5 id="variable-names-per-cohort-and-melted-variables_1">##### Variable names per cohort (and melted variables)</h5>
 <table>
 <thead>
 <tr>
@@ -1024,6 +1117,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <th><strong>Alcofib name</strong></th>
 <th><strong>Glucofib name</strong></th>
 <th><strong>Decide name</strong></th>
+<th><strong>Marina name</strong></th>
+<th><strong>Galaald name</strong></th>
 <th><strong>Data type</strong></th>
 <th><strong>Rule/Notes</strong></th>
 </tr>
@@ -1035,6 +1130,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>LS_V1</td>
 <td>te</td>
 <td>te</td>
+<td>FIBROSCAN</td>
+<td>te</td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
 </tr>
@@ -1044,13 +1141,16 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>CAP_V1</td>
 <td>cap</td>
 <td>cap</td>
+<td>CAP</td>
+<td>cap</td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
 </tr>
 </tbody>
 </table>
 <h3 id="table-medical_history">Table: <code>medical_history</code></h3>
-<p><span style="color:red">This table structure must be reviewed.</span></p>
+<!-- <span style="color:red">This table structure must be reviewed.</span> -->
+
 <ul>
 <li><strong>Description:</strong> Stores medical history of patients.</li>
 <li>
@@ -1065,6 +1165,7 @@ Transforming a wide table into a long table is a straightforward process (if the
 <li><code>COPD</code> (VARCHAR(255)): Chronic obstructive pulmonary disease information.</li>
 <li><code>smoke</code> (VARCHAR(255)): Smoking status of the patient.</li>
 <li><code>alcohol_treat</code> (VARCHAR(255)): Information on alcohol treatment.</li>
+<li><code>overuse</code> (VARCHAR(255)): Alcohor overuse.</li>
 </ul>
 </li>
 <li>
@@ -1074,6 +1175,95 @@ Transforming a wide table into a long table is a straightforward process (if the
 <li><strong>Relations:</strong> Relates to the <code>population</code> table via <code>liveraim_id</code> and <code>cohort_id</code>.</li>
 </ul>
 <h4 id="actions-and-specification-tables_4">Actions and specification tables</h4>
+<!-- | **Liveraim name** | **Liverscreen name** | **Alcofib name**        | **Glucofib name** | **Decide name** | **SQL data type** | **Data type** | **Rule/Notes**                                                                |
+| ----------------- | -------------------- | ----------------------- | ----------------- | --------------- | ----------------- | ------------- | ----------------------------------------------------------------------------- |
+| liveraim_id       | -                    | -                       | -                 | -               | VARCHAR(255)      | str           | Created dynamically after merging cohorts.                                    |
+| cohort_id         | id                   | Codigo_deidentificacion | id                | id              | VARCHAR(255)      | str           |                                                                               |
+| date_0            | date_0               | Fecha_V1                | date_0            | date_0          | DATETIME          | datetime      |                                                                               |
+| hypertension      | hypertension         | HTA                     | hypertension      | hypertension    | hypertension      | category      | Applied a mapping (to homogenize level codification) defined in `level_data`. |
+| centralobesity    | centralobesity       | Obesidad_abdominal      | centralobesity    | centralobesity  | centralobesity    | category      | Applied a mapping (to homogenize level codification) defined in `level_data`. |
+| hightrigly        | hightrigly           | Hipertriglic            | hightrigly        | hightrigly      | hightrigly        | category      | Applied a mapping (to homogenize level codification) defined in `level_data`. |
+| COPD              | comorbid___2         | EPOC                    | comorbid___2      | comorbid___2    | comorbid___2      | category      | Applied a mapping (to homogenize level codification) defined in `level_data`. |
+| smoke             | smoke                | Tabaquismo              | smoke             | smoke           | smoke             | category      | Applied a mapping (to homogenize level codification) defined in `level_data`. |
+| alcohol_treat     | med_type___12        | Medicacion_abstinencia  | med_type___12     | med_type___12   | med_type___12     | category      | Applied a mapping (to homogenize level codification) defined in `level_data`. | -->
+
+<table>
+<thead>
+<tr>
+<th><strong>Liveraim name</strong></th>
+<th><strong>SQL data type</strong></th>
+<th><strong>Data type</strong></th>
+<th><strong>calculated</strong></th>
+<th><strong>Rule/Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>liveraim_id</td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td>False</td>
+<td>Created dynamically after merging cohorts.</td>
+</tr>
+<tr>
+<td>cohort_id</td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td>False</td>
+<td></td>
+</tr>
+<tr>
+<td>inclusion_date</td>
+<td>DATETIME</td>
+<td>datetime</td>
+<td>False</td>
+<td></td>
+</tr>
+<tr>
+<td>hypertension</td>
+<td>VARCHAR(255)</td>
+<td>category</td>
+<td>False</td>
+<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code>.</td>
+</tr>
+<tr>
+<td>centralobesity</td>
+<td>VARCHAR(255)</td>
+<td>category</td>
+<td>False</td>
+<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code>.</td>
+</tr>
+<tr>
+<td>hightrigly</td>
+<td>VARCHAR(255)</td>
+<td>category</td>
+<td>False</td>
+<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code>.</td>
+</tr>
+<tr>
+<td>COPD</td>
+<td>VARCHAR(255)</td>
+<td>category</td>
+<td>False</td>
+<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code>.</td>
+</tr>
+<tr>
+<td>smoke</td>
+<td>VARCHAR(255)</td>
+<td>category</td>
+<td>False</td>
+<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code>.</td>
+</tr>
+<tr>
+<td>alcohol_treat</td>
+<td>VARCHAR(255)</td>
+<td>category</td>
+<td>False</td>
+<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code>.</td>
+</tr>
+</tbody>
+</table>
+<h5 id="variable-names-per-cohort_2">Variable names per cohort</h5>
 <table>
 <thead>
 <tr>
@@ -1082,9 +1272,9 @@ Transforming a wide table into a long table is a straightforward process (if the
 <th><strong>Alcofib name</strong></th>
 <th><strong>Glucofib name</strong></th>
 <th><strong>Decide name</strong></th>
-<th><strong>SQL data type</strong></th>
-<th><strong>Data type</strong></th>
-<th><strong>Rule/Notes</strong></th>
+<th><strong>Marina name</strong></th>
+<th><strong>Galaald name</strong></th>
+<th><strong>Liveraim</strong></th>
 </tr>
 </thead>
 <tbody>
@@ -1094,9 +1284,9 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>-</td>
 <td>-</td>
 <td>-</td>
-<td>VARCHAR(255)</td>
-<td>str</td>
-<td>Created dynamically after merging cohorts.</td>
+<td>-</td>
+<td>-</td>
+<td>liveraim_id</td>
 </tr>
 <tr>
 <td>cohort_id</td>
@@ -1104,19 +1294,19 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>Codigo_deidentificacion</td>
 <td>id</td>
 <td>id</td>
-<td>VARCHAR(255)</td>
-<td>str</td>
-<td></td>
+<td>Codi_mostra</td>
+<td>id</td>
+<td>cohort_id</td>
 </tr>
 <tr>
-<td>date_0</td>
+<td>inclusion_date</td>
 <td>date_0</td>
 <td>Fecha_V1</td>
 <td>date_0</td>
-<td>date_0</td>
-<td>DATETIME</td>
-<td>datetime</td>
-<td></td>
+<td>incl_date</td>
+<td>DATA_INCLUSIO</td>
+<td>date_incl</td>
+<td>inclusion_date</td>
 </tr>
 <tr>
 <td>hypertension</td>
@@ -1124,39 +1314,39 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>HTA</td>
 <td>hypertension</td>
 <td>hypertension</td>
+<td>HTA</td>
 <td>hypertension</td>
-<td>category</td>
-<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code>.</td>
+<td>hypertension</td>
 </tr>
 <tr>
 <td>centralobesity</td>
 <td>centralobesity</td>
 <td>Obesidad_abdominal</td>
 <td>centralobesity</td>
+<td>mets_centralobesity</td>
+<td>OBESITAT</td>
 <td>centralobesity</td>
 <td>centralobesity</td>
-<td>category</td>
-<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code>.</td>
 </tr>
 <tr>
 <td>hightrigly</td>
 <td>hightrigly</td>
 <td>Hipertriglic</td>
 <td>hightrigly</td>
+<td>mets_hightrigly</td>
+<td>-</td>
+<td>-</td>
 <td>hightrigly</td>
-<td>hightrigly</td>
-<td>category</td>
-<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code>.</td>
 </tr>
 <tr>
 <td>COPD</td>
 <td>comorbid___2</td>
 <td>EPOC</td>
 <td>comorbid___2</td>
-<td>comorbid___2</td>
-<td>comorbid___2</td>
-<td>category</td>
-<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code>.</td>
+<td>copd</td>
+<td>MPOC</td>
+<td>comorbid_copd</td>
+<td>COPD</td>
 </tr>
 <tr>
 <td>smoke</td>
@@ -1164,19 +1354,29 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>Tabaquismo</td>
 <td>smoke</td>
 <td>smoke</td>
+<td>TABAC</td>
 <td>smoke</td>
-<td>category</td>
-<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code>.</td>
+<td>smoke</td>
 </tr>
 <tr>
 <td>alcohol_treat</td>
 <td>med_type___12</td>
 <td>Medicacion_abstinencia</td>
 <td>med_type___12</td>
-<td>med_type___12</td>
-<td>med_type___12</td>
-<td>category</td>
-<td>Applied a mapping (to homogenize level codification) defined in <code>level_data</code>.</td>
+<td>alcohol_treat</td>
+<td>-</td>
+<td>-</td>
+<td>alcohol_treat</td>
+</tr>
+<tr>
+<td>overuse</td>
+<td>overuse</td>
+<td>Enol_Binge_drinking_V1</td>
+<td>overuse</td>
+<td>overuse</td>
+<td>Alcohol.risk</td>
+<td>overuse</td>
+<td>overuse</td>
 </tr>
 </tbody>
 </table>
@@ -1291,7 +1491,76 @@ Transforming a wide table into a long table is a straightforward process (if the
 </tr>
 </tbody>
 </table>
-<h5 id="melted-variables-metadata_2">Melted variables metadata</h5>
+<table>
+<thead>
+<tr>
+<th><strong>Liveraim name</strong></th>
+<th><strong>SQL data type</strong></th>
+<th><strong>Data type</strong></th>
+<th><strong>Calculated</strong></th>
+<th><strong>Rule/Notes</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>liveraim_id</td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td>True</td>
+<td>Created dynamically after merging cohorts.</td>
+</tr>
+<tr>
+<td>cohort_id</td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td>False</td>
+<td></td>
+</tr>
+<tr>
+<td>date_0</td>
+<td>DATETIME</td>
+<td>datetime</td>
+<td>False</td>
+<td></td>
+</tr>
+<tr>
+<td>variable</td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td>True</td>
+<td>Obtained from melting the variables. Numerical variables: <code>crea</code>, <code>crp</code>, <code>glc</code>, <code>ast</code>, <code>alt</code>, <code>ggt</code>, <code>bili</code>, <code>cb</code>, <code>alk</code>, <code>prot_tot</code>, <code>alb</code>, <code>hto</code>, <code>plates</code>, <code>ferritin</code>, <code>fesat</code>, <code>inr</code>, <code>chol</code>, <code>hdl</code>, <code>ldl</code>, <code>tg</code>, <code>ghb</code>, <code>wcc</code>, categorical variables: <code>hbs_ag</code>, <code>hcv</code></td>
+</tr>
+<tr>
+<td>value</td>
+<td>FLOAT</td>
+<td>float</td>
+<td>True</td>
+<td>Obtained from melting the variables. Numerical variables: <code>crea</code>, <code>crp</code>, <code>glc</code>, <code>ast</code>, <code>alt</code>, <code>ggt</code>, <code>bili</code>, <code>cb</code>, <code>alk</code>, <code>prot_tot</code>, <code>alb</code>, <code>hto</code>, <code>plates</code>, <code>ferritin</code>, <code>fesat</code>, <code>inr</code>, <code>chol</code>, <code>hdl</code>, <code>ldl</code>, <code>tg</code>, <code>ghb</code>, <code>wcc</code>, categorical variables: <code>hbs_ag</code>, <code>hcv</code></td>
+</tr>
+<tr>
+<td>final_units</td>
+<td>VARCHAR(255)</td>
+<td>str</td>
+<td>True</td>
+<td></td>
+</tr>
+<tr>
+<td>lower_bound</td>
+<td>FLOAT</td>
+<td>float</td>
+<td>True</td>
+<td></td>
+</tr>
+<tr>
+<td>upper_bound</td>
+<td>FLOAT</td>
+<td>float</td>
+<td>True</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h5 id="variable-names-per-cohort-and-melted-variables_2">Variable names per cohort (and melted variables)</h5>
 <table>
 <thead>
 <tr>
@@ -1300,6 +1569,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <th><strong>Alcofib name</strong></th>
 <th><strong>Glucofib name</strong></th>
 <th><strong>Decide name</strong></th>
+<th><strong>Marina name</strong></th>
+<th><strong>Galaald name</strong></th>
 <th><strong>Data type</strong></th>
 <th><strong>Rule/Notes</strong></th>
 </tr>
@@ -1310,7 +1581,9 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>crea_mg_dl</td>
 <td>Crea_V1</td>
 <td>crea_mg_dl</td>
-<td>crea_mg_dl</td>
+<td>crea</td>
+<td>CREATININA</td>
+<td>creat</td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
 </tr>
@@ -1320,6 +1593,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>CRP_V1</td>
 <td>crp</td>
 <td>crp</td>
+<td></td>
+<td>crp</td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
 </tr>
@@ -1328,7 +1603,9 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>glc_mg_dl</td>
 <td>Glu_V1</td>
 <td>glc_mg_dl</td>
-<td>glc_mg_dl</td>
+<td>glc</td>
+<td>GLUCOSA</td>
+<td>glc</td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
 </tr>
@@ -1337,6 +1614,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>ast</td>
 <td>ASAT_V1</td>
 <td>ast</td>
+<td>ast</td>
+<td>GOT_80avisar</td>
 <td>ast</td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
@@ -1347,6 +1626,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>ALAT_V1</td>
 <td>alt</td>
 <td>alt</td>
+<td>GPT_80avisar</td>
+<td>alt</td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
 </tr>
@@ -1356,6 +1637,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>GGT_V1</td>
 <td>ggt</td>
 <td>ggt</td>
+<td>GGT_80avisar</td>
+<td>ggt</td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
 </tr>
@@ -1364,7 +1647,9 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>bili_mgdl</td>
 <td>Bili_V1</td>
 <td>bili_mgdl</td>
-<td>bili_mgdl</td>
+<td>bili</td>
+<td>BILIRRUBINA</td>
+<td>bili</td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
 </tr>
@@ -1373,7 +1658,9 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>cb_mg_dl</td>
 <td>Bili_directa_v1</td>
 <td>cb_mg_dl</td>
-<td>cb_mg_dl</td>
+<td></td>
+<td></td>
+<td></td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
 </tr>
@@ -1383,6 +1670,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>FA_V1</td>
 <td>alk</td>
 <td>alk</td>
+<td>FOSFATASA_ALCALINA</td>
+<td>alk</td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
 </tr>
@@ -1391,7 +1680,9 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>prot_g_l</td>
 <td>Prot_Tot_V1</td>
 <td>prot_g_l</td>
-<td>prot_g_l</td>
+<td></td>
+<td>PROTEÏNES_TOTALS</td>
+<td></td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
 </tr>
@@ -1401,6 +1692,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>Albumina_V1</td>
 <td>alb</td>
 <td>alb</td>
+<td>ALBUMINA</td>
+<td>alb</td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
 </tr>
@@ -1409,7 +1702,9 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>hto</td>
 <td>HTO_V1</td>
 <td>hto</td>
-<td>hto</td>
+<td>hct</td>
+<td>HEMATOCRITx100</td>
+<td>evf</td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
 </tr>
@@ -1418,6 +1713,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>plates</td>
 <td>Plaq_V1</td>
 <td>plates</td>
+<td>trc</td>
+<td>RECOMPTE_PLAQUETES</td>
 <td>plates</td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
@@ -1427,7 +1724,9 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>ferritin</td>
 <td>Ferr_V1</td>
 <td>ferritin</td>
-<td>ferritin</td>
+<td>ferri</td>
+<td>FERRITINA</td>
+<td>ferri</td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
 </tr>
@@ -1436,6 +1735,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>fesat</td>
 <td>IS_V1</td>
 <td>fesat</td>
+<td>fesat</td>
+<td>SAT_TRANSFERRINA</td>
 <td>fesat</td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
@@ -1446,6 +1747,8 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>INR_V1</td>
 <td>inr</td>
 <td>inr</td>
+<td>INR</td>
+<td>inr</td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
 </tr>
@@ -1454,207 +1757,33 @@ Transforming a wide table into a long table is a straightforward process (if the
 <td>chol_mg_dl</td>
 <td>CT_V1</td>
 <td>chol_mg_dl</td>
-<td>chol_mg_dl</td>
+<td>chol</td>
+<td>COL_T</td>
+<td>chol</td>
 <td>float</td>
 <td>Data type modification<br>Apply conversion factor</td>
 </tr>
-<tr>
-<td>hdl</td>
-<td>hdl_mg_dl</td>
-<td>HDL_V1</td>
-<td>hdl_mg_dl</td>
-<td>hdl_mg_dl</td>
-<td>float</td>
-<td>Data type modification<br>Apply conversion factor</td>
-</tr>
-<tr>
-<td>ldl</td>
-<td>ldl_mg_dl</td>
-<td>LDL_V1</td>
-<td>ldl_mg_dl</td>
-<td>ldl_mg_dl</td>
-<td>float</td>
-<td>Data type modification<br>Apply conversion factor</td>
-</tr>
-<tr>
-<td>tg</td>
-<td>tg</td>
-<td>TG_V1</td>
-<td>tg</td>
-<td>tg</td>
-<td>float</td>
-<td>Data type modification<br>Apply conversion factor</td>
-</tr>
-<tr>
-<td>ghb</td>
-<td>ghb</td>
-<td>HbA1c_V1</td>
-<td>ghb</td>
-<td>ghb</td>
-<td>float</td>
-<td>Data type modification<br>Apply conversion factor</td>
-</tr>
-<tr>
-<td>wcc</td>
-<td>wcc</td>
-<td>LEU_V1</td>
-<td>wcc</td>
-<td>wcc</td>
-<td>float</td>
-<td>Data type modification<br>Apply conversion factor</td>
-</tr>
-</tbody>
-</table>
-<h3 id="table-blood_test_categorical">Table: <code>blood_test_categorical</code></h3>
-<ul>
-<li><strong>Description:</strong> Stores categorical blood test results.</li>
-<li><strong>Fields:</strong><ul>
-<li><code>date_0</code> (DATETIME): Date of patient inclusion in the cohort.</li>
-<li><code>liveraim_id</code> (VARCHAR(255)): Common liveraim identifier for the patient. Unique within the data warehouse. </li>
-<li><code>cohort_id</code> (VARCHAR(255)): Cohort-specific identifier for each patient in a cohort. Unique within the cohort. </li>
-<li><code>variable</code> (VARCHAR(255)): Name of the variable to which the corresponding value in the <code>value</code> column refers. </li>
-<li><code>value</code> (VARCHAR(255)): Categorical result of the blood test.</li>
-<li><code>final_units</code> (VARCHAR(255)): Final units of the value.</li>
-<li><code>lower_bound</code> (FLOAT): Lower acceptable limit for the value (if applicable).</li>
-<li><code>upper_bound</code> (FLOAT): Upper acceptable limit for the value (if applicable).</li>
-</ul>
-</li>
-<li><strong>Format</strong>: long.</li>
-<li><strong>Variables in <code>varible</code> column</strong>: <code>hbs_ag</code>, <code>hcv</code>.</li>
-<li><strong>Primary Key:</strong> (<code>liveraim_id</code>, <code>cohort_id</code>, <code>variable</code>)</li>
-<li><strong>Relations:</strong> Relates to the <code>population</code> table via <code>liveraim_id</code> and <code>cohort_id</code>.</li>
-</ul>
-<h4 id="actions-and-specification-tables_6">Actions and specification tables</h4>
-<table>
-<thead>
-<tr>
-<th><strong>Liveraim name</strong></th>
-<th><strong>Liverscreen name</strong></th>
-<th><strong>Alcofib name</strong></th>
-<th><strong>Glucofib name</strong></th>
-<th><strong>Decide name</strong></th>
-<th><strong>SQL data type</strong></th>
-<th><strong>Data type</strong></th>
-<th><strong>Rule/Notes</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>liveraim_id</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>VARCHAR(255)</td>
-<td>str</td>
-<td>Created dynamically after merging cohorts.</td>
-</tr>
-<tr>
-<td>cohort_id</td>
-<td>id</td>
-<td>Codigo_deidentificacion</td>
-<td>id</td>
-<td>id</td>
-<td>VARCHAR(255)</td>
-<td>str</td>
-<td></td>
-</tr>
-<tr>
-<td>date_0</td>
-<td>date_0</td>
-<td>Fecha_V1</td>
-<td>date_0</td>
-<td>date_0</td>
-<td>DATETIME</td>
-<td>datetime</td>
-<td></td>
-</tr>
-<tr>
-<td>variable</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>VARCHAR(255)</td>
-<td></td>
-<td>Obtained from melting the variables <code>hbs_ag</code>, <code>hcv</code>.</td>
-</tr>
-<tr>
-<td>value</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>VARCHAR(255)</td>
-<td>category</td>
-<td>Obtained from melting the variables <code>hbs_ag</code>, <code>hcv</code>.</td>
-</tr>
-<tr>
-<td>final_units</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>VARCHAR(255)</td>
-<td>str</td>
-<td></td>
-</tr>
-<tr>
-<td>lower_bound</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>FLOAT</td>
-<td>float</td>
-<td></td>
-</tr>
-<tr>
-<td>upper_bound</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-<td>FLOAT</td>
-<td>float</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h5 id="melted-variables-metadata_3">Melted variables metadata</h5>
-<table>
-<thead>
-<tr>
-<th><strong>Liveraim name</strong></th>
-<th><strong>Liverscreen name</strong></th>
-<th><strong>Alcofib name</strong></th>
-<th><strong>Glucofib name</strong></th>
-<th><strong>Decide name</strong></th>
-<th><strong>SQL data type</strong></th>
-<th><strong>Data type</strong></th>
-<th><strong>Rule/Notes</strong></th>
-</tr>
-</thead>
-<tbody>
 <tr>
 <td>hbs_ag</td>
 <td>hbs_ag</td>
 <td>HBsAg_V1</td>
 <td>hbs_ag</td>
-<td>hbs_ag</td>
-<td>VARCHAR(255)</td>
-<td>category</td>
-<td>applied a mapping (to homogenize level codification) defined in <code>level_data</code></td>
+<td>hbsag_b</td>
+<td>HBsAG</td>
+<td></td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
 </tr>
 <tr>
 <td>hcv</td>
 <td>hcv</td>
 <td>HCVAb_V1</td>
 <td>hcv</td>
-<td>hcv</td>
-<td>VARCHAR(255)</td>
-<td>category</td>
-<td>applied a mapping (to homogenize level codification) defined in <code>level_data</code></td>
+<td>hcvab_b</td>
+<td>IgG_VHC</td>
+<td></td>
+<td>float</td>
+<td>Data type modification<br>Apply conversion factor</td>
 </tr>
 </tbody>
 </table>

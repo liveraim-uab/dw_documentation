@@ -205,6 +205,12 @@
                 <li class="third-level"><a href="#final_data-column-variables">final_data column variables</a></li>
             <li class="second-level"><a href="#ids_to_droptxt-file">ids_to_drop.txt File</a></li>
                 
+            <li class="second-level"><a href="#biomarkers_config-module">biomarkers_config module</a></li>
+                
+                <li class="third-level"><a href="#bmkconfig-class">BMKConfig class</a></li>
+                <li class="third-level"><a href="#hclinicbmkconfig-class">HClinicBMKConfig class</a></li>
+                <li class="third-level"><a href="#nordicbmkconfig-class">NordicBMKConfig class</a></li>
+                <li class="third-level"><a href="#rochebmkconfig-class">RocheBMKConfig class</a></li>
     </ul>
 </div></div>
         <div class="col-md-9" role="main">
@@ -218,6 +224,7 @@
 <li><a href="#new_var_config-module"><code>new_var_config.py</code></a>: Definition of new or derived varibles.</li>
 <li><a href="#new_levels_config-module"><code>new_levels_config.py</code></a>: Definition of the levels of the new/derived categorical variables. </li>
 <li><a href="#reference_names-module"><code>reference_names.py</code></a>: Names of the columns of the innitial data files (<code>var_data</code>, <code>level_data</code> and <code>panel_metadata</code>)</li>
+<li><a href="#biomarkers_config-module"><code>biomarkers_config.py</code></a>: Parameters needed for the proper reading, formatting and computation of biomarkers</li>
 </ul>
 <p>The following sections describe the variables contained in each of these files, their purpose, and possible modifications.</p>
 <h2 id="main_config-module"><code>main_config</code> module</h2>
@@ -525,7 +532,7 @@ STATUS_WITHDRAWN = '2'
 <li><code>VAR_CONVERSION_FACTOR_COLUMN</code>: Name of the column where the conversion factor used to transform values from the original cohort to the final units is defined.</li>
 </ul>
 <h4 id="level_data-column-variables"><code>level_data</code> column variables</h4>
-<p>Variables que referencian las columnas del archivo/objeto <code>level_data</code> (hay que recordar que cada fila corresponde a un nivel de una variable):</p>
+<p>Variables that reference the columns of the <code>level_data</code> file/object:</p>
 <ul>
 <li><code>LEVEL_ORIGINAL_NAME_COLUMN</code>: Name of the column where the original name of the variable in the cohort is defined.</li>
 <li><code>LEVEL_LIVERAIM_NAME_COLUMN</code>: Name of the column where the final name (in the common format) of the variable is defined.</li>
@@ -549,7 +556,134 @@ STATUS_WITHDRAWN = '2'
 <p>This module should only be changed if the column names in <code>level_data</code>, <code>var_data</code> and <code>panel_metadata</code> are changed.</p>
 <h2 id="ids_to_droptxt-file"><code>ids_to_drop.txt</code> File</h2>
 <p>Inside the configuration module directory, a file named <code>ids_to_drop.txt</code> can be placed (this file is not tracked by Git). It should contain a raw list of patient identifiers, one per line. Each patient listed in this file will be excluded from the data warehouse during data processing.</p>
-<p>This provides a simple way to remove specific patients from the data warehouse—e.g., due to incorrect identification, misspelled IDs, duplicates, or ID collisions—by adding them to this list.</p></div>
+<p>This provides a simple way to remove specific patients from the data warehouse—e.g., due to incorrect identification, misspelled IDs, duplicates, or ID collisions—by adding them to this list.</p>
+<h2 id="biomarkers_config-module"><code>biomarkers_config</code> module</h2>
+<p>In this module contains the following configuration classes, that contain all the specifications for the proper reading and formatting of biomarker data received from the providers:</p>
+<ul>
+<li><strong><a href="#BMKConfig-class"><code>BMKConfig</code></a></strong>: Works as parent class for the rest of the provierd-specific configuration classes. In consequence, it contains all the common attributes that this classes share.</li>
+<li><strong><a href="#HClinicBMKConfig-class"><code>HClinicBMKConfig</code></a></strong>: Contains all the specific configuration parameters for the data received from the Hospital Clínic</li>
+<li><strong><a href="#NordicBMKConfig-class"><code>NordicBMKConfig</code></a></strong>: Contains all the specific configuration parameters for the data received from the Nordic</li>
+<li><strong><a href="#RocheBMKConfig-class"><code>RocheBMKConfig</code></a></strong>: Contains all the specific configuration parameters for the data received from the Roche</li>
+</ul>
+<h4 id="bmkconfig-class"><code>BMKConfig</code> class</h4>
+<h5 id="attributes"><strong>Attributes</strong>:</h5>
+<ul>
+<li><code>provider</code>: Name of the provider (hclinic, nordic or roche)</li>
+<li><code>provider_data_dir</code>: Directory where the biomarkers raw data for this provider is stored.</li>
+<li><code>BMK_DATA_DIR_PATH</code>: Common directory containing all biomarkers data (in particular, it contains the subpath <code>provider_data_dir</code>)</li>
+<li><code>FINAL_ID_COLUN</code>: Name of the ID column in the final formatted DataFrame.</li>
+<li><code>FINAL_VARIABLE_COLUMN</code>: Name of the variable column (which contains the blinded name of the biomarker) in the final formatted DataFrame.</li>
+<li><code>FINAL_VALUE_COLUMN</code>: Name of the ID column in the final formatted DataFrame (in the current version this column is not exported to the final data and is replaced by the FINAL_NUMERIC_VALUE_COLUMN).</li>
+<li><code>FINAL_NORM_VALUE_COLUMN</code>: Name of the normalized value column in the final formatted DataFrame.</li>
+<li><code>FINAL_REQUEST_COLUMN</code>: Name of the request ID column in the final formatted DataFrame (in the current version this column is not exported to the final data).</li>
+<li><code>FINAL_REGISTER_DATE_COLUMN</code>: Name of the register date column in the final formatted DataFrame (in the current version this column is not exported to the final data).</li>
+<li><code>FINAL_VALIDATION_DATE_COLUMN</code>: Name of the validation date column in the final formatted DataFrame.</li>
+<li><code>FINAL_NUMERIC_VALUE_COLUMN</code>: Name of the final numeric value (which only contains numeric values) column in the final formatted DataFrame.</li>
+<li><code>FINAL_LIVERAIM_ID_COLUMN</code>: Name of the common liveraim ID column in the final formatted DataFrame.</li>
+<li><code>FINAL_LIMIT_DETECT_COLUMN</code>: Name of the limit detection column in the final formatted DataFrame.</li>
+<li><code>FINAL_COMMENTS_COLUMN</code>: Name of the comments column in the final formatted DataFrame.</li>
+<li><code>FINAL_Z_SCORE_COLUMN</code>: Name of the z_score column in the final formatted DataFrame.</li>
+<li>
+<p><code>FINAL_QUINTILES_COLUMN</code>: Name of the quintiles column in the final formatted DataFrame.</p>
+</li>
+<li>
+<p><code>BMK_FINAL_COLUMNS</code>: List of the column names selected for the final biomarker panel.</p>
+</li>
+<li><code>python_column_types</code>: Dictionary with the python datatypes of each of the final columns.</li>
+<li><code>mysql_column_types</code>: Dictionary with the SQL datatypes of each of the final columns.</li>
+<li><code>BLINDED_BIOMARKER_MAP</code>: Dictionary to map the biomarkers names to blinded names (currently uppercase letters).</li>
+<li><code>BMKS_CUT_OFFS</code>: Dictionary with the cutoff values of the biomarkers (if provided).</li>
+</ul>
+<h4 id="hclinicbmkconfig-class"><code>HClinicBMKConfig</code> class</h4>
+<p>Inherits from <code>BMKConfig</code>.</p>
+<h5 id="new-attributes"><strong>New attributes</strong>:</h5>
+<ul>
+<li><code>provider</code>: name of the provider (nordic)</li>
+<li><code>ID_COLUMN</code>: name of the original/raw column of the IDs.</li>
+<li><code>VARIABLE_COLUMN</code>: name of the original/raw column of the biomarker name (variable column)</li>
+<li><code>VALUE_COLUMN</code>: name of the original/raw column of the biomarker measurement value.</li>
+<li><code>REQUEST_COLUMN</code>: name of the original/raw request code column.</li>
+<li><code>REGISTER_DATE_COLUMN</code>: name of the original/raw register date colu,m.</li>
+<li><code>VALIDATION_DATE_COLUMN</code>: name of the original/raw validation_date column.</li>
+<li><code>NUMERIC_VALUE_COLUMN</code>: name of the original/raw numeric value column  (this column is not present in the raw data). In this case, it is set to the same as VALUE_COLUMN.</li>
+<li><code>LIVERAIM_ID_COLUMN</code>: name of the liveraim ID column (this column is not present in the raw data). Its value should be the same as FINAL_LIVERAIM_ID_COLUMN.</li>
+<li><code>LIMIT_DETECT_COLUMN</code>: name of limit detection column (this column is not present in the raw data). Its value should be the same as FINAL_LIMIT_DETECT_COLUMN.</li>
+<li><code>ORIGINAL_COLUMNS</code>:  list with all the column names in the original raw data.</li>
+<li><code>biomarker_columns_map</code>: dictionary mapping the original names to the final names of the columns.</li>
+<li><code>FILE_TYPE</code>: type of the raw data files received from the provider.</li>
+<li><code>READING_METHOD</code>: method that will be used to read the raw data.</li>
+<li><code>COMMENTS_DICT</code>: Dictionary used to map and harmonize the comments from strings to a numeric code.</li>
+<li><code>MISSING_SYMBOLS</code>: List of symbols that, in VALUE_COLUMN, are equivalent to a missing (i.e. "no calculable", "ND", ...).</li>
+</ul>
+<h4 id="nordicbmkconfig-class"><code>NordicBMKConfig</code> class</h4>
+<p>Inherits from <code>BMKConfig</code>.</p>
+<h5 id="new-attributes_1"><strong>New attributes</strong>:</h5>
+<ul>
+<li><code>provider</code>: name of the provider (nordic)</li>
+<li><code>ID_COLUMN</code>: name of the original/raw column of the IDs.</li>
+<li><code>VARIABLE_COLUMN</code>: name of the original/raw column of the biomarker name (variable column)</li>
+<li><code>VALUE_COLUMN</code>: name of the original/raw column of the biomarker measurement value.</li>
+<li><code>REGISTER_DATE_COLUMN</code>: name of the original/raw register date colu,m.</li>
+<li><code>VALIDATION_DATE_COLUMN</code>: name of the original/raw validation_date column.</li>
+<li><code>NUMERIC_VALUE_COLUMN</code>: name of the original/raw numeric value column  (this column is not present in the raw data). In this case, it is set to the same as VALUE_COLUMN.</li>
+<li><code>LIVERAIM_ID_COLUMN</code>: name of the liveraim ID column (this column is not present in the raw data). Its value should be the same as FINAL_LIVERAIM_ID_COLUMN.</li>
+<li><code>LIMIT_DETECT_COLUMN</code>: name of limit detection column (this column is not present in the raw data). Its value should be the same as FINAL_LIMIT_DETECT_COLUMN.</li>
+<li><code>COMMENTS_COLUMN</code>: name of the original/raw comments column.</li>
+<li><code>STUDY_ID_COLUMN</code>: name of the original/raw study column.</li>
+<li><code>UNITS_COLUMN</code>: name of the original/raw units column.</li>
+<li>
+<p><code>METHOD_COLUMN</code>: name of the original/raw method column.</p>
+</li>
+<li>
+<p><code>IDS_REASSIGNMENT_PATH</code>: path to the .json dictionary that contains the mapping of the unmatching IDs from Odense patients.</p>
+</li>
+<li>
+<p><code>ORIGINAL_COLUMNS</code>: list with all the column names in the original raw data.</p>
+</li>
+<li><code>biomarker_columns_map</code>: dictionary mapping the original names to the final names of the columns.</li>
+<li><code>DATA_DIR</code>: Name of the directory inside <code>BMK_DATA_DIR_PATH</code> where the provider's data is stored.</li>
+<li><code>FILE_TYPE</code>: type of the raw data files received from the provider.</li>
+<li><code>READING_METHOD</code>: method that will be used to read the raw data.</li>
+<li><code>COMMENTS_DICT</code>: Dictionary used to map and harmonize the comments from strings to a numeric code.</li>
+<li><code>MISSING_SYMBOLS</code>: List of symbols that, in VALUE_COLUMN, are equivalent to a missing (i.e. "no calculable", "ND", ...).</li>
+<li><code>limit_detect_bounds</code>: Dictionary with the detection limit bounds (upper and lower bounds for each biomarker) if provided by the provider.</li>
+<li><code>l_bound_comment</code>: Comment that indicates that the the value in the register us below the limit of quantification.</li>
+<li><code>u_bound_comment</code>: Comment that indicates that the the value in the register us above the limit of quantification.</li>
+</ul>
+<h4 id="rochebmkconfig-class"><code>RocheBMKConfig</code> class</h4>
+<p>Inherits from <code>BMKConfig</code>.</p>
+<ul>
+<li><code>provider</code>: name of the provider (nordic)</li>
+<li><code>ID_COLUMN</code>: name of the original/raw column of the IDs.</li>
+<li><code>VARIABLE_COLUMN</code>: name of the original/raw column of the biomarker name (variable column)</li>
+<li><code>VALUE_COLUMN</code>: name of the original/raw column of the biomarker measurement value.</li>
+<li><code>REGISTER_DATE_COLUMN</code>: name of the original/raw register date colu,m.</li>
+<li><code>VALIDATION_DATE_COLUMN</code>: name of the original/raw validation_date column.</li>
+<li><code>NUMERIC_VALUE_COLUMN</code>: name of the original/raw numeric value column  (this column is not present in the raw data). In this case, it is set to the same as VALUE_COLUMN.</li>
+<li><code>LIVERAIM_ID_COLUMN</code>: name of the liveraim ID column (this column is not present in the raw data). Its value should be the same as FINAL_LIVERAIM_ID_COLUMN.</li>
+<li><code>LIMIT_DETECT_COLUMN</code>: name of limit detection column (this column is not present in the raw data). Its value should be the same as FINAL_LIMIT_DETECT_COLUMN.</li>
+<li><code>COMMENTS_COLUMN</code>: name of the original/raw comments column.</li>
+<li><code>STUDY_ID_COLUMN</code>: name of the original/raw study column.</li>
+<li><code>UNITS_COLUMN</code>: name of the original/raw units column.</li>
+<li>
+<p><code>METHOD_COLUMN</code>: name of the original/raw method column.</p>
+</li>
+<li>
+<p><code>IDS_REASSIGNMENT_PATH</code>: path to the .json dictionary that contains the mapping of the unmatching IDs from Odense patients.</p>
+</li>
+<li>
+<p><code>ORIGINAL_COLUMNS</code>: list with all the column names in the original raw data.</p>
+</li>
+<li><code>biomarker_columns_map</code>: dictionary mapping the original names to the final names of the columns.</li>
+<li><code>DATA_DIR</code>: Name of the directory inside <code>BMK_DATA_DIR_PATH</code> where the provider's data is stored.</li>
+<li><code>FILE_TYPE</code>: type of the raw data files received from the provider.</li>
+<li><code>READING_METHOD</code>: method that will be used to read the raw data.</li>
+<li><code>COMMENTS_DICT</code>: Dictionary used to map and harmonize the comments from strings to a numeric code.</li>
+<li><code>MISSING_SYMBOLS</code>: List of symbols that, in VALUE_COLUMN, are equivalent to a missing (i.e. "no calculable", "ND", ...).</li>
+<li><code>limit_detect_bounds</code>: Dictionary with the detection limit bounds (upper and lower bounds for each biomarker) if provided by the provider.</li>
+<li><code>l_bound_comment</code>: Comment that indicates that the the value in the register us below the limit of quantification.</li>
+<li><code>u_bound_comment</code>: Comment that indicates that the the value in the register us above the limit of quantification.</li>
+</ul></div>
         
         
     </div>
