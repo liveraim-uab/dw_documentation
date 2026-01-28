@@ -1,6 +1,6 @@
 # Fast Configuration
 
-This section describes the necessary configuration to run the code and generate the data warehouse for WP1. For a comprehensive description of all configuration parameters, refer to the section [Configuration Module](modules_documentation/configuration_module.md).
+This section describes the necessary configuration to run the code and generate the data warehouse (DW). For a comprehensive description of all configuration parameters, refer to the section [Configuration Module](modules_documentation/configuration_module.md).
 
 > **Important Notice**: Before configuring the project, ensure that the prerequisites described in the [Environment Setup](#enviroment-setup) section are met.
 
@@ -13,52 +13,69 @@ This section describes the necessary configuration to run the code and generate 
 
 While the configuration allows some flexibility in the project directory structure, it is recommended to maintain the current structure to avoid errors. The project directory currently (as of 08/07/2024) has the following structure:
 
-    LIVERAIM_WP1/
-    ├── config/
-    │   ├── cohort_config.py
-    │   ├── connection_config.py
-    │   ├── main_config.py
-    │   ├── new_levels_config.py
-    │   ├── new_var_config.py
-    │   └── reference_names.py
-    ├── data/
-    │   ├── Alcofib/
-    │   ├── Glucofib/
-    │   ├── Decide/
-    │   └── Liverscreen/
-    ├── logs/
-    │   ...
-    ├── qc_report/
-    │   ...
-    ├── wp1_documentation/
-    │   ...
-    ├── requirements.txt
-    ├── main.py
-    ...
-    other python modules
+    DATA_WAREHOUSE/
+    ├── data
+    │   ├── biomarkers_data
+    │   │   ├── nordic_biomarkers_data
+    │   │   └── hclinic_biomarkers_data
+    │   ├── WP1
+    │   │   ├── Liverscreen
+    │   │   ├── Alcofib
+    │   │   └── ... 
+    │   ├── WP2
+    │   │   └── Galaald
+    │   └── numeric_bounds.json
+    └── scr
+        ├── config/
+        │   ├── cohort_config.py
+        │   ├── connection_config.py
+        │   ├── main_config.py
+        │   ├── new_levels_config.py
+        │   ├── new_var_config.py
+        │   └── reference_names.py
+        ├── logs/
+        │   ...
+        ├── qc_report/
+        │   ...
+        ├── requirements.txt
+        ├── main.py
+        ...
+        other python modules
 
 ### Structure of `data/cohort_name/` Directory
 
-Each subdirectory within `data/` contains the databases and files related to each cohort. These subdirectories should have the following structure:
+Each subdirectory within `data/` contains the databases and files related to each cohort or the biomarker data. These subdirectories should have the following structure:
 
     data/
-    ├── cohort_name/
-    │   ├── databases/
-    │   │   ├── cohort_name_database_version_date.extension
-    │   │   ...
-    │   ├── cohort_name_level_data.xlsx
-    │   └── cohort_name_var_data.xlsx
+    ├── WP1   
+        ├── <cohort_name>/
+        │   ├── databases/
+        │   │   ├── <cohort_name_database_version_date>.extension
+        │   │   ...
+        │   ├── <cohort_name>_level_data.xlsx
+        │   └── <cohort_name>_var_data.xlsx
+        └── panel_data.xlsx
+    ├── WP2    
+        ├── ...
+            ...
+    └── biomarkers_data
+        ├── nordic_biomarkers_data
+            ├── <name_database_version_date>.extension
+            ...
+        └── hclinic_biomarkers_data
+            ├── <name_database_version_date>.extension
+            ...
     ...
 
 The `cohort_name_level_data.xlsx` and `cohort_name_var_data.xlsx` files are described in the section [Initial Data and Configuration data](liveraim_data_warehouse_specifications.md#initial-data-and-configuration-data). If you downloaded the repository from GitHub, you should not need to modify these files.
 
 ### Structure of `data/cohort_name/databases/` Directory
 
-The `/data/cohort_name/databases` directory should store the files containing the raw data for the databases of each cohort. Each file in the directory corresponds to one of the received database versions. For more information on how different versions are handled, see the section [Managing Raw Data Versions](). It is **very important** (for this particular case) that the file names follow this structure:
+The `/data/<cohort_name>/databases` directory should store the files containing the raw data for the databases of each cohort. Each file in the directory corresponds to one of the received database versions. For more information on how different versions are handled, see the section [Managing Raw Data Versions](). It is **very important** (for this particular case) that the file names follow this structure:
 
-    cohort_name_database_version_date.extension
+    <cohort_name>_database_<version_date>.extension
 
-For example, the raw data file for the Liverscreen cohort received on 07/29/2024 in .dta format would be named:
+For example, the raw data file for the Liverscreen cohort received on 29/07/2024 in .dta format would be named:
 
     liverscreen_database_20240729.dta
 
@@ -66,7 +83,17 @@ Note that the name is in lowercase and the date is in the *yyyymmdd* format.
 
 > **Note**: This folder may contain only one file. It is recommended that this corresponds to the latest version of the data.
 
-Since these data are not uploaded to GitHub, it is necessary to manually place them in the correct directory and format. Once this is done, the directory should be correctly configured.
+Similarly, the directory `/data/biomarkers_data/<provider>_biomarkers_data` should store the files containing the raw data from the biomarkers transfered by this particular provider. This folder may contain different versions or batches of data. Those different files are, again, read and merged during the execution of the database. For further information on the merging of this data, see section [Biomerkers data Management](dataflow.md#biomarker-data-management).
+
+Biomarker data files must also follow the structure:
+
+    <provider>_biomarkers_<batch_date>.extension
+
+For example, data tranfered from Nordic recieved on 29/07/2024 in .csv format would be named:
+
+    nordic_biomarkers_20240729.csv
+
+Since these files are not uploaded to GitHub, it is necessary to manually place them in the correct directory and format. Once this is done, the directory should be correctly configured.
 
 ## MySQL Connection Configuration
 

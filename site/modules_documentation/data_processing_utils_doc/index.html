@@ -200,8 +200,8 @@
 </div></div>
         <div class="col-md-9" role="main">
 
-<h1 id="data_processing_utils-documentation"><code>data_processing_utils</code> Documentation<a class="headerlink" href="#data_processing_utils-documentation" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<h1 id="data_processing_utils-documentation"><code>data_processing_utils</code> Documentation</h1>
+<h2 id="overview">Overview</h2>
 <p>The goal of this module is to prepare the raw data received from various partners so that it can later be homogenized (using the <a href="../cohort_utils_doc/"><code>cohort_utils</code></a> module) and exported (using the <a href="../file_exporting_utils_doc/"><code>file_exporting_utils</code></a> and <a href="../sql_exporting_utils_doc/"><code>sql_exporting_utils</code></a> modules). This module performs the following tasks:</p>
 <ul>
 <li><strong>Add calculated variables</strong> based on the original data. This includes updating the objects with configuration data, such as <code>var_data</code> and <code>level_data</code> with new information, which will be used in the <code>cohort_utils</code> module to create the <code>Cohort</code> object. Examples of added variables include: <code>status</code>, <code>birth_date</code>, <code>exit_date</code>, <code>cohort</code>, etc.</li>
@@ -209,17 +209,17 @@
 <li><strong>Merge versions</strong> of the same database to obtain each patient's data in its latest version. This includes identifying patients with <code>status='withdrawn'</code>, i.e., patients who do not appear in the latest version but do appear in previous versions.</li>
 <li><strong>Check compatibility</strong> of the databases from different cohorts.</li>
 </ul>
-<h2 id="general-structure">General Structure<a class="headerlink" href="#general-structure" title="Permanent link">&para;</a></h2>
+<h2 id="general-structure">General Structure</h2>
 <p>The module consists of the following key components:</p>
 <ul>
 <li><strong><code>DataPreprocessor</code></strong>: A class responsible for centralizing the preprocessing described above. It is designed to be flexible and customizable based on the specifics of each cohort's data: for each cohort, <code>DataPreprocessor</code> allows for personalized transformations through cohort-specific methods that apply the appropriate preprocessing steps.</li>
 <li><strong><code>VarCombiner</code></strong>: A helper class responsible for combining the variables specified in the <code>var_comb_data</code> dictionary. It is used within <code>DataPreprocessor</code> during data preprocessing.</li>
 <li><strong>Auxiliary functions</strong>: helper functions to check and transform data structure.</li>
 </ul>
-<h2 id="functions-and-classes">Functions and Classes<a class="headerlink" href="#functions-and-classes" title="Permanent link">&para;</a></h2>
+<h2 id="functions-and-classes">Functions and Classes</h2>
 <p>In this sections are described the classes and functions defined in the module: </p>
-<h3 id="functions"><strong>Functions</strong>:<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
-<h3 id="check_df_formatsdf_dict-dictstr-pddataframe-bool"><code>check_df_formats(df_dict: dict[str, pd.DataFrame]) -&gt; bool</code><a class="headerlink" href="#check_df_formatsdf_dict-dictstr-pddataframe-bool" title="Permanent link">&para;</a></h3>
+<h3 id="functions"><strong>Functions</strong>:</h3>
+<h3 id="check_df_formatsdf_dict-dictstr-pddataframe-bool"><code>check_df_formats(df_dict: dict[str, pd.DataFrame]) -&gt; bool</code></h3>
 <p>Checks if the format (variable names and data types) of all DataFrames in <code>df_dict</code> are compatible for concatenation. It ensures that the columns are in the same order (this can be modified by sorting the columns) and checks if the data types are consistent.</p>
 <ul>
 <li><strong>Arguments</strong>:</li>
@@ -231,7 +231,7 @@
 </li>
 <li><code>bool</code>: Returns <code>True</code> if the DataFrames are compatible for concatenation, even if data types differ (a warning is logged). Returns <code>False</code> if the formats are incompatible.</li>
 </ul>
-<h4 id="logs">logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h4>
+<h4 id="logs">logs</h4>
 <ul>
 <li>In <code>check_df_formats</code> function:<ul>
 <li>If there are discrepancies between the names of the columns of the different versions of the same databse, an error is logged. </li>
@@ -239,15 +239,15 @@
 </ul>
 </li>
 </ul>
-<h3 id="classes"><strong>Classes</strong>:<a class="headerlink" href="#classes" title="Permanent link">&para;</a></h3>
+<h3 id="classes"><strong>Classes</strong>:</h3>
 <blockquote>
 <p><strong>Note</strong>: Due to how pandas handles DataFrame modifications, changes made to the <code>data</code> attribute (<code>data</code>) (generally modifying and/or adding columns) occur 'inplace'. Therefore, when passing the DataFrame by reference into a method or function, any modifications to it will be reflected in the original, and returning the object is not necessary. However, changes made to <code>var_data</code> and <code>level_data</code> objects do require returning the modified object in the function.</p>
 </blockquote>
-<h3 id="class-datapreprocessor">Class <code>DataPreprocessor</code><a class="headerlink" href="#class-datapreprocessor" title="Permanent link">&para;</a></h3>
-<h4 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h4>
+<h3 id="class-datapreprocessor">Class <code>DataPreprocessor</code></h3>
+<h4 id="description">Description</h4>
 <p>This class centralizes data preprocessing tasks for cohort databases. It processes the dataframe columns/variables, updates configuration data (<code>var_data</code> and <code>level_data</code>), and handles cohort-specific transformations. In particular, it first merges all the database versions into a single DataFrame, keeping the data of each patient from the las version. This single dataframe will be stored in the attribute <code>data</code>. Then new calculated/secundary variables are added to it, such as <code>status</code>, <code>exit_date</code>, etc. Moreover, it combines variables using the <code>var_combine_data</code> atrribute (if it exists). During the preprocessing, the configuration data (<code>var_data</code> and <code>level_data</code> dataframes) are updated to fit the structure of <code>data</code>. </p>
 <p>Once the preprocessing is finished, <code>data</code>, <code>var_data</code> and <code>level_data</code> is returned so they can be used, for example, to instantiate a <code>Cohort</code>. </p>
-<h4 id="attributes">Attributes<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h4>
+<h4 id="attributes">Attributes</h4>
 <ul>
 <li>
 <p><strong><code>cohort_databases</code> (dict[str, pd.DataFrame]):</strong><br />
@@ -275,7 +275,7 @@
   A DataFrame containing metadata about the variables that need to be combined. If this attribute exists, it will be used to combine variables in the cohort during preprocessing.</p>
 </li>
 </ul>
-<h4 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h4>
+<h4 id="methods">Methods</h4>
 <ul>
 <li>
 <p><strong><code>__init__(self,</code>
@@ -424,7 +424,7 @@ Returns all processed data, including the main dataset, <code>var_data</code>, a
 </ul>
 </li>
 </ul>
-<h4 id="logs_1">Logs<a class="headerlink" href="#logs_1" title="Permanent link">&para;</a></h4>
+<h4 id="logs_1">Logs</h4>
 <ul>
 <li>
 <p>In <code>__init__</code>:</p>
@@ -460,8 +460,8 @@ Returns all processed data, including the main dataset, <code>var_data</code>, a
 </ul>
 </li>
 </ul>
-<h3 id="class-varcombiner">Class <code>VarCombiner</code><a class="headerlink" href="#class-varcombiner" title="Permanent link">&para;</a></h3>
-<h4 id="description_1">Description<a class="headerlink" href="#description_1" title="Permanent link">&para;</a></h4>
+<h3 id="class-varcombiner">Class <code>VarCombiner</code></h3>
+<h4 id="description_1">Description</h4>
 <p>Combines variables in a DataFrame based on a reference dictionary (<code>comb_var_dict</code>). This class helps merge variables and apply conversion factors as needed. In this version, the main functionality of the class is to combine variables of the same magnitude that are expressed in different units so the count of missings is reduced. To do so, it uses the <code>var_combine_dict</code>, where the variables (and their conversion factor) to be combined are specified. For more information about the structure of this dictionary check the section <a href="../../liveraim_data_warehouse_specifications/#comb_var_data-file">comb_var_data file</a>. </p>
 <p>The <strong>process of combining the data</strong> works as follows (it's important to understand the structure of <code>comb_var_dict</code>). For each key-value pair in <code>comb_var_dict</code> with the following structure:</p>
 <pre><code>&lt;final_variable&gt;: {&lt;variable_to_combine_1&gt;: &lt;conversion_factor_1&gt;, &lt;variable_to_combine_2&gt;: &lt;conversion_factor_2&gt;, ...}
@@ -478,7 +478,7 @@ Returns all processed data, including the main dataset, <code>var_data</code>, a
 <p>If no numeric values are found among the <code>variables_to_combine_n</code>, the value for <code>final_variable</code> is set to <code>NaN</code>.</p>
 </li>
 </ol>
-<h4 id="attributes_1">Attributes<a class="headerlink" href="#attributes_1" title="Permanent link">&para;</a></h4>
+<h4 id="attributes_1">Attributes</h4>
 <ul>
 <li>
 <p><strong><code>comb_var_dict (dict)</code></strong>: A dictionary where keys are reference variables (the name of the final variable to be obtained) and values are dictionaries with variables to combine and their respective conversion factors.</p>
@@ -493,7 +493,7 @@ Returns all processed data, including the main dataset, <code>var_data</code>, a
 <p><strong><code>transformed_data (pd.DataFrame)</code></strong>: A copy of the original DataFrame that will be transformed by combining variables. </p>
 </li>
 </ul>
-<h4 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">&para;</a></h4>
+<h4 id="methods_1">Methods</h4>
 <ul>
 <li>
 <p><strong><code>__init__(self, comb_var_dict: dict, df: pd.DataFrame)</code></strong>
@@ -561,17 +561,17 @@ Combines all data according to the <code>comb_var_dict</code> and returns the up
 </ul>
 </li>
 </ul>
-<h4 id="logs_2">Logs<a class="headerlink" href="#logs_2" title="Permanent link">&para;</a></h4>
+<h4 id="logs_2">Logs</h4>
 <ul>
 <li>In <code>original_data.setter</code>:<ul>
 <li>If the variables to combine are not a subset of the columns of the data dataframe (<code>original_data</code>), an error message is logged. </li>
 </ul>
 </li>
 </ul>
-<h3 id="class-configdatamanager">Class <code>ConfigDataManager</code><a class="headerlink" href="#class-configdatamanager" title="Permanent link">&para;</a></h3>
-<h4 id="description_2">Description<a class="headerlink" href="#description_2" title="Permanent link">&para;</a></h4>
+<h3 id="class-configdatamanager">Class <code>ConfigDataManager</code></h3>
+<h4 id="description_2">Description</h4>
 <p>This class is responsible for transforming and combining configuration objects defined in the <code>CONFIG_OBJ_NAMES</code> list (<code>var_data</code>, <code>level_data</code>, <code>comb_var_data</code>, and <code>panel_data</code>) from the <code>main_config</code>. The class prepares the configuration data in a format suitable for export to SQL by converting the objects into pandas DataFrames and merging them as needed.</p>
-<h4 id="attributes_2">Attributes<a class="headerlink" href="#attributes_2" title="Permanent link">&para;</a></h4>
+<h4 id="attributes_2">Attributes</h4>
 <ul>
 <li>
 <p><strong><code>config_obj_names</code> (list[str]):</strong><br />
@@ -586,7 +586,7 @@ Combines all data according to the <code>comb_var_dict</code> and returns the up
   Dictionary that holds combined configuration data for each configuration type in DataFrame format, suitable for export.</p>
 </li>
 </ul>
-<h4 id="methods_2">Methods<a class="headerlink" href="#methods_2" title="Permanent link">&para;</a></h4>
+<h4 id="methods_2">Methods</h4>
 <ul>
 <li>
 <p><strong><code>__init__(self, all_data: dict = None)</code></strong>:<br />
@@ -728,7 +728,7 @@ Appends configuration data for a specific cohort and configuration type to the c
 </ul>
 </li>
 </ul>
-<h2 id="general-operation">General Operation<a class="headerlink" href="#general-operation" title="Permanent link">&para;</a></h2>
+<h2 id="general-operation">General Operation</h2>
 <p>The data preprocessing is carried out iteratively for each cohort. Once completed, the resulting objects are used to create a <code>Cohort</code> class, responsible for homogenizing and formatting the data (see the section <a href="../cohort_utils_doc/"><code>cohort_utils</code></a>).</p>
 <p>The data preprocessing begins with the instantiation of the <code>DataPreprocessor</code> class, which requires as parameters (for each cohort) the <code>var_data</code>, <code>level_data</code>, and <code>databases</code> objects. Additionally, the <code>var_comb_data</code> parameter can be used to combine variables following the specifications of this object. These objects are read using the <code>DataReader</code> class from the <a href="../file_reading_utils_doc/"><code>file_reading_utils</code></a> module. For more details on the structure of these objects, see the section <a href="../../liveraim_data_warehouse_specifications/#initial-data-and-configuration-data">Initial data and configuration data</a>.</p>
 <p>During preprocessing, three main modifications will be made:</p>
@@ -768,7 +768,7 @@ The second method updates the <code>var_data</code> and <code>level_data</code> 
 </li>
 </ul>
 <p>Once all preprocessing is completed, the preprocessed data can be accessed using the <code>get_data</code> method.</p>
-<h2 id="usage-example">Usage Example<a class="headerlink" href="#usage-example" title="Permanent link">&para;</a></h2>
+<h2 id="usage-example">Usage Example</h2>
 <pre><code class="language-python">from data_processing_utils import DataPreprocessor
 
 # Initialize DataPreprocessor with required arguments
@@ -780,7 +780,7 @@ preprocessor.preprocess()
 # Get the final processed data
 processed_data, var_data, level_data = preprocessor.get_data()
 </code></pre>
-<h2 id="usage-in-main-execution">Usage in main execution<a class="headerlink" href="#usage-in-main-execution" title="Permanent link">&para;</a></h2></div>
+<h2 id="usage-in-main-execution">Usage in main execution</h2></div>
         
         
     </div>
@@ -811,6 +811,8 @@ processed_data, var_data, level_data = preprocessor.get_data()
     <script>var base_url = "../.."</script>
     
     <script src="../../js/base.js"></script>
+    <script src="../../javascripts/mathjax.js"></script>
+    <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../search/main.js"></script>
 
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">

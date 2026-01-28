@@ -197,25 +197,25 @@
 </div></div>
         <div class="col-md-9" role="main">
 
-<h1 id="file_exporting_utils-documentation"><code>file_exporting_utils</code> Documentation<a class="headerlink" href="#file_exporting_utils-documentation" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<h1 id="file_exporting_utils-documentation"><code>file_exporting_utils</code> Documentation</h1>
+<h2 id="overview">Overview</h2>
 <p>The <code>file_exporting_utils</code> module is responsible for exporting data produced during the execution of the main program into various file formats, such as <code>.csv</code> and <code>.feather</code>. It ensures that the exported files are saved within a structured directory system, which includes a timestamp-based execution folder and separate subfolders for each file format.</p>
 <p>This module facilitates the following functionalities:
 + <strong>Export to CSV</strong>: Exports pandas DataFrames into <code>.csv</code> files.
 + <strong>Export to Feather</strong>: Exports pandas DataFrames into <code>.feather</code> files.
 + <strong>Dynamic directory creation</strong>: Creates structured directories based on the execution time to organize the exported files.</p>
 <p>The <code>FileExporter</code> class is used to centralize all export operations, handling the creation of necessary subdirectories, file formatting, and logging potential issues during the export process. This class is initialized with a common root folder and dynamically creates subdirectories for each export type.</p>
-<h2 id="general-structure">General Structure<a class="headerlink" href="#general-structure" title="Permanent link">&para;</a></h2>
+<h2 id="general-structure">General Structure</h2>
 <p>The module includes the definition of the main class resposible of managing the exportation:</p>
 <ul>
 <li><code>FileExporter</code>: This is the main class of the module and is responsible for handling data exports to both CSV and Feather formats. It also manages the creation of subdirectories based on the current execution time and logs any errors that occur during the export process.</li>
 </ul>
 <p>When the class is instantiated, it autoatically creates the directories needed for the exportations.</p>
-<h2 id="class-description">Class Description<a class="headerlink" href="#class-description" title="Permanent link">&para;</a></h2>
-<h3 id="fileexporter"><strong><code>FileExporter</code></strong><a class="headerlink" href="#fileexporter" title="Permanent link">&para;</a></h3>
-<h4 id="description">Description:<a class="headerlink" href="#description" title="Permanent link">&para;</a></h4>
+<h2 id="class-description">Class Description</h2>
+<h3 id="fileexporter"><strong><code>FileExporter</code></strong></h3>
+<h4 id="description">Description:</h4>
 <p>The <code>FileExporter</code> class is designed to export pandas DataFrames to <code>.csv</code> and <code>.feather</code> formats, ensuring the exported files are organized into separate directories for each execution. It dynamically creates directories for each type of export (CSV and Feather) based on the execution time and logs the export process.</p>
-<h4 id="attributes">Attributes:<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h4>
+<h4 id="attributes">Attributes:</h4>
 <ul>
 <li><strong><code>common_export_folder</code> (str)</strong>: The root directory where all exported files will be saved.</li>
 <li><strong><code>execution_time</code> (str)</strong>: A timestamp indicating when the export was initiated, based on the current execution time.</li>
@@ -223,7 +223,7 @@
 <li><strong><code>feather_folder</code> (str)</strong>: Subfolder where <code>.feather</code> files will be saved.</li>
 <li><strong><code>csv_folder</code> (str)</strong>: Subfolder where <code>.csv</code> files will be saved.</li>
 </ul>
-<h4 id="methods">Methods:<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h4>
+<h4 id="methods">Methods:</h4>
 <ul>
 <li>
 <p><strong><code>__init__(self, common_export_folder: str) -&gt; None</code></strong>: 
@@ -304,13 +304,13 @@
 </ul>
 </li>
 </ul>
-<h2 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h2>
+<h2 id="logs">Logs</h2>
 <p>The <code>FileExporter</code> class logs various events during the execution of its methods:</p>
 <ul>
 <li><strong>Folder creation</strong>: Logs whether folders were successfully created or not.</li>
 <li><strong>CSV and Feather exports</strong>: Logs success messages when DataFrames are exported correctly. Logs error messages if any issues arise during the export process.</li>
 </ul>
-<h2 id="usage-example">Usage Example<a class="headerlink" href="#usage-example" title="Permanent link">&para;</a></h2>
+<h2 id="usage-example">Usage Example</h2>
 <p>The following is an example of how to use the <code>FileExporter</code> class:</p>
 <pre><code class="language-python">from file_exporter import FileExporter
 import pandas as pd
@@ -331,7 +331,7 @@ exporter.export_to_csv(df, df_name=&quot;example_data&quot;)
 exporter.export_to_feather(df, df_name=&quot;example_data&quot;)
 </code></pre>
 <p>In this example, the <code>FileExporter</code> is instantiated with a root export folder. When the class is isntantiated, the directories are automatically created. The DataFrame is then exported to both CSV and Feather formats.</p>
-<h2 id="output-description">Output Description<a class="headerlink" href="#output-description" title="Permanent link">&para;</a></h2>
+<h2 id="output-description">Output Description</h2>
 <p>The FileExporter class creates the following directory structure for each execution in the main directory:</p>
 <pre><code class="language-php">&lt;common_export_folder&gt;/
     execution_&lt;timestamp&gt;/
@@ -349,7 +349,7 @@ LIVERAIM_DATA_example_data.feather
 LIVERAIM_DATA_population.feather
 </code></pre>
 <p>During the main execution, the name <code>common_export_folder</code> is imported from the variable <code>DATAWAREHOUSE_PATH</code>, declared in the <a href="../configuration_module/#main_config-module"><code>main_config</code> module</a>.</p>
-<h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
+<h2 id="error-handling">Error Handling</h2>
 <p>The FileExporter handles common export errors such as:</p>
 <ul>
 <li><code>FileNotFoundError</code>: If the directory does not exist or cannot be accessed.</li>
@@ -387,6 +387,8 @@ LIVERAIM_DATA_population.feather
     <script>var base_url = "../.."</script>
     
     <script src="../../js/base.js"></script>
+    <script src="../../javascripts/mathjax.js"></script>
+    <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../search/main.js"></script>
 
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">

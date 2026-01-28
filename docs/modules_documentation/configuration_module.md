@@ -8,6 +8,7 @@ The `config` module contains the parameters and variables required for the prope
 * [`new_var_config.py`](#new_var_config-module): Definition of new or derived varibles.
 * [`new_levels_config.py`](#new_levels_config-module): Definition of the levels of the new/derived categorical variables. 
 * [`reference_names.py`](#reference_names-module): Names of the columns of the innitial data files (`var_data`, `level_data` and `panel_metadata`)
+* [`biomarkers_config.py`](#biomarkers_config-module): Parameters needed for the proper reading, formatting and computation of biomarkers
 
 The following sections describe the variables contained in each of these files, their purpose, and possible modifications.
 
@@ -17,10 +18,12 @@ The following sections describe the variables contained in each of these files, 
 * `EXECUTION_DATETIME (str)`: DateTime of the execution. Used for debugging, logging and exportation purposes. 
 * `NUMERIC_TYPES (list)`: List of numeric python types compatibles with the databse. 
 * `CONFIG_OBJ_NAMES (list)`: List with the names of the configuration data objects in the code (such as `var_data`, `level_data`, etc.)
+* `BUILD_DUMMIES` `(bool)`: Indicates wheter a dummy dataset of the execution must be build and exported to `.feather` files. 
 
 #### Quality control paramenters
 * `ALPHA (str)`: Error threshold used during the numeric QC checks.
-* `EXPORT_QC_RECORD (bool)`: With a value of `True`, it exports the data generated during the quality control process. For more details, see the section [Quality Control Utils](qc_checks_utils_doc.md). With a value of `False`, quality control is still performed, but the generated data is not saved after execution (except for what is printed in the log). 
+* `EXPORT_QC_RECORD (bool)`: With a value of `True`, it exports the data generated during the quality control process. For more details, see the section [Quality Control Utils](qc_checks_utils_doc.md). With a value of `False`, quality control is still performed, but the generated data is not saved after execution (except for what is printed in the log).
+* `NAN_RECORD_EXPORT_FOLDER`: ...
 * `QC_REPORT_FOLDER (str)`: name of the folder taht centralizes the QC: it will contain the QC output and the code for processing this data and the rendered report.
 * `QC_DATA_FOLDER (str)`: name of the folder where all the data generated during the quality control checks will be dumped (if `EXPORT_QC_RECORD` is set to true). This folder is itended to be a subdirectory fo the directory above `QC_REPORT_FOLDER`
 
@@ -34,6 +37,8 @@ The following variables are mainly used in the module [`file_reading_utils`](../
 * `GLUCOFIB_VAR_FILE_NAME (str)`: Name of the file containing the `var_data` for the *Glucofib* cohort (should be an .xlsx file).
 * `ALCOFIB_VAR_FILE_NAME (str)`: Name of the file containing the `var_data` for the *Alcofib* cohort (should be an .xlsx file).
 * `DECIDE_VAR_FILE_NAME (str)`: Name of the file containing the `var_data` for the *Decide* cohort (should be an .xlsx file).
+* `MARINA_VAR_FILE_NAME (str)`: Name of the file containing the `var_data` for the *Marina* cohort (should be an .xlsx file).
+* `GALAALD_VAR_FILE_NAME (str)`: Name of the file containing the `var_data` for the *Galaald* cohort (should be an .xlsx file).
 
 * `VAR_FILE_NAMES (dict)`: Dictionary containing the cohort names (as defined in the `cohort_config` module) as keys, and the corresponding `var_data` file names as values (i.e., the names defined above). This dictionary **should not be modified** unless a new cohort is added: the dictionary is automatically generated using the other variables, ensuring it stays up to date.
 
@@ -41,10 +46,25 @@ The following variables are mainly used in the module [`file_reading_utils`](../
 * `GLUCOFIB_LEVEL_FILE_NAME (str)`: Name of the file containing the `level_data` for the *Glucofib* cohort (should be an .xlsx file).
 * `ALCOFIB_LEVEL_FILE_NAME (str)`: Name of the file containing the `level_data` for the *Alcofib* cohort (should be an .xlsx file).
 * `DECIDE_LEVEL_FILE_NAME (str)`: Name of the file containing the `level_data` for the *Decide* cohort (should be an .xlsx file).
+* `MARINA_LEVEL_FILE_NAME (str)`: Name of the file containing the `level_data` for the *Marina* cohort (should be an .xlsx file).
+* `GALAALD_LEVEL_FILE_NAME (str)`: Name of the file containing the `level_data` for the *Galaald* cohort (should be an .xlsx file).
 
 * `LEVEL_FILE_NAMES (dict)`: Dictionary containing the cohort names (as defined in the `cohort_config` module) as keys, and the corresponding `level_data` file names as values (i.e., the names defined above). This dictionary **should not be modified** unless a new cohort is added: the dictionary is automatically generated using the other variables, ensuring it stays up to date.
 
+- `LIVERSCREEN_COMB_VARS_FILE_NAME (str)`: Name of the file containing the `var_comb_data` for the *Liverscreen* cohort (should be an .json file).
+- `GLUCOFIB_COMB_VARS_FILE_NAME (str)`: Name of the file containing the `var_comb_data` for the *Glucofib* cohort (should be an .json file).
+- `ALCOFIB_COMB_VARS_FILE_NAME (str)`: Name of the file containing the `var_comb_data` for the *Alcofib* cohort (should be an .json file).
+- `MARINA1_COMB_VARS_FILE_NAME (str)`: Name of the file containing the `var_comb_data` for the *Marina* cohort (should be an .json file).
+- `DECIDE_COMB_VARS_FILE_NAME (str)`: Name of the file containing the `var_comb_data` for the *Decide* cohort (should be an .json file).
+- `GALAALD_COMB_VARS_FILE_NAME (str)`: Name of the file containing the `var_comb_data` for the *Galaald* cohort (should be an .json file).
+
+- `COMB_VARS_FILE_NAMES (dict)`: Dictionary containing the cohort names (as defined in the `cohort_config` module) as keys, and the corresponding `comb_var_data` file names as values (i.e., the names defined above). This dictionary **should not be modified** unless a new cohort is added: the dictionary is automatically generated using the other variables, ensuring it stays up to date.
+
 If you wish to use other `var_data`, `level_data`, or `panel_metadata` files (for testing, verification, etc.), you can modify the value of these variables to read those files.
+
+* `COMMON_DATA_FOLDER (str)`: Name of the folder containing all the data. This folder is not tracked by git and must follow the structure described in [Structure of data/cohort_name/ Directory](../quick_start_guide.md#structure-of-datacohort_namedatabases-directory).
+
+* `DATABASES_FOLDER (str)`: Name of the folder, inside each cohort specific directory, that will contain the raw data recieved from the partners.
 
 * `READING_METHODS_DICT (dict)`: Dictionary containing strings as keys that indicate different types of files and their assiciated reading method as the value. 
 
@@ -55,6 +75,13 @@ If you wish to use other `var_data`, `level_data`, or `panel_metadata` files (fo
 * `EXPORT_FILES (bool)`: With a value of `True`, it exports the final data (the data warehouse, with the panel structure described in [???]()) to .csv and .feather files. With a value of `False`, these files are not generated. For more details, see the section [File Exporting Utils Module](../modules_documentation/file_exporting_utils_doc.md).
 * `CREATE_SQL_DB (bool)`: Con un valor de `True` se exporta los datos a una base de datos MySQL (i.e. se crea el datawarehouse). Con un valor de `False` no se exportan los datos a MySQL.
 * `DATAWAREHOUSE_PATH (str)`: Name of the folder where the data warehouse in .csv and .feather will be exported.
+
+- **`ANALYSIS_REPORT_SCRIPT_PATH (str)`**: absolute path to the `.Rmd` script used to generate the initial descriptive analysis of the data, in case the results are exported to files.
+
+- **`COLS_IN_PANELS (dict)`**: Dictionary mapping each panel name to the list of column names that should be exported for that panel in .feather/.csv files. Used to customize the structure of the data warehouse.
+
+
+- `COLS_IN_SQL_PANELS (dict)`: Dictionary mapping each panel name to the list of column names that should be exported for that panel in the SQL DB. Used to customize the structure of the data warehouse.
 
 > **Note**: This module is usually imported using the abreviation `config`:
 > 
@@ -71,16 +98,23 @@ This module contians variables related to the configuration and instantiation of
 * `DECIDE_NAME (str)`: Name to be used to refer to the *Decide* cohort during the execution of the main code.
 * `MARINA1_NAME (str)`: Name to be used to refer to the *Marina* cohort during the execution of the main code.
 * `LIVERAIM_NAME (str)`: Name to be used to refer to the *Liveraim* merged database during the execution of the main code.
+* `GALAALD_NAME (str)`: Name to be used to refer to the *Galaald* merged database during the execution of the main code.
+
 * `ALL_COHORTS (list)`: List of all the cohort names. This variable is created using the variables defined above and should be only modified to add new elements (i.e. new cohorts). 
+* `WP1_COHORT_NAME_LIST (list)`: List of cohort names that will be used for the processing of WP1. This variable is created using the variables defined above.
+* `WP2_COHORT_NAME_LIST (list)`: List of cohort names that will be used for the processing of WP2. This variable is created using the variables defined above.
 
-For each cohort, the following variables are also defined (for brevity, the term `COHORT_NAME` will be used to refer to the name of the specific cohort):
+For each cohort, the following variables are also defined (for brevity, the term `<COHORT_NAME>` will be used to refer to the name of the specific cohort):
 
-* `COHORT_NAME_INCL_DATE_VAR (str)`: Original name of the 'inclusion date' variable.
-* `COHORT_NAME_AGE_VAR (str)`: Original name of the 'age' variable.
-* `COHORT_NAME_ID_VAR (str)`: Original name of the 'identifier' variable.
-* `COHORT_NAME_COHORT_STATUS (str)`: Value of the categorical `status` variable. For more details about this variable, refer to the section on the [`new_levels_config module`](#new_levels_config-module).
-* 
+* `COHOR<T_NAME>_INCL_DATE_VAR (str)`: Original name of the 'inclusion date' variable.
+* `<COHORT_NAME>_AGE_VAR (str)`: Original name of the 'age' variable.
+* `<COHORT_NAME>_ID_VAR (str)`: Original name of the 'identifier' variable.
+* `<COHORT_NAME>_COHORT_STATUS (str)`: Value of the categorical `status` variable. For more details about this variable, refer to the section on the [`new_levels_config module`](#new_levels_config-module).
+ 
 * `COHORTS_DATA (dict)`: A dictionary that contains the previously defined variables for each cohort. This dictionary is imported (instead of importing each variable individually) into the code, making it easier to access these variables. The dictionary keys are the names of each cohort, and the values are the corresponding variables for that cohort as described above.
+
+- `PERCENT_VARS (list)`: List of variable names (using their common mapped name) that should be represented with percentage (%) units. This list is used during formatting and processing to handle inconsistencies in how these variables are expressed.
+
 
 > **Note**: This module is usually imported using the abreviation `cc`:
 > 
@@ -250,23 +284,24 @@ To create the list of dictionaries, the variable `VARIABLE-NAME_LEVEL_DATA_ROW` 
 
 ## `reference_names` module
 
-> **Note**: Es recomendable haber consultado al menos la sección [initial data and configuration](../liveraim_data_warehouse_specifications.md#initial-data-and-configuration-data) antes de seguir leyendo este apartado. 
+> **Note**: It is recommended to read the section [Initial data and configuration](../liveraim_data_warehouse_specifications.md#initial-data-and-configuration-data) before continuing with this section.
 
-En este módulo se listan las variables que hacen referencia a los nombres de las columnas de los tres archivos de metadatos iniciales, a saber:
+This module lists the variables that reference the column names of the three initial metadata files, namely:
 
 + `level_data`
 + `var_data`
 + `panel_metadata`
 
-Estos nombres se usan ampliamente en el código. Los nombres de las variables siguen una nomenclatura concreta: la primera palabra de la variable hace referencia al archivo/objeto en cuestión. La última palabra es `COLUMN`, haciendo referencia a que la variable lleva el nombre de uan columna de un archivo .xlsx (o un DataFrame), con el objetivo de diferenciarla de otras variables parecidas. 
+These names are widely used throughout the code. The variables follow a specific naming convention: the first part of the variable name refers to the file/object it belongs to, and the last part is `COLUMN`, indicating that the variable contains the name of a column from a `.xlsx` file (or a DataFrame). This helps differentiate them from similar variables.
 
-Así, por ejemplo, la variable que contiene el nombre de la columna del archivo `var_data` en la que aparece la descripción de cada variable lleva el nombre de `VAR_DESCRIPTION_COLUMN`.
+For instance, the variable that stores the name of the column in the `var_data` file containing the description of each variable is named `VAR_DESCRIPTION_COLUMN`.
 
-A riesgo de ser redundante, se listan a continuación las variables definidas en el módulo: 
+At the risk of being redundant, the variables defined in this module are listed below:
 
 #### `var_data` column variables
 
-Variables que referencian las columnas del archivo/objeto `var_data` (hay que recordar que cada fila corresponde a una variable):
+Variables that reference the columns of the `var_data` file/object (note that each row corresponds to a variable):
+
 
 + `VAR_ORIGINAL_NAME_COLUMN`: Name of the column where the variable's original name in the cohort is defined.
 + `VAR_LIVERAIM_NAME_COLUMN`: Name of the column where the final name (in the common format) of the variable is defined.
@@ -281,7 +316,7 @@ Variables que referencian las columnas del archivo/objeto `var_data` (hay que re
 
 #### `level_data` column variables
 
-Variables que referencian las columnas del archivo/objeto `level_data` (hay que recordar que cada fila corresponde a un nivel de una variable):
+Variables that reference the columns of the `level_data` file/object:
 
 + `LEVEL_ORIGINAL_NAME_COLUMN`: Name of the column where the original name of the variable in the cohort is defined.
 + `LEVEL_LIVERAIM_NAME_COLUMN`: Name of the column where the final name (in the common format) of the variable is defined.
@@ -304,4 +339,133 @@ The following variables specify the names of some of the columns in the tables w
 + `FINAL_DATA_VARIABLE_NAME`: Name of the column in the final long-format tables where the variable names will appear.
 + `FINAL_DATA_VALUE_NAME`: Name of the column in the final long-format tables where the variable values will appear.
 
-This module should only be changed if the column names in `level_data`, `var_data` and `panel_metadata` are changed. 
+This module should only be changed if the column names in `level_data`, `var_data` and `panel_metadata` are changed.
+
+## `ids_to_drop.txt` File
+
+Inside the configuration module directory, a file named `ids_to_drop.txt` can be placed (this file is not tracked by Git). It should contain a raw list of patient identifiers, one per line. Each patient listed in this file will be excluded from the data warehouse during data processing.
+
+This provides a simple way to remove specific patients from the data warehouse—e.g., due to incorrect identification, misspelled IDs, duplicates, or ID collisions—by adding them to this list.
+
+## `biomarkers_config` module
+
+In this module contains the following configuration classes, that contain all the specifications for the proper reading and formatting of biomarker data received from the providers:
+
+- **[`BMKConfig`](#BMKConfig-class)**: Works as parent class for the rest of the provierd-specific configuration classes. In consequence, it contains all the common attributes that this classes share.
+- **[`HClinicBMKConfig`](#HClinicBMKConfig-class)**: Contains all the specific configuration parameters for the data received from the Hospital Clínic
+- **[`NordicBMKConfig`](#NordicBMKConfig-class)**: Contains all the specific configuration parameters for the data received from the Nordic
+- **[`RocheBMKConfig`](#RocheBMKConfig-class)**: Contains all the specific configuration parameters for the data received from the Roche
+
+#### `BMKConfig` class
+
+##### **Attributes**:
+
+- `provider`: Name of the provider (hclinic, nordic or roche)
+- `provider_data_dir`: Directory where the biomarkers raw data for this provider is stored.
+- `BMK_DATA_DIR_PATH`: Common directory containing all biomarkers data (in particular, it contains the subpath `provider_data_dir`)
+- `FINAL_ID_COLUN`: Name of the ID column in the final formatted DataFrame.
+- `FINAL_VARIABLE_COLUMN`: Name of the variable column (which contains the blinded name of the biomarker) in the final formatted DataFrame.
+- `FINAL_VALUE_COLUMN`: Name of the ID column in the final formatted DataFrame (in the current version this column is not exported to the final data and is replaced by the FINAL_NUMERIC_VALUE_COLUMN).
+- `FINAL_NORM_VALUE_COLUMN`: Name of the normalized value column in the final formatted DataFrame.
+- `FINAL_REQUEST_COLUMN`: Name of the request ID column in the final formatted DataFrame (in the current version this column is not exported to the final data).
+- `FINAL_REGISTER_DATE_COLUMN`: Name of the register date column in the final formatted DataFrame (in the current version this column is not exported to the final data).
+- `FINAL_VALIDATION_DATE_COLUMN`: Name of the validation date column in the final formatted DataFrame.
+- `FINAL_NUMERIC_VALUE_COLUMN`: Name of the final numeric value (which only contains numeric values) column in the final formatted DataFrame.
+- `FINAL_LIVERAIM_ID_COLUMN`: Name of the common liveraim ID column in the final formatted DataFrame.
+- `FINAL_LIMIT_DETECT_COLUMN`: Name of the limit detection column in the final formatted DataFrame.
+- `FINAL_COMMENTS_COLUMN`: Name of the comments column in the final formatted DataFrame.
+- `FINAL_Z_SCORE_COLUMN`: Name of the z_score column in the final formatted DataFrame.
+- `FINAL_QUINTILES_COLUMN`: Name of the quintiles column in the final formatted DataFrame.
+
+- `BMK_FINAL_COLUMNS`: List of the column names selected for the final biomarker panel.
+- `python_column_types`: Dictionary with the python datatypes of each of the final columns.
+- `mysql_column_types`: Dictionary with the SQL datatypes of each of the final columns.
+- `BLINDED_BIOMARKER_MAP`: Dictionary to map the biomarkers names to blinded names (currently uppercase letters).
+- `BMKS_CUT_OFFS`: Dictionary with the cutoff values of the biomarkers (if provided).
+
+
+#### `HClinicBMKConfig` class
+
+Inherits from `BMKConfig`.
+
+##### **New attributes**:
+
+- `provider`: name of the provider (nordic)
+- `ID_COLUMN`: name of the original/raw column of the IDs.
+- `VARIABLE_COLUMN`: name of the original/raw column of the biomarker name (variable column)
+- `VALUE_COLUMN`: name of the original/raw column of the biomarker measurement value.
+- `REQUEST_COLUMN`: name of the original/raw request code column.
+- `REGISTER_DATE_COLUMN`: name of the original/raw register date colu,m.
+- `VALIDATION_DATE_COLUMN`: name of the original/raw validation_date column.
+- `NUMERIC_VALUE_COLUMN`: name of the original/raw numeric value column  (this column is not present in the raw data). In this case, it is set to the same as VALUE_COLUMN.
+- `LIVERAIM_ID_COLUMN`: name of the liveraim ID column (this column is not present in the raw data). Its value should be the same as FINAL_LIVERAIM_ID_COLUMN.
+- `LIMIT_DETECT_COLUMN`: name of limit detection column (this column is not present in the raw data). Its value should be the same as FINAL_LIMIT_DETECT_COLUMN.
+- `ORIGINAL_COLUMNS`:  list with all the column names in the original raw data.
+- `biomarker_columns_map`: dictionary mapping the original names to the final names of the columns.
+-  `FILE_TYPE`: type of the raw data files received from the provider.
+- `READING_METHOD`: method that will be used to read the raw data.
+- `COMMENTS_DICT`: Dictionary used to map and harmonize the comments from strings to a numeric code.
+- `MISSING_SYMBOLS`: List of symbols that, in VALUE_COLUMN, are equivalent to a missing (i.e. "no calculable", "ND", ...).
+
+#### `NordicBMKConfig` class
+Inherits from `BMKConfig`.
+
+
+##### **New attributes**:
+
+- `provider`: name of the provider (nordic)
+- `ID_COLUMN`: name of the original/raw column of the IDs.
+- `VARIABLE_COLUMN`: name of the original/raw column of the biomarker name (variable column)
+- `VALUE_COLUMN`: name of the original/raw column of the biomarker measurement value.
+- `REGISTER_DATE_COLUMN`: name of the original/raw register date colu,m.
+- `VALIDATION_DATE_COLUMN`: name of the original/raw validation_date column.
+- `NUMERIC_VALUE_COLUMN`: name of the original/raw numeric value column  (this column is not present in the raw data). In this case, it is set to the same as VALUE_COLUMN.
+- `LIVERAIM_ID_COLUMN`: name of the liveraim ID column (this column is not present in the raw data). Its value should be the same as FINAL_LIVERAIM_ID_COLUMN.
+- `LIMIT_DETECT_COLUMN`: name of limit detection column (this column is not present in the raw data). Its value should be the same as FINAL_LIMIT_DETECT_COLUMN.
+- `COMMENTS_COLUMN`: name of the original/raw comments column.
+- `STUDY_ID_COLUMN`: name of the original/raw study column.
+- `UNITS_COLUMN`: name of the original/raw units column.
+- `METHOD_COLUMN`: name of the original/raw method column.
+
+- `IDS_REASSIGNMENT_PATH`: path to the .json dictionary that contains the mapping of the unmatching IDs from Odense patients.
+
+- `ORIGINAL_COLUMNS`: list with all the column names in the original raw data.
+- `biomarker_columns_map`: dictionary mapping the original names to the final names of the columns.
+- `DATA_DIR`: Name of the directory inside `BMK_DATA_DIR_PATH` where the provider's data is stored.
+- `FILE_TYPE`: type of the raw data files received from the provider.
+- `READING_METHOD`: method that will be used to read the raw data.
+- `COMMENTS_DICT`: Dictionary used to map and harmonize the comments from strings to a numeric code.
+- `MISSING_SYMBOLS`: List of symbols that, in VALUE_COLUMN, are equivalent to a missing (i.e. "no calculable", "ND", ...).
+- `limit_detect_bounds`: Dictionary with the detection limit bounds (upper and lower bounds for each biomarker) if provided by the provider.
+- `l_bound_comment`: Comment that indicates that the the value in the register us below the limit of quantification.
+- `u_bound_comment`: Comment that indicates that the the value in the register us above the limit of quantification.
+
+#### `RocheBMKConfig` class
+Inherits from `BMKConfig`.
+
+- `provider`: name of the provider (nordic)
+- `ID_COLUMN`: name of the original/raw column of the IDs.
+- `VARIABLE_COLUMN`: name of the original/raw column of the biomarker name (variable column)
+- `VALUE_COLUMN`: name of the original/raw column of the biomarker measurement value.
+- `REGISTER_DATE_COLUMN`: name of the original/raw register date colu,m.
+- `VALIDATION_DATE_COLUMN`: name of the original/raw validation_date column.
+- `NUMERIC_VALUE_COLUMN`: name of the original/raw numeric value column  (this column is not present in the raw data). In this case, it is set to the same as VALUE_COLUMN.
+- `LIVERAIM_ID_COLUMN`: name of the liveraim ID column (this column is not present in the raw data). Its value should be the same as FINAL_LIVERAIM_ID_COLUMN.
+- `LIMIT_DETECT_COLUMN`: name of limit detection column (this column is not present in the raw data). Its value should be the same as FINAL_LIMIT_DETECT_COLUMN.
+- `COMMENTS_COLUMN`: name of the original/raw comments column.
+- `STUDY_ID_COLUMN`: name of the original/raw study column.
+- `UNITS_COLUMN`: name of the original/raw units column.
+- `METHOD_COLUMN`: name of the original/raw method column.
+
+- `IDS_REASSIGNMENT_PATH`: path to the .json dictionary that contains the mapping of the unmatching IDs from Odense patients.
+
+- `ORIGINAL_COLUMNS`: list with all the column names in the original raw data.
+- `biomarker_columns_map`: dictionary mapping the original names to the final names of the columns.
+- `DATA_DIR`: Name of the directory inside `BMK_DATA_DIR_PATH` where the provider's data is stored.
+- `FILE_TYPE`: type of the raw data files received from the provider.
+- `READING_METHOD`: method that will be used to read the raw data.
+- `COMMENTS_DICT`: Dictionary used to map and harmonize the comments from strings to a numeric code.
+- `MISSING_SYMBOLS`: List of symbols that, in VALUE_COLUMN, are equivalent to a missing (i.e. "no calculable", "ND", ...).
+- `limit_detect_bounds`: Dictionary with the detection limit bounds (upper and lower bounds for each biomarker) if provided by the provider.
+- `l_bound_comment`: Comment that indicates that the the value in the register us below the limit of quantification.
+- `u_bound_comment`: Comment that indicates that the the value in the register us above the limit of quantification.

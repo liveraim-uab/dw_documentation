@@ -294,6 +294,8 @@ of the bmk data.
         - If the `bmk_bounds` attribute has not yet been created, a warning is issued indicating that this attribute must be created first, then the method returns.
         - If any inconsistencies are found, i.e., values outside the `bmk_bounds` limits, a message with relevant error information is logged.
     <br><br>
+
+### Class `BMKCalculator`
     
 ## General Operation
 

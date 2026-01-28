@@ -201,22 +201,22 @@
 </div></div>
         <div class="col-md-9" role="main">
 
-<h1 id="file_reading_utils-documentation"><code>file_reading_utils</code> Documentation<a class="headerlink" href="#file_reading_utils-documentation" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<h1 id="file_reading_utils-documentation"><code>file_reading_utils</code> Documentation</h1>
+<h2 id="overview">Overview</h2>
 <p>The <code>file_reading_utils</code> module is responsible for reading various types of data files (databases and metadata) required for building the data warehouse. The primary class in this module is <code>DataReader</code>, which centralizes the reading process for all relevant files, including raw cohort data, variable metadata (<code>var_data</code>), level metadata (<code>level_data</code>), panel metadata (<code>panel_data</code>) and metadata to combine variables (<code>comb_var_data</code>). </p>
 <p>This module is sensitive to the structure of the directory where the data is stored, and it also includes the function <code>hash_file</code>, which calculates the hash of a file. This can be useful for logging purposes, as it helps trace the files used during data reading.</p>
-<h2 id="general-structure">General Structure<a class="headerlink" href="#general-structure" title="Permanent link">&para;</a></h2>
+<h2 id="general-structure">General Structure</h2>
 <p>The module contains the following key components:</p>
 <ul>
 <li><strong><code>DataReader</code></strong>: The main class used for reading raw cohort data and metadata, managing logging, and ensuring the directory structure is correct.</li>
 <li><strong><code>hash_file</code></strong>: A utility function for generating the hash of a file.</li>
 <li><strong><code>stringfy</code></strong>: A helper function to convert a list of dictionaries into a formatted string for logging purposes.</li>
 </ul>
-<h2 id="class-description">Class Description<a class="headerlink" href="#class-description" title="Permanent link">&para;</a></h2>
-<h3 id="class-datareader">Class <strong><code>DataReader</code></strong><a class="headerlink" href="#class-datareader" title="Permanent link">&para;</a></h3>
-<h4 id="description">Description:<a class="headerlink" href="#description" title="Permanent link">&para;</a></h4>
+<h2 id="class-description">Class Description</h2>
+<h3 id="class-datareader">Class <strong><code>DataReader</code></strong></h3>
+<h4 id="description">Description:</h4>
 <p>The <code>DataReader</code> class centralizes the process of reading various data files required for creating a data warehouse. This includes reading raw cohort data, variable and level metadata, panel data and combination variable data. It manages logging, error handling, and ensures proper file access and reading.</p>
-<h4 id="attributes">Attributes:<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h4>
+<h4 id="attributes">Attributes:</h4>
 <ul>
 <li><strong><code>reading_methods_dict</code> (dict)</strong>: Contains the methods for reading different types of data (e.g., <code>.csv</code>, <code>.dta</code>, <code>.xlsx</code>).</li>
 <li><strong><code>databases_format_dict</code> (dict)</strong>: Specifies the format of the raw databases for each cohort, used in conjunction with <code>reading_methods_dict</code> to read cohort data.</li>
@@ -231,7 +231,7 @@
 <li><strong><code>all_data</code> (dict)</strong>: A dictionary containing all the data required to create the data warehouse.</li>
 <li><strong><code>read_files_log</code> (dict)</strong>: A dictionary containing the filenames and their hashes for logging purposes.</li>
 </ul>
-<h4 id="methods">Methods:<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h4>
+<h4 id="methods">Methods:</h4>
 <ul>
 <li>
 <p><strong><code>__init__(self, cohort_names_list: list) -&gt; None</code></strong>: 
@@ -341,7 +341,7 @@
     Sets the <code>all_data</code> attribute by calling the <code>read_all_data</code> method.</p>
 </li>
 </ul>
-<h2 id="utility-functions">Utility Functions<a class="headerlink" href="#utility-functions" title="Permanent link">&para;</a></h2>
+<h2 id="utility-functions">Utility Functions</h2>
 <ul>
 <li>
 <p><strong><code>hash_file(file_name: str, algorithm: str="sha256") -&gt; str</code></strong>: 
@@ -377,19 +377,19 @@
     Tests the instantiation of the DataReader class and prints the relative path and names of the files that have been read. For testing purpose. If this module (<code>file_reading_utils</code>) is executed directly as the main program, this function will be executed. </p>
 </li>
 </ul>
-<h2 id="general-operation">General Operation<a class="headerlink" href="#general-operation" title="Permanent link">&para;</a></h2>
+<h2 id="general-operation">General Operation</h2>
 <p>Cuando se instancía la clase <code>DataReader</code> se desencadenan, secuencialmente, las siguientes acciones: </p>
 <ul>
 <li>Instanciación de los atributos básicos importados desde los modulos de configuración (<code>config</code>) como <code>reading_methods_dict</code>, <code>common_data_folder</code>, etc. </li>
 <li>Chequeo de los nombres de las cohortes para las cuales se va a leer los datos. Esto se hace llamando al método <code>check_cohort_names</code>.</li>
 <li>Lectura de todos los datos, que se almacenan en el atributo <code>all_data</code>. Esto se hace llamando al método <code>read_all_data</code>. Consulta el apartado <a href="#output-description"><code>output description</code></a> para más detalles. Este método llama internamente, y para cada cohorte, al método <code>read_cohort_data</code>, encargado de leer todos los datos necesarios de una cohorte. Además, lee el archivo <code>panel_data</code>. </li>
 </ul>
-<h2 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h2>
+<h2 id="logs">Logs</h2>
 <p>The <code>DataReader</code> class logs various events during the reading process:
 - <strong>Cohort Name Validation</strong>: Logs an error if any invalid cohort names are provided.
 - <strong>File Reading</strong>: Logs success or failure messages for each file read (raw data, metadata, panel data). For the database files, it also logs the name of each version and its hash. 
 - <strong>Hash Calculation</strong>: Logs errors if any issues occur while calculating file hashes.</p>
-<h2 id="usage-example">Usage Example<a class="headerlink" href="#usage-example" title="Permanent link">&para;</a></h2>
+<h2 id="usage-example">Usage Example</h2>
 <p>The following is an example of how to use the <code>DataReader</code> class to read cohort data and metadata:</p>
 <pre><code class="language-python">from data_reader import DataReader
 import config.cohort_config as cc
@@ -409,7 +409,7 @@ var_data = all_data['Liverscreen']['var_data']
 level_data = all_data['Liverscreen']['level_data']
 </code></pre>
 <p>In this example, the <code>DataReader</code> is instantiated with a list of cohort names, and the data for each cohort is read into the <code>all_data</code> attribute. The raw data, variable metadata, and level metadata for each cohort can be accessed from this attribute.</p>
-<h2 id="output-description">Output Description<a class="headerlink" href="#output-description" title="Permanent link">&para;</a></h2>
+<h2 id="output-description">Output Description</h2>
 <p>The DataReader class reads and stores the following data for each cohort:</p>
 <ul>
 <li><strong>Raw Data</strong>: The raw data (multiple versions if available) for each cohort. </li>
@@ -434,7 +434,7 @@ level_data = all_data['Liverscreen']['level_data']
     }
 }
 </code></pre>
-<h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
+<h2 id="error-handling">Error Handling</h2>
 <p>The DataReader handles several common errors that may arise during the file reading process, including:</p>
 <ul>
 <li><code>FileNotFoundError</code>: Raised if a specified file or directory does not exist.</li>
@@ -474,6 +474,8 @@ level_data = all_data['Liverscreen']['level_data']
     <script>var base_url = "../.."</script>
     
     <script src="../../js/base.js"></script>
+    <script src="../../javascripts/mathjax.js"></script>
+    <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../search/main.js"></script>
 
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">

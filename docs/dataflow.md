@@ -13,7 +13,7 @@ The data processing follows these steps, which are explained in detail in this d
 + [**Cohort Merging**](#cohort-merging): Once the different cohorts with homogenized data have been created, they are merged into a new `Cohort` object (named `liveraim`). Two important actions are performed in this cohort:
     + The variable `liveraim_id` is added, a common format identifier.
     + The different panels (in `DataFrame` format) that will later be exported are created.
-+ [**Biomarker data processing**](#biomarker-data-processing): 
++ [**Biomarker data management**](#biomarker-data-management): Biomarkers data is read and harmonized by applying provider-specific transformations to obtain a common biomarkers panel. In addition, formula-based biomarkers are computed and added to to the panel.
 + [**Exportation to Files**](#exportation-to-files): The created panels are exported as `.feather` and `.csv` files for further analysis.
 + [**Exportation to MySQL Database**](#exportation-to-mysql-database): A connection is made to MySQL, where the various tables and relationships of the schema are created, and the data is exported to SQL format.
 
@@ -252,16 +252,136 @@ Once all cohorts have been formatted, they are merged using the `merge_cohorts` 
 
 Once the new `cohort` object is created, the `set_id` method is called. This method generates a new column in the `homogeneous_data` dataframe attribute, populated with a unified ID for each patient. The structure of this new ID follows the format `LAxxxxx`, where `xxxxx` is a sequential number starting from 1 and increasing up to the total number of rows in the dataframe (i.e., the position of the last patient in the dataframe). The IDs are assigned in ascending order throughout the dataframe.
 
-As a result, the correspondence between the original ID (referred to here as `cohort_id`) and the unified ID (referred to here as `liveraim_id`) may vary depending on the position of each patient’s data within the `homogeneous_data` dataframe. This implies that the mapping between `cohort_id` and `liveraim_id` can change between executions.
+> **Warning**: As a result, the correspondence between the original ID (referred to here as `cohort_id`) and the unified ID (referred to here as `liveraim_id`) may vary depending on the position of each patient’s data within the `homogeneous_data` dataframe. This implies that the mapping between `cohort_id` and `liveraim_id` can change between executions.
 
 For more details on the functionality of this process, refer to the section [`merge_cohorts` function](modules_documentation/cohort_utils_doc.md#merge_cohorts-function).
 
-## Biomarker data processing
+## Biomarker data management
+
+To check the structure of the processed biomarkers data panel check the subsection [Biomarkers table](liveraim_data_warehouse_specifications.md#table-biomarkers). There are two different sources of biomarkers data:
+
+- **Partners**: third party partners (name Nordic, Roche and Hospital Clínic) are responsible for the analysis and transfer of the biomarkers data, that will be then processed and integrated into the data warehouse. This process is described in the following sections [Data Reading](#data-reading-1) and [Data Processing](#data-processing).
+
+- **Data Warehouse**: Some biomarkes are computed using the variables from the data warehouse, formatted and merged with the biomarkers data obtained from the partners. This process is briefly described in [Calculation of computed Biomarkers](#calculation-of-computed-biomarkers).
+#### Data Reading
+
+The processing of biomarker data is performed immediately after the processing of cohort data, as the cohort IDs are used to validate the IDs in the biomarker data.
+
+Biomarker data is received from different providers, namely Nordic, Roche, and Hospital Clínic, in the current version. Since each provider may send the data split into different batches, and similarly to the cohort data case, the reading process for biomarker data is handled by the `BMKDataReader` class. For each provider, an instance of `BMKDataReader` is created, resulting in a dictionary (stored in the `bmk_data_dict` attribute) where the keys are the version dates (batches) and the values are the dataframes containing the data. 
+
+For more details on the organization of the biomarker data directory and the specifics of the reading process, please check the section [class `DataReader`](modules_documentation/biomarker_utils_doc.md#class-bmkdatareader).
+
+#### Data Processing
+
+Once read, an instance of `BMKDataProcessor` is created for each provider. This instance is responsible for harmonizing and processing the biomarker data so it can be merged with data from other biomarkers. To instantiate this object, two main parameters are required, in addition to the `biomarkers_data`: the name of the provider (which allows calling the specific configuration class to process its data) and the set of common Liveraim IDs from the cohort database. The following section describes the general transformations applied to the data from each provider:
+
+- For each version/batch received from the provider, the following transformations are applied:
+    - The columns of the DataFrame are **renamed** to follow a common naming convention.
+
+    - **Provider-specific transformations** are applied via the `BMKHarmonizer` class. This will be covered in more detail below. The result of this transformation is a DataFrame with a common format and structure, both among batches from the same provider and between different providers.
+
+    - The **original IDs are stored** to generate a mapping between these IDs and the harmonized ones. This is mainly for debugging and traceability purposes — it allows tracing back the original IDs in the biomarker data that do not match the IDs in the cohort database.
+
+    - **ID harmonization**: The IDs are transformed to fix inconsistencies between cohort data and biomarker data. The transformations applied are described in the section [**ID transformations**](#id-transformations).
+
+    - **Duplicate removal**: If any duplicate records for ID and biomarker are found within a batch, they are dropped and removed from the DataFrame, retaining none of them.
+
+    - **Blinding of biomarkers**: The biomarker names (column `variable`) are mapped to anonymize them. However, in the final version the results are already available for the collaborators. For this reason the biomarkers names are unblinded to facilitate readability.
+    - A **quality control** process is performed on the transformed data and stored as a DataFrame in a dictionary, whose key will be the version/batch name. These checks are detailed below.
+
+- The DataFrames from each version are then concatenated (vertically) to obtain a single DataFrame (which may contain duplicates).
+- The dictionary mapping the original IDs to the transformed IDs is created and stored in the `ids_transformation_dict` attribute.
+- The appropriate data type is applied to each column.
+- **Consistency checks**: Two main checks are performed at this point:
+    - **ID matching**: The IDs in the biomarker data are matched with those provided from the cohort data. If an ID from the biomarker data does not match any of the cohort IDs, it is dropped from the DataFrame and ignored.
+
+    - **Duplicate removal**: If any duplicates are found for the same biomarker and ID, the duplicates are dropped (currently keeping only the entry with the latest `validation_date`). This is due to the fact that there may be patient overlap between batches from the same provider.
+
+- A new column (`liveraim_id` by default) is generated by mapping the transformed IDs to the Liveraim IDs from the cohort database. At this point, some identifiers might not match any of the provided Liveraim IDs (and will be subsequently dropped from the final data).
+
+- **Missing values drop**: Rows with missing numeric values for a given biomarker are excluded from the DataFrame.
+
+- **Scaling**: The values for each biomarker (currently in the `value` column) are scaled into a specified range ([0, 1] by default). The current version uses a Min-Max scaling method:
+
+$$
+X'_i = \frac{X_i - X_{min}}{X_{max} - X_{min}}
+$$
+
+- **Normalization**: The z-score of the numeric value (grouped by biomarker) is computed and added as a column. To do so, the following formula is used:
+
+    $$
+    X'_i = \frac{X_i - \mu}{\sigma}
+    $$
+
+    Where:
+
+    - $\mu$ is the mean of the values for the given biomarker.  
+    - $\sigma$ is the standard deviation of the values for the given biomarker.  
+
+- **Quintiles**: quintiles are computed (grouped by biomarker) and added as a column. Labelled from 1 to 5. 
+
+
+As mentioned above, this process is performed separately for the data from each provider. Finally, all the DataFrames (with compatible structures) are merged into a single one, ready to be exported.
+
+#### Provider-specific transformations
+
+##### **Hospital Clínic**
+The raw data from this provider may include the symbols `<` or `>` in the numeric value field of some biomarkers. These symbols indicate whether the value is below or above the quantification limit. Values without any symbol are considered to fall within the detectable range. Accordingly, the main specific transformations applied are:
+
+- **Comments column**: A new column called `comments` is created based on the biomarker value column. If any of the above symbols are present, the corresponding comment is added to this column. If no symbol is found, the default value is an empty string.
+
+- **Symbols processing**: The symbol (if any) is extracted from the biomarker value column and stored in a new column named `limit_detect`, which contains only the symbol. If no symbol is present, the default value is `pd.NA`. Additionally, a new column called `numeric_value` is created, containing only the numeric part of the biomarker value (as `float` type).
+ 
+
+##### **Nordic**
+
+- **IDs Mapping**: Some IDs received from Nordic did not follow the same codification system as those in the data warehouse for certain patients. In particular, these IDs come from the Odense database (Decide). To resolve this, a dictionary that maps these incorrect IDs to the correct ones is loaded and applied. The path to this dictionary (a `.json` file) is stored in the `IDS_REASSIGNMENT_PATH` attribute of the `NordicBmkConfig` class.
+
+- **Biomarker value formatting**: In the biomarker value column, values with the string "ND" (indicating a missing value) are replaced with an empty string. Then, the column is converted to `float`, assigning `np.nan` to empty strings.
+
+- **Addition of `limit_detect` column**: Based on the `comments` column in the raw data provided by Nordic, the new column called `limit_detect` is created, following the convention described in [Hospital Clínic transformations](#hospital-clínic).
+
+- **Comments mapping**: Comments in the `comments` column are mapped to numeric codes using dictionaries defined in the configuration module.
+
+- **Value clipping**: The raw data from Nordic includes the value of the analysis (`numeric_value`), even when it falls outside the detection range. To ensure consistency and preserve the structure of the panel, values outside the detection limits (those bounds have been provided by Nordic) are replaced with the appropriate limit value:
+    - Values below the detection limit are replaced with the lower detection limit.
+    - Values above the detection limit are replaced with the upper detection limit.
+
+##### **Roche**
+
+- **IDs Mapping**: Some IDs received from Roche did not follow the same codification system as those in the data warehouse for certain patients. In particular, these IDs come from the Odense database (Decide). To resolve this, a dictionary that maps these incorrect IDs to the correct ones is loaded and applied. The path to this dictionary (a `.json` file) is stored in the `IDS_REASSIGNMENT_PATH` attribute of the `RocheBmkConfig` class.
+
+- **Addition of `limit_detect` column**: Based on the `comments` column in the raw data provided by Nordic, the new column called `limit_detect` is created, following the convention described in [Hospital Clínic transformations](#hospital-clínic).
+
+- **Comments mapping**: Comments in the `comments` column are mapped to numeric codes using dictionaries defined in the configuration module.
+
+## Calculation of computed Biomarkers
+As some biomarkers are analyzed and provided by external partners, certain biomarkers need to be computed using variables from the current data warehouse. The following section briefly describes the process of computing and formatting these biomarkers.
+
+The class responsible for performing these computations is `BMKCalculator`, which is instantiated with the already processed data warehouse (in particular, with a `Cohort` object). For more details on the implementation of this class, refer to the section [`BMKCalculator` class](modules_documentation/biomarker_utils_doc.md#class-bmkcalculator).
+
+For each biomarker that needs to be computed, a specific Python function has been implemented. This function returns a `pd.Series` object with the computed values. The following steps are performed to obtain a compatible DataFrame that can be merged with the one generated by `BMKDataProcessor`:
+
+- A biomarker-specific function (already defined) is applied to compute the values using the harmonized data warehouse. The resulting values are stored in the `numeric_value` column.
+
+- The `variable` column, containing the name of the biomarker, is added.
+
+- The required columns (`liveraim_id`, `inclusion_date`, `numeric_value`, and `variable`) are selected and assembled into a DataFrame.
+
+    > **Note**: Date used as `validation_date` variable for computed biomarkers will be, at this version, the `inclusion_date` variable.
+
+- The columns `scaled_value`, `quintiles`, and `z_score` are added as described in the [Biomarker Data Processing](#data-processing) section.
+
+- The columns `comments` and `limit_detect` are added to match the common structure.
+
+    > **Warning**: In the current version, no detection limits are available for the computed biomarkers. Accordingly, all records will contain default values in the `limit_detect` and `comments` columns (`pd.NA` and `""`, respectively). Furthermore, no clipping is applied to the biomarker values.
+
+Each biomarker data results in an individual DataFrame. These DataFrames are then merged into a single, consistent DataFrame that can be seamlessly combined with those produced by `BMKDataProcessor`.
+
 
 ## Exportation to Files
 
 If the variable `EXPORT_FILES` defined in the `main_config` module is set to `True`, the data for each of the final panels will be exported as files. In the current version, the data is exported to `.csv` and `.feather` formats.
-
 
 ## Exportation to MySQL Database
 After exporting the database as files, the MySQL database is created. The module responsible for handling this export is [`sql_exporting_utils`](modules_documentation/sql_exporting_utils_doc.md). Specifically, the `SQLExporter` class, defined in this module, centralizes the connection to the database, the creation of tables, and the export of data.

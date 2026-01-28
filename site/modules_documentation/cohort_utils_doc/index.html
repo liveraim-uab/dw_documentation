@@ -195,19 +195,19 @@
 </div></div>
         <div class="col-md-9" role="main">
 
-<h1 id="cohorts_utils-documentation"><code>cohorts_utils</code> Documentation<a class="headerlink" href="#cohorts_utils-documentation" title="Permanent link">&para;</a></h1>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<h1 id="cohorts_utils-documentation"><code>cohorts_utils</code> Documentation</h1>
+<h2 id="overview">Overview</h2>
 <p>This module defines the <code>Cohort</code> class, which centralizes the process of homogenizing data from different cohorts into a common format, determined by the configuration data. Additionally, it is responsible for distributing the selected variables into different panels and formatting them appropriately (as specified in <code>panel_data</code>) to allow for export in various formats.</p>
-<h2 id="general-sturcture">General Sturcture<a class="headerlink" href="#general-sturcture" title="Permanent link">&para;</a></h2>
+<h2 id="general-sturcture">General Sturcture</h2>
 <p>The module consists of the following key components:</p>
 <ul>
 <li><strong>Functions responsible for the transformation and homogenization</strong> of the cohort databases (in <code>pd.DataFrame</code> format).</li>
 <li><strong><code>Cohort</code> class</strong>: This class centralizes cohort data (both the raw database, configuration data, etc.) as well as the process of data homogenization and, finally, the distribution of variables into each panel. It is important to note that the arguments required to initialize <code>Cohort</code> are the result of preprocessing carried out by <code>DataPreprocessor</code>.</li>
 <li><strong>Auxiliary functions</strong> used by <code>Cohort</code> to initialize attributes.</li>
 </ul>
-<h2 id="functions-and-classes">Functions and Classes<a class="headerlink" href="#functions-and-classes" title="Permanent link">&para;</a></h2>
+<h2 id="functions-and-classes">Functions and Classes</h2>
 <p>In this sections are described the classes and functions defined in the module: </p>
-<h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h3>
+<h3 id="functions">Functions</h3>
 <ul>
 <li>
 <p><strong><code>manage_string_type(df: pd.DataFrame, var: str) -&gt; None</code></strong></p>
@@ -540,12 +540,12 @@
 </ul>
 </li>
 </ul>
-<h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">&para;</a></h3>
-<h3 id="class-cohort">Class <code>Cohort</code><a class="headerlink" href="#class-cohort" title="Permanent link">&para;</a></h3>
-<h4 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h4>
+<h3 id="classes">Classes</h3>
+<h3 id="class-cohort">Class <code>Cohort</code></h3>
+<h4 id="description">Description</h4>
 <p>This class is the main object for data processing and export in the LiverAim project. It takes <code>raw_data</code> (presumably preprocessed) as input, along with configuration data about the selected/core variables (<code>var_data</code>), configuration data about the levels of the selected/core categorical variables (<code>level_data</code>), and other relevant parameters that define each cohort. It then centralizes the process of homogenization and formatting of the cohort, creating the attribute <code>homogenized_data</code>, which has a common format across cohorts.</p>
 <p>It also includes a method to distribute the variables in the final panels according to the configuration data in <code>panel_metadata</code> (see <a href="../../liveraim_data_warehouse_specifications/#initial-data-and-configuration-data">initial data and configuration data</a> section for more specifications about this object).</p>
-<h4 id="attributes">Attributes<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h4>
+<h4 id="attributes">Attributes</h4>
 <ul>
 <li>
 <p><strong><code>cohort_name</code> (str):</strong><br />
@@ -608,7 +608,7 @@
   A dictionary where each key is a panel name, and the corresponding value is a DataFrame with the panel's data.</p>
 </li>
 </ul>
-<h4 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h4>
+<h4 id="methods">Methods</h4>
 <ul>
 <li>
 <p><strong><code>__init__(self, cohort_name: str,</code>
@@ -740,7 +740,7 @@
 </ul>
 </li>
 </ul>
-<h4 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h4>
+<h4 id="logs">Logs</h4>
 <ul>
 <li>
 <p>In <code>__init__</code>:  </p>
@@ -767,7 +767,7 @@
 </ul>
 </li>
 </ul>
-<h2 id="general-operation">General Operation<a class="headerlink" href="#general-operation" title="Permanent link">&para;</a></h2>
+<h2 id="general-operation">General Operation</h2>
 <p>The instantiation of a <code>Cohort</code> requires three fundamental elements (in addition to other less critical parameters) that come from preprocessing by the <code>DataPreprocessor</code> class (see <a href="../data_processing_utils_doc/">Data Processing utils</a>):</p>
 <ul>
 <li><strong><code>raw_data</code></strong>: The cohort database, which is the result of merging different versions of the database for the same cohort.</li>
@@ -780,7 +780,7 @@
 <p>The <code>set_id</code> method allows the creation of a new identifier variable in the <code>raw_data</code> attribute while updating the configuration data. This is useful for creating a common identifier across all cohorts once they have been merged (after homogenization).</p>
 <p>Although the <code>raw_data</code> produced by <code>merge_cohorts</code> has the correct format, merging DataFrames can sometimes alter some of the data types. To prevent this, it is recommended to call the <code>homogenize_data</code> method again, which ensures that the data types are correct.</p>
 <p>If you wish to create the final tables or panels (presumably after homogenizing, merging cohorts, and creating a new common ID variable), the <code>set_final_data</code> method generates a dictionary containing the different DataFrames, each representing a panel. It requires the <code>panel_data</code> dictionary as a parameter, which contains the configuration data for the panels. This method selects the variables that should appear in each panel and transforms the DataFrames to long format if necessary. The dictionary with the final DataFrames is stored in the <code>final_data</code> attribute.</p>
-<h2 id="usage-in-main-execution">Usage in main execution<a class="headerlink" href="#usage-in-main-execution" title="Permanent link">&para;</a></h2>
+<h2 id="usage-in-main-execution">Usage in main execution</h2>
 <pre><code class="language-python">...
 
 # Create a list with the names of the cohorts to be used. 
@@ -844,6 +844,8 @@ liverscreen_cohort.set_final_data(panel_data)
     <script>var base_url = "../.."</script>
     
     <script src="../../js/base.js"></script>
+    <script src="../../javascripts/mathjax.js"></script>
+    <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../search/main.js"></script>
 
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">

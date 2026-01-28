@@ -4,13 +4,13 @@ This section describes the structure, tables, and relationships within the data 
 
 The data warehouse is composed of several tables that can be divided into two groups: the database itself, which we will simply call `database`, and the `configuration data` tables, where information about the variables, the structure of the database, mapping dictionaries, etc., is stored. The database, in its first version (prior to receiving biomarker data), consists of the following tables:
 
-- `population`: Contains basic information about each patient, such as gender, status, cohort membership, etc.
-- `blood_test_categorical`: Contains categorical variables extracted from the blood test (at `dat_0`).
-- `blood_test_numerical`: Contains numerical variables extracted from the blood test (at `dat_0`).
-- `demographics`: Contains demographic information about the patient, such as gender, ethnicity, etc.
-- `fibroscan`: Contains information related to the fibroscan test results for each patient.
-- `physical_exam`: Contains information obtained from the physical examination, including variables such as weight, height, etc.
-- `medical_history`: Contains information about each patient's medical history, including relevant comorbidities, etc.
+- [`population`](#table-population): Contains basic information about each patient, such as gender, status, cohort membership, etc.
+- [`blood_test`](#table-blood_test): Contains variables extracted from the blood test (at `date_0`), both categorical and numerical.
+- [`demographics`](#table-demographics): Contains demographic information about the patient, such as gender, ethnicity, etc.
+- [`fibroscan`](#table-fibroscan): Contains information related to the fibroscan test results for each patient.
+- [`physical_exam`](#table-physical_exam): Contains information obtained from the physical examination, including variables such as weight, height, etc.
+- [`medical_history`](#table-medical_history): Contains information about each patient's medical history, including relevant comorbidities, etc.
+- [`biomarkers`](#table-biomarkers): Contains data from biomarker measurements provided by CDB, Nordic, and Roche, as well as data from the computed biomarkers.
 
 We will refer to these tables as panels or tables interchangeably. The `population` panel acts as the core of the database: the other panels are linked to this primary one (see [General Relationships in the Schema](#general-relationships-in-the-schema)).
  The following image schematically depicts the structure and relationships of the data warehouse:
@@ -26,17 +26,18 @@ Transforming a wide table into a long table is a straightforward process (if the
 
     | date_0              | liveraim_id | cohort_id | variable | value | final_units | lower_bound | upper_bound |
     | ------------------- | ----------- | --------- | -------- | ----- | ----------- | ----------- | ----------- |
-    | 2023-01-19 00:00:00 | LA---       | -----     | alb      | NaN   | g/L         |             |             |
-    | 2023-01-19 00:00:00 | LA---       | -----     | alk      | 41    | U/L         |             |             |
-    | 2023-01-19 00:00:00 | LA---       | -----     | alt      | 21    | UI/L        |             |             |
-    | 2023-01-19 00:00:00 | LA---       | -----     | ast      | 20    | U/L         |             |             |
-    | 2023-01-19 00:00:00 | LA---       | -----     | bili     | 0.6   | mg/dL       |             |             |
-    | 2023-01-19 00:00:00 | LA---       | -----     | cb       | NaN   | mg/dL       |             |             |
-    | 2023-01-19 00:00:00 | LA---       | -----     | chol     | 236   | mg/dL       |             |             |
-    | 2023-01-19 00:00:00 | LA---       | -----     | crea     | 1.1   | mg/dL       | 0           | 10          |
-    | 2023-01-19 00:00:00 | LA---       | -----     | crp      | NaN   | mg/dL       |             |             |
-    | 2023-01-19 00:00:00 | LA---       | -----     | ferritin | 146   | ng/mL       |             |             |
-    | ...                 |
+    | 2023-01-19 00:00:00 | LA---       | -----     | alb      | 43    | g/L         | 10          | 55          |
+    | 2023-01-19 00:00:00 | LA---       | -----     | alk      | 41    | U/L         | 20          | 150         |
+    | 2023-01-19 00:00:00 | LA---       | -----     | alt      | 21    | UI/L        | 5 0         | 500         |
+    | 2023-01-19 00:00:00 | LA---       | -----     | ast      | 20    | U/L         | 5.0         | 1000.0      |
+    | 2023-01-19 00:00:00 | LA---       | -----     | bili     | 0.6   | mg/dL       | 0.2         | 9.99        |
+    | 2023-01-19 00:00:00 | LA---       | -----     | cb       | 8.7   | mg/dL       | 0.2         | 9.99        |
+    | 2023-01-19 00:00:00 | LA---       | -----     | chol     | 236   | mg/dL       | 100         | 700         |
+    | 2023-01-19 00:00:00 | LA---       | -----     | crea     | 1.1   | mg/dL       | 0.3         | 9.99        |
+    | 2023-01-19 00:00:00 | LA---       | -----     | crp      | NaN   | mg/dL       | 0.0         | 9.99        |
+    | 2023-01-19 00:00:00 | LA---       | -----     | ferritin | 146   | ng/mL       | 10          | 999         |
+    | ...                 |             |           |          |       |             |             |             |
+
 
 
 For `long` tables, since there can (and should) be repetitions in the ID columns (one repetition for each variable in long format at least), composite primary keys are used. In general, this database uses the columns `liveraim_id`, `cohort_id`, and `variable` as composite primary keys: the database does not allow any repetitions of the combination of these three variables.
@@ -45,7 +46,7 @@ For `long` tables, since there can (and should) be repetitions in the ID columns
 
 It is important to clarify the difference between `cohort_id` and `liveraim_id`. `cohort_id` is the patient-specific identifier within each cohort. The encoding of these identifiers is heterogeneous, varies between cohorts, and originates from the original data. `liveraim_id` is a new variable generated during the execution of `main.py`, which assigns a unique identifier to each patient across all cohorts at the data warehouse level, following a common format. There is a bijective correspondence between these two variables.
 
-> **Note**: The variables in the `variable` column (the "melted" variables) of each `long` table must be of the same data type. This is because SQL does not allow values with different data types in the same column. This adds robustness to the database at the cost of having to create additional tables. For example, in the case of blood test data, two tables are needed: `blood_test_numerical` and `blood_test_categorical`.
+> **Note**: The variables in the `variable` column (the "melted" variables) of each `long` table must be of the same data type. This is because SQL does not allow values with different data types in the same column. This adds robustness to the database at the cost of having to create additional tables. For example, in the case of blood test data, categorical variables have been transformed to numeric (as they are encoded with integers).
 
 # Initial data and configuration data 
 
@@ -89,9 +90,7 @@ These files are tracked in GitHub like the rest of the scripts, so there is no n
 
 When this file is read, it is loaded into the code as a `pandas.DataFrame` object. Throughout all the documentation, we will refer to this DataFrame also as `var_data`.
 
-> **Note 1**: There must be certain coherence between the var_data files from each cohort: the number of variables in each file (i.e., the number of rows) should be the same. In addition, the set of variables in `liveraim_name` should be the same between cohorts, and the `final_data` column should be consistent. Although this is checked in the code, making sure that there are no errors is recomended. 
-
-> **Note 2**: If needed, addition of other columns is possible and should not create incompatibilities (but the management of those new columns should be implemented).
+> **Note**: If needed, addition of other columns is possible and should not create incompatibilities (but the management of those new columns should be implemented).
 
 ## `level_data` files
 
@@ -178,17 +177,17 @@ For more information about the structure of the final data, check the next secti
 
 # Liveraim Data Warehouse Structure
 
-The **LIVERAIM DATA WAREHOUSE v0.1** is composed by the following tables:
+The **LIVERAIM DATA WAREHOUSE v2** is composed by the following tables:
 
 a. **Database**
 
   - `population`
-  - `blood_test_categorical`
-  - `blood_test_numerical`
+  - `blood_test`
   - `demographics`
   - `fibroscan`
   - `physical_exam`
   - `medical_history`
+  - `biomarkers`
 
 b. **Configuration Data**
 
@@ -203,87 +202,132 @@ b. **Configuration Data**
 ### Table sources:
 For each cohort, there is at least one raw database containing patient data. Each database corresponds to a single file, and for some cohorts, different versions of the same database are available. If multiple versions are available, the data from the latest version for each patient will be used. During the data processing phase, the databases are merged into a single table, which is later split and restructured into the various tables of the final database.
 
-From each raw database, a subset of variables is selected. These variables must be common across all cohort databases (although the variable names may differ), ensuring that patient data from different cohorts can be merged. Thus, all variables that appear in the final database are either secondary variables created during the code execution, or they originate from one of the four cohorts (depending on the patient's source) used to construct the final database. For more information about the dataflow go to [dataflow](dataflow.md) section.
+From each raw database, a subset of variables is selected. In the current version, not all variables are required to be present in every cohort: some variables may be available in one cohort but absent in others. In the final panels, this results in missing values for those variables in the corresponding cohorts. Therefore, all variables present in the final database either originate from one of the six source cohorts (depending on the patient's origin) or are secondary variables generated during code execution. For more information about the data flow, refer to the [dataflow](dataflow.md) section.
 
 A summary of the data sources is presented below:
 
 | **Cohort**  | **Number of versions used** | **File type**       | **Reading method**    |
 | ----------- | --------------------------- | ------------------- | --------------------- |
-| liverscreen | 7                           | stata file (`.dta`) | `pd.read_stata`       |
-| alcofib     | 2                           | sav file (`.sav`)   | `pyreadstat.read_sav` |
+| liverscreen | 8                           | stata file (`.dta`) | `pd.read_stata`       |
+| alcofib     | 3                           | sav file (`.sav`)   | `pyreadstat.read_sav` |
 | glucofib    | 1                           | csv (`.csv`)        | `pd.read_csv`         |
 | decide      | 1                           | stata file (`.dta`) | `pd.read_stata`       |
 | galaald     | 1                           | stata file (`.dta`) | `pd.read_stata`       |
-| marina      | 2                           | sav file (`.sav`)   | `pyreadstat.read_sav` |
+| marina      | 1                           | sav file (`.sav`)   | `pyreadstat.read_sav` |
 
 > **Note 1**: Some of the information below may be redundant, as certain variables appear in many or all panels. However, redundancies have been intentionally kept for the sake of clarity and readability.
 
-> **Note 2**: As three of the four used cohorts have been previously managed isnod RedCap, many RedCap names in the final database have been kept as standard (sometimes with few changes). 
+> **Note 2**: As four of the six used cohorts have been previously managed isnod RedCap, many RedCap names in the final database have been kept as standard (sometimes with few changes). 
 
 ### Table: `population`
 - **Description:** Defines the population of patients within different cohorts.
 - **Fields:**
-    - `liveraim_id` (VARCHAR(255)): Common liveraim identifier for the patient. Unique within the data warehouse. 
-    - `cohort_id` (VARCHAR(255)): Cohort-specific identifier for each patient in a cohort. Unique within the cohort. 
-    - `gender` (VARCHAR(8)): Gender of the patient.
+    - `liveraim_id` (VARCHAR(255)): Common liveraim identifier for the patient. Unique within the data warehouse.
+    - `gender` (VARCHAR(30)): Gender of the patient.
     - `birth_date` (DATETIME): Date of birth of the patient.
-    - `status` (VARCHAR(8)): Current status of the patient (ongoing,, withdrawn, finished).
-    - `date_0` (DATETIME): Date of patient inclusion in the cohort.
-    - `exit_date` (DATETIME): Date of study exit.
+    - `age` (INT): Age of the patient at `inclusion_date`.
+    - `inclusion_date` (DATETIME) (DATETIME): Date of patient inclusion in the cohort.
+    - `at_risk` (VARCHAR(30)): If patients belogs to general population or at-risk population.
+    - `cohort` (VARCHAR(30)): The cohort to which the patient belongs.
+    - `work_package` (VARCHAR(8)): 
+    - `exit_date` (DATETIME): Date of study exit. 
+    - `status` (VARCHAR(8)): Current status of the patient (ongoing, withdrawn, finished).
+    
 - **Format**: wide
 - **Primary Key:** (`liveraim_id`, `cohort_id`)
 - **Relations:** Central table that relates to all other tables using `liveraim_id` and `cohort_id`.
 
 #### Actions and specification tables
 
-| **Liveraim name** | **Liverscreen name** | **Alcofib name**        | **Glucofib name** | **Decide name** | **SQL data type** | **data type** | **Rule/Notes**                                                                                                                                                                                                                                                                     |
-| ----------------- | -------------------- | ----------------------- | ----------------- | --------------- | ----------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| liveraim_id       | -                    | -                       | -                 | -               | VARCHAR(255)      | str           | Created dynamically after merging cohorts.                                                                                                                                                                                                                                         |
-| cohort_id         | id                   | Codigo_deidentificacion | id                | id              | VARCHAR(255)      | str           |                                                                                                                                                                                                                                                                                    |
-| gender            | gender               | Sexe                    | gender            | gender          | FLOAT             | category      | Applied a mapping (to homogenize level codification) defined in `level_data`.                                                                                                                                                                                                      |
-| birth_date        | -                    | -                       | -                 | -               | DATETIME          | datetime      | Variable calculated from patient's age and date_0 (inclusion date).                                                                                                                                                                                                                |
-| date_0            | date_0               | Fecha_V1                | date_0            | date_0          | DATETIME          | datetime      |                                                                                                                                                                                                                                                                                    |
-| status            | -                    | -                       | -                 | -               | VARCHAR(8)        | category      | Calculated variable. If cohort recruitment is ongoing, it is set to *ongoing*. If cohort recruitment is finished, it is set to *finished*. If the patient has left the cohort (in cases where more than one version is available), it is set to *withdrawn*.                       |
-| exit_date         | -                    | -                       | -                 | -               | DATETIME          | datetime      | Calculated variable. If the patient's status is ongoing, it is set to the current date (execution date). If the status is finished, it is set to the date of the last version. If the status is withdrawn, it is set to the date of the last version in which the patient appears. |
+| <!--        | **Liveraim name** | **Liverscreen name**    | **Alcofib name** | **Glucofib name** | **Decide name** | **SQL data type** | **data type**                                                                                                                                                                                                                                                                      | **Rule/Notes** |
+| ----------- | ----------------- | ----------------------- | ---------------- | ----------------- | --------------- | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| liveraim_id | -                 | -                       | -                | -                 | VARCHAR(255)    | str               | Created dynamically after merging cohorts.                                                                                                                                                                                                                                         |
+| cohort_id   | id                | Codigo_deidentificacion | id               | id                | VARCHAR(255)    | str               |                                                                                                                                                                                                                                                                                    |
+| gender      | gender            | Sexe                    | gender           | gender            | FLOAT           | category          | Applied a mapping (to homogenize level codification) defined in `level_data`.                                                                                                                                                                                                      |
+| birth_date  | -                 | -                       | -                | -                 | DATETIME        | datetime          | Variable calculated from patient's age and date_0 (inclusion date).                                                                                                                                                                                                                |
+| date_0      | date_0            | Fecha_V1                | date_0           | date_0            | DATETIME        | datetime          |                                                                                                                                                                                                                                                                                    |
+| status      | -                 | -                       | -                | -                 | VARCHAR(8)      | category          | Calculated variable. If cohort recruitment is ongoing, it is set to *ongoing*. If cohort recruitment is finished, it is set to *finished*. If the patient has left the cohort (in cases where more than one version is available), it is set to *withdrawn*.                       |
+| exit_date   | -                 | -                       | -                | -                 | DATETIME        | datetime          | Calculated variable. If the patient's status is ongoing, it is set to the current date (execution date). If the status is finished, it is set to the date of the last version. If the status is withdrawn, it is set to the date of the last version in which the patient appears. | -->            |
+
+
+| **Liveraim name** | **SQL data type** | **data type** | **Secondary** | **Rule/Notes**                                                                                                                                                                                                                                                                     |
+| ----------------- | ----------------- | ------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| liveraim_id       | VARCHAR(255)      | str           | TRUE          | Created dynamically after merging cohorts.                                                                                                                                                                                                                                         |
+| gender            | VARCHAR(30)       | str           | FALSE         |                                                                                                                                                                                                                                                                                    |
+| birth_date        | DATETIME          | datetime      | TRUE          | Variable calculated from patient's age and inclusion_date.                                                                                                                                                                                                                         |
+| age               | INT               | float         | FALSE         |                                                                                                                                                                                                                                                                                    |
+| inclusion_date    | DATETIME          | datetime      | FALSE         |                                                                                                                                                                                                                                                                                    |
+| at_risk           | VARCHAR(30)       | category      | TRUE          | Calculated variable from `cohort`: IF `cohort` = "Liverscreen"&#124;"Metronord" THEN 0, ELSE 1.                                                                                                                                                                                    |
+| cohort            | VARCHAR(30)       | category      | FALSE         |                                                                                                                                                                                                                                                                                    |
+| work_package      | VARCHAR(8)        | category      | FALSE         |                                                                                                                                                                                                                                                                                    |
+| exit_date         | DATETIME          | datetime      | TRUE          | Calculated variable. If the patient's status is ongoing, it is set to the current date (execution date). If the status is finished, it is set to the date of the last version. If the status is withdrawn, it is set to the date of the last version in which the patient appears. |
+| status            | VARCHAR(8)        | category      | TRUE          | Calculated variable. If cohort recruitment is ongoing, it is set to *ongoing*. If cohort recruitment is finished, it is set to *finished*. If the patient has left the cohort (in cases where more than one version is available), it is set to *withdrawn*.                       |
+
+#### Variable names per cohort
+
+| **Liveraim name** | **Liverscreen name** | **Alcofib name** | **Glucofib name** | **Decide name** | **Marina name** | **Galaald name** |
+| ----------------- | -------------------- | ---------------- | ----------------- | --------------- | --------------- | ---------------- |
+| liveraim_id       | -                    | -                | -                 | -               | -               | -                |
+| gender            | gender               | Sexe             | gender            | sex             | SEXE            | gender           |
+| birth_date        | -                    | -                | -                 | -               | -               | -                |
+| age               | age_0                | Edad             | age_0             | age             | EDAT            | age              |
+| inclusion_date    | date_0               | Fecha_V1         | date_0            | incl_date       | DATA_INCLUSIO   | date_incl        |
+| at_risk           | -                    | -                | -                 | -               | -               | -                |
+| cohort            | -                    | -                | -                 | -               | -               | -                |
+| work_package      | -                    | -                | -                 | -               | -               | -                |
+| status            | -                    | -                | -                 | -               | -               | -                |
+| exit_date         | -                    | -                | -                 | -               | -               | -                |
+
 
 ### Table: `physical_exam`
 - **Description:** Stores physical exam results.
 - **Fields:**
     - `liveraim_id` (VARCHAR(255)): Common liveraim identifier for the patient. Unique within the data warehouse. 
-    - `cohort_id` (VARCHAR(255)): Cohort-specific identifier for each patient in a cohort. Unique within the cohort. 
-    - `date_0` (DATETIME): Date of patient inclusion in the cohort.
+    - `inclusion_date` (DATETIME): Date of patient inclusion in the cohort.
     - `variable` (VARCHAR(255)): Name of the variable to which the corresponding value in the `value` column refers.
     - `value` (FLOAT): Value of variable in `variable` column. 
+    - `value_clipped` (FLOAT): Value of variable in `variable` column clipped following the provided upper and lower bounds (if any). 
+    - `limit_detection` (VARCHAR(255)): Indicates if the provided value is below (`<`), above (`>`) or within the variable range (`<NA>`)
     - `final_units` (VARCHAR(255)): Final units of the value.
     - `lower_bound` (FLOAT): Lower acceptable limit for the value.
     - `upper_bound` (FLOAT): Upper acceptable limit for the value.
 - **Format**: Long.
-- **Variables in `varible` column**: `weight`, `height`, `bmi`, `hip`.
+- **Variables in `varible` column**: `weight`, `height`, `bmi`, `hip`, `waist`, `whr`, `sbp`, `dbp`.
  
-- **Primary Key:** (`liveraim_id`, `cohort_id`, `variable`)
-- **Relations:** Relates to the `population` table via `liveraim_id` and `cohort_id`.
+- **Primary Key:** (`liveraim_id`, `variable`)
+- **Relations:** Relates to the `population` table via `liveraim_id`.
 
 #### Actions and specification tables
 
-| **Liveraim name** | **Liverscreen name** | **Alcofib name**        | **Glucofib name** | **Decide name** | **Data type** | **Rule/Notes**                                                       |
-| ----------------- | -------------------- | ----------------------- | ----------------- | --------------- | ------------- | -------------------------------------------------------------------- |
-| liveraim_id       | -                    | -                       | -                 | -               | VARCHAR(255)  | Created dynamically after merging cohorts.                           |
-| cohort_id         | id                   | Codigo_deidentificacion | id                | id              | VARCHAR(255)  |                                                                      |
-| date_0            | date_0               | Fecha_V1                | date_0            | date_0          | DATETIME      |                                                                      |
-| variable          | -                    | -                       | -                 | -               | VARCHAR(255)  | Obtained from melting the variables `weight`, `height`, `bmi`, `hip` |
-| value             | -                    | -                       | -                 | -               | FLOAT         | Obtained from melting the variables `weight`, `height`, `bmi`, `hip` |
-| final_units       | -                    | -                       | -                 | -               | VARCHAR(255)  |                                                                      |
-| lower_bound       | -                    | -                       | -                 | -               | FLOAT         |                                                                      |
-| upper_bound       | -                    | -                       | -                 | -               | FLOAT         |                                                                      |
+| **Liveraim name** | **Data type** | **Secondary** | **Rule/Notes**                                                                                      |
+| ----------------- | ------------- | ------------- | --------------------------------------------------------------------------------------------------- |
+| liveraim_id       | VARCHAR(255)  | FALSE         | Created dynamically after merging cohorts.                                                          |
+| inclusion_date    | DATETIME      | FALSE         |                                                                                                     |
+| variable          | VARCHAR(255)  | TRUE          | Obtained from melting the variables `weight`, `height`, `bmi`, `hip`, `waist`, `whr`, `sbp`, `dbp`. |
+| value             | FLOAT         | TRUE          | Obtained from melting the variables `weight`, `height`, `bmi`, `hip`, `waist`, `whr`, `sbp`, `dbp`. |
+| value_clipped     | FLOAT         | TRUE          | Obtained from clipping the value column with the lower and upper bounts, if provided.               |
+| limit_detect      | VARCHAR(255)  | -             | IF value is above upper_bound THEN `<` ELIF value is below lower_bound THEN `>` ELSE `<NA>`.        |
+| final_units       | VARCHAR(255)  | -             |                                                                                                     |
+| lower_bound       | FLOAT         | -             |                                                                                                     |
+| upper_bound       | FLOAT         | -             |                                                                                                     |
+| upper_bound       | FLOAT         | -             |                                                                                                     |
 
-##### Melted variables metadata
 
-| **Liveraim name** | **Liverscreen name** | **Alcofib name** | **Glucofib name** | **Decide name** | **Data type** | **Rule/Notes**                                    |
-| ----------------- | -------------------- | ---------------- | ----------------- | --------------- | ------------- | ------------------------------------------------- |
-| weight            | weight               | Peso_V1          | weight            | weight          | float         | Data type modification<br>Apply conversion factor |
-| height            | height               | Talla_V1         | height            | height          | float         | Data type modification<br>Apply conversion factor |
-| bmi               | bmi                  | BMI_V1           | bmi               | bmi             | float         | Data type modification<br>Apply conversion factor |
-| hip               | hip                  | diametro_cintura | hip               | hip             | float         | Data type modification<br>Apply conversion factor |
+##### Variable names per cohort (and melted variables)
+
+| **Liveraim name** | **Liverscreen name** | **Alcofib name** | **Glucofib name** | **Decide name** | **Marina name** | **Metronord** | **Galaald name** | **Rule/Notes**                                                                              |
+| ----------------- | -------------------- | ---------------- | ----------------- | --------------- | --------------- | ------------- | ---------------- | ------------------------------------------------------------------------------------------- |
+| weight            | weight               | Peso_V1          | weight            | weight          | PES             | pes           | weight           | Data type modification<br>Apply conversion factor                                           |
+| height            | height               | Talla_V1         | height            | height          | TALLA_METRES    | talla         | height           | Data type modification<br>Apply conversion factor                                           |
+| bmi               | bmi                  | BMI_V1           | bmi               | bmi             | IMC             | bmi           | bmi              | This variable is recomputed using weight and height and compared with the provided variable |
+| hip               | hip                  | -                | hip               | hip             | -               | Bmaluc        | hip              | Data type modification<br>Apply conversion factor                                           |
+| waist             | waist                | diametro_cintura | waist             | waist           | P_CINTURA       | Bcintura      | -                | Data type modification<br>Apply conversion factor                                           |
+| whr               | whr                  | -                | whr               | whr             | -               | -             | -                | Data type modification<br>Apply conversion factor                                           |
+| sbp               | sbp                  | -                | sbp               | sbp             | PAS             | pas           | -                | Data type modification<br>Apply conversion factor                                           |
+| dbp               | dbp                  | -                | dbp               | dbp             | PAD             | pad           | -                | Data type modification<br>Apply conversion factor                                           |
+| cohort_id         | id                   | Codigo_Muestras  | code              | id              | Codi_mostra     |               | id               |                                                                                             |
+| inclusion_date    | date_0               | Fecha_V1         | date_0            | incl_date       | DATA_INCLUSIO   |               | date_incl        |                                                                                             |
+|                   |
 
 ### Table: `demographics`
 - **Description:** Contains demographic information of patients.
@@ -302,22 +346,35 @@ A summary of the data sources is presented below:
 
 #### Actions and specification tables
 
-| **Liveraim name** | **Liverscreen name** | **Alcofib name**        | **Glucofib name** | **Decide name** | **SQL data type** | **data type** | **Rule/Notes**                                                               |
-| ----------------- | -------------------- | ----------------------- | ----------------- | --------------- | ----------------- | ------------- | ---------------------------------------------------------------------------- |
-| liveraim_id       | -                    | -                       | -                 | -               | VARCHAR(255)      | str           | Created dynamically after merging cohorts.                                   |
-| cohort_id         | id                   | Codigo_deidentificacion | id                | id              | VARCHAR(255)      | str           |                                                                              |
-| date_0            | date_0               | Fecha_V1                | date_0            | date_0          | DATETIME          | datetime      |                                                                              |
-| ethnicity         | ethnicity            | Etnia                   | ethnicity         | ethnicity       | VARCHAR(255)      | category      | Applied a mapping (to homogenize level codification) defined in `level_data` |
-| gender            | gender               | Sexe                    | gender            | gender          | VARCHAR(255)      | category      | Applied a mapping (to homogenize level codification) defined in `level_data` |
+
+| **Liveraim name** | **SQL data type** | **data type** | **Rule/Notes**                                                               | **Calculated** | **Rules/Notes**                            |
+| ----------------- | ----------------- | ------------- | ---------------------------------------------------------------------------- | -------------- | ------------------------------------------ |
+| liveraim_id       | VARCHAR(255)      | str           | Created dynamically after merging cohorts.                                   | TRUE           | Created dynamically after merging cohorts. |
+| inclusion_date    | DATETIME          | datetime      |                                                                              | FALSE          | -                                          |
+| age               | INT               | foat          | -                                                                            | FALSE          | -                                          |
+| gender            | VARCHAR(255)      | category      | Applied a mapping (to homogenize level codification) defined in `level_data` | FALSE          | Recodified                                 |
+| ethnicity         | VARCHAR(255)      | category      | Applied a mapping (to homogenize level codification) defined in `level_data` | FALSE          | Recodified                                 |
+
+##### Variable names per cohort 
+
+| **Liveraim**   | **Liverscreen** | **Glucofib** | **Alcofib** | **Decide** | **Marina**    | **Metronord** |
+| -------------- | --------------- | ------------ | ----------- | ---------- | ------------- | ------------- |
+| liveraim_id    | None            | None         | None        | None       | None          | None          |
+| inclusion_date | date_0          | date_0       | Fecha_V1    | incl_date  | DATA_INCLUSIO | denquesta     |
+| gender         | gender          | gender       | Sexe        | sex        | SEXE          | sexe          |
+| age            | age_0           | age_0        | Edad        | age        | EDAT          | edat          |
+| ethnicity      | ethnicity       | ethnicity    | Etnia       | ethnicity  | None          | None          |
+
 
 ### Table: `fibroscan`
 - **Description:** Records fibroscan exam results.
 - **Fields:**
     - `liveraim_id` (VARCHAR(255)): Common liveraim identifier for the patient. Unique within the data warehouse. 
-    - `cohort_id` (VARCHAR(255)): Cohort-specific identifier for each patient in a cohort. Unique within the cohort. 
-    - `date_0` (DATETIME): Date of patient inclusion in the cohort.
+    - `inclusion_date` (DATETIME): Date of patient inclusion in the cohort.
     - `variable` (VARCHAR(255)): Name of the variable to which the corresponding value in the `value` column refers.
     - `value` (FLOAT): Value of variable in `variable` column. 
+    - `value_clipped` (FLOAT): Value of variable in `variable` column clipped following the provided upper and lower bounds (if any).
+    - `limit_detect` (VARCHAR(255)): Indicates if the provided value is below (`<`), above (`>`) or within the variable range (`<NA>`)
     - `final_units` (VARCHAR(255)): Final units of the value.
     - `lower_bound` (FLOAT): Lower acceptable limit for the value.
     - `upper_bound` (FLOAT): Upper acceptable limit for the value.
@@ -328,40 +385,46 @@ A summary of the data sources is presented below:
 
 #### Actions and specification tables
 
-| **Liveraim name** | **Liverscreen name** | **Alcofib name**        | **Glucofib name** | **Decide name** | **Data type** | **Rule/Notes**                                   |
-| ----------------- | -------------------- | ----------------------- | ----------------- | --------------- | ------------- | ------------------------------------------------ |
-| liveraim_id       | -                    | -                       | -                 | -               | VARCHAR(255)  | Created dynamically after merging cohorts.       |
-| cohort_id         | id                   | Codigo_deidentificacion | id                | id              | VARCHAR(255)  |                                                  |
-| date_0            | date_0               | Fecha_V1                | date_0            | date_0          | DATETIME      |                                                  |
-| variable          | -                    | -                       | -                 | -               | VARCHAR(255)  | Obtained from melting the variables `te`, `cap`. |
-| value             | -                    | -                       | -                 | -               | FLOAT         | Obtained from melting the variables `te`, `cap`. |
-| final_units       | -                    | -                       | -                 | -               | VARCHAR(255)  |                                                  |
-| lower_bound       | -                    | -                       | -                 | -               | FLOAT         |                                                  |
-| upper_bound       | -                    | -                       | -                 | -               | FLOAT         |                                                  |
+| **Liveraim name** | **Data type** | **Secondary** | **Rule/Notes**                                                                               |
+| ----------------- | ------------- | ------------- | -------------------------------------------------------------------------------------------- |
+| liveraim_id       | VARCHAR(255)  | FALSE         | Created dynamically after merging cohorts.                                                   |
+| inclusion_date    | DATETIME      | FALSE         |                                                                                              |
+| variable          | VARCHAR(255)  | TRUE          | Obtained from melting the variables `te`, `cap`.                                             |
+| value             | FLOAT         | TRUE          | Obtained from melting the variables `te`, `cap`.                                             |
+| value_clipped     | FLOAT         | TRUE          | Obtained from clipping the value column with the lower and upper bounts, if provided.        |
+| limit_detect      | VARCHAR(255)  | TRUE          | IF value is above upper_bound THEN `<` ELIF value is below lower_bound THEN `>` ELSE `<NA>`. |
+| final_units       | VARCHAR(255)  | -             | -                                                                                            |
+| lower_bound       | FLOAT         | -             | -                                                                                            |
+| upper_bound       | FLOAT         | -             | -                                                                                            |
+| upper_bound       | FLOAT         | -             | -                                                                                            |
 
 
-##### Melted variables metadata
+##### ##### Variable names per cohort (and melted variables)
 
-| **Liveraim name** | **Liverscreen name** | **Alcofib name** | **Glucofib name** | **Decide name** | **Data type** | **Rule/Notes**                                    |
-| ----------------- | -------------------- | ---------------- | ----------------- | --------------- | ------------- | ------------------------------------------------- |
-| te                | te                   | LS_V1            | te                | te              | float         | Data type modification<br>Apply conversion factor |
-| cap               | cap                  | CAP_V1           | cap               | cap             | float         | Data type modification<br>Apply conversion factor |
-
+| **Liveraim** | **Liverscreen** | **Glucofib** | **Alcofib** | **Decide** | **Marina** | **Metronord** | **Rule/Notes**                                    |
+| ------------ | --------------- | ------------ | ----------- | ---------- | ---------- | ------------- | ------------------------------------------------- |
+| te           | te              | te           | LS_V1       | te         | FIBROSCAN  | fibroscan     | Data type modification<br>Apply conversion factor |
+| cap          | cap             | cap          | CAP_V1      | cap        | CAP        | None          | Data type modification<br>Apply conversion factor |
 
 ### Table: `medical_history`
-<span style="color:red">This table structure must be reviewed.</span>
+<!-- <span style="color:red">This table structure must be reviewed.</span> -->
 
 - **Description:** Stores medical history of patients.
 - **Fields:**
     - `liveraim_id` (VARCHAR(255)): Common liveraim identifier for the patient. Unique within the data warehouse. 
-    - `cohort_id` (VARCHAR(255)): Cohort-specific identifier for each patient in a cohort. Unique within the cohort. 
-    - `date_0` (DATETIME): Date of patient inclusion in the cohort.
+    - `inclusion_date` (DATETIME): Date of patient inclusion in the cohort.
     - `hypertension` (VARCHAR(255)): Hypertension information.
     - `centralobesity` (VARCHAR(255)): Central obesity information.
     - `hightrigly` (VARCHAR(255)): High triglycerides information.
     - `COPD` (VARCHAR(255)): Chronic obstructive pulmonary disease information.
     - `smoke` (VARCHAR(255)): Smoking status of the patient.
     - `alcohol_treat` (VARCHAR(255)): Information on alcohol treatment.
+    - `overuse` (VARCHAR(255)): Alcohor overuse.
+    - `alc_consumption` (FLOAT): UBE consumption per week, registered at inclusion_date.
+    - `dm2` (VARCHAR(255)): IF patient has diabates mellitus type 2.
+    - `fibrosis_etiology` (VARCHAR(255)): Fibrosis etiology classification 
+    - `fibrosis_etiology_by_CAP` (VARCHAR(255)):  Fibrosis etiology classification including CAP criteria
+    - `metabolic_syndrome` (VARCHAR(255)): Metabolic syndrome classification.
 
 - **Format**: wide
 - **Primary Key:** (`liveraim_id`, `cohort_id`)
@@ -369,170 +432,217 @@ A summary of the data sources is presented below:
 
 #### Actions and specification tables
 
-| **Liveraim name** | **Liverscreen name** | **Alcofib name**        | **Glucofib name** | **Decide name** | **SQL data type** | **Data type** | **Rule/Notes**                                                                |
-| ----------------- | -------------------- | ----------------------- | ----------------- | --------------- | ----------------- | ------------- | ----------------------------------------------------------------------------- |
-| liveraim_id       | -                    | -                       | -                 | -               | VARCHAR(255)      | str           | Created dynamically after merging cohorts.                                    |
-| cohort_id         | id                   | Codigo_deidentificacion | id                | id              | VARCHAR(255)      | str           |                                                                               |
-| date_0            | date_0               | Fecha_V1                | date_0            | date_0          | DATETIME          | datetime      |                                                                               |
-| hypertension      | hypertension         | HTA                     | hypertension      | hypertension    | hypertension      | category      | Applied a mapping (to homogenize level codification) defined in `level_data`. |
-| centralobesity    | centralobesity       | Obesidad_abdominal      | centralobesity    | centralobesity  | centralobesity    | category      | Applied a mapping (to homogenize level codification) defined in `level_data`. |
-| hightrigly        | hightrigly           | Hipertriglic            | hightrigly        | hightrigly      | hightrigly        | category      | Applied a mapping (to homogenize level codification) defined in `level_data`. |
-| COPD              | comorbid___2         | EPOC                    | comorbid___2      | comorbid___2    | comorbid___2      | category      | Applied a mapping (to homogenize level codification) defined in `level_data`. |
-| smoke             | smoke                | Tabaquismo              | smoke             | smoke           | smoke             | category      | Applied a mapping (to homogenize level codification) defined in `level_data`. |
-| alcohol_treat     | med_type___12        | Medicacion_abstinencia  | med_type___12     | med_type___12   | med_type___12     | category      | Applied a mapping (to homogenize level codification) defined in `level_data`. |
+| **Liveraim name**        | **SQL data type** | **Data type** | **secondary** | **Rule/Notes**                                                                           |
+| ------------------------ | ----------------- | ------------- | ------------- | ---------------------------------------------------------------------------------------- |
+| liveraim_id              | VARCHAR(255)      | str           | FALSE         | Created dynamically after merging cohorts.                                               |
+| inclusion_date           | DATETIME          | datetime      | FALSE         |                                                                                          |
+| hypertension             | VARCHAR(255)      | category      | FALSE         | Applied a mapping (to homogenize level codification) defined in `level_data`.            |
+| centralobesity           | VARCHAR(255)      | category      | FALSE         | Applied a mapping (to homogenize level codification) defined in `level_data`.            |
+| hightrigly               | VARCHAR(255)      | category      | FALSE         | Applied a mapping (to homogenize level codification) defined in `level_data`.            |
+| COPD                     | VARCHAR(255)      | category      | FALSE         | Applied a mapping (to homogenize level codification) defined in `level_data`.            |
+| smoke                    | VARCHAR(255)      | category      | FALSE         | Applied a mapping (to homogenize level codification) defined in `level_data`.            |
+| alcohol_treat            | VARCHAR(255)      | category      | FALSE         | Applied a mapping (to homogenize level codification) defined in `level_data`.            |
+| overuse                  | VARCHAR(255)      | category      | FALSE         | Applied a mapping (to homogenize level codification) defined in `level_data`.            |
+| alc_consumption          | FLOAT             | float         | FALSE         | Harmonized applying conversion factor due to units discrepancies.                        |
+| dm2                      | VARCHAR(255)      | category      | FALSE         | Applied a mapping (to homogenize level codification) defined in `level_data`.            |
+| fibrosis_etiology        | VARCHAR(255)      | category      | TRUE          | Derived from clinician review and predefined clinical rules. For details, see Section X. |
+| fibrosis_etiology_by_CAP | VARCHAR(255)      | category      | TRUE          | Derived from clinician review and predefined clinical rules. For details, see Section X. |
+| metabolic_syndrome       | VARCHAR(255)      | category      | TRUE          | Derived from clinician review and predefined clinical rules. For details, see Section X. |
 
 
-### Table: `blood_test_numerical`
+##### Variable names per cohort 
+
+| **Liveraim**             | **Liverscreen** | **Glucofib**   | **Alcofib**               | **Decide**          | **Marina**    | **Metronord** |
+| ------------------------ | --------------- | -------------- | ------------------------- | ------------------- | ------------- | ------------- |
+| liveraim_id              | -               | -              | -                         | -                   | -             | -             |
+| inclusion_date           | date_0          | date_0         | Fecha_V1                  | incl_date           | DATA_INCLUSIO | denquesta     |
+| alcohol_treat            | med_type___12   | med_type___12  | Medicacion_abstinencia    | med_alc             | -             | -             |
+| smoke                    | smoke           | smoke          | Tabaquismo                | smoke               | TABAC         | tabac         |
+| hypertension             | hypertension    | hypertension   | HTA                       | hypertension        | HTA           | hta           |
+| centralobesity           | centralobesity  | centralobesity | Obesidad_abdominal        | mets_centralobesity | OBESITAT      | -             |
+| hightrigly               | hightrigly      | hightrigly     | Hipertriglic              | mets_hightrigly     | -             | hipertrig     |
+| COPD                     | comorbid___2    | comorbid___2   | EPOC                      | copd                | MPOC          | -             |
+| overuse                  | overuse         | overuse        | Enol_Binge_drinking_V1    | overuse             | Alcohol.risk  | br            |
+| alc_consumption          | alc_current     | alc_current    | Enol_canti_UBEs_ultimoaño | alc_3m              | UBE_S         | Bube          |
+| dm2                      | comorbid___15   | comorbid___15  | DM                        | dm2                 | DM            | dm            |
+| fibrosis_etiology        | -               | -              | -                         | -                   | -             | -             |
+| fibrosis_etiology_by_CAP | -               | -              | -                         | -                   | -             | -             |
+| metabolic_syndrome       | -               | -              | -                         | -                   | -             | -             |
+
+
+
+### Table: `blood_test`
 - **Description:** Stores numerical blood test results.
 - **Fields:**
-    - `date_0` (DATETIME): Date of patient inclusion in the cohort.
     - `liveraim_id` (VARCHAR(255)): Common liveraim identifier for the patient. Unique within the data warehouse. 
-    - `cohort_id` (VARCHAR(255)): Cohort-specific identifier for each patient in a cohort. Unique within the cohort. 
+    - `inclusion_date` (DATETIME): Date of patient inclusion in the cohort.
     - `variable` (VARCHAR(255)): Type of variable measured.
     - `value` (FLOAT): Value of the blood test result.
+    - `value_clipped` (FLOAT): Value of variable in `variable` column clipped following the provided upper and lower bounds (if any).
+    - `limit_detect` (VARCHAR(255)): Indicates if the provided value is below (`<`), above (`>`) or within the variable range (`<NA>`)
     - `final_units` (VARCHAR(255)): Final units of the value.
     - `lower_bound` (FLOAT): Lower acceptable limit for the value.
     - `upper_bound` (FLOAT): Upper acceptable limit for the value.
 - **Format**: long.
-- **Variables in `varible` column**: `crea`, `crp`, `glc`, `ast`, `alt`, `ggt`, `bili`, `cb`, `alk`, `prot_tot`, `alb`, `hto`, `plates`, `ferritin`, `fesat`, `inr`, `chol`, `hdl`, `ldl`, `tg`, `ghb`, `wcc`.
+- **Variables in `varible` column**: `crea`, `crp`, `glc`, `ast`, `alt`, `ggt`, `bili`, `cb`, `alk`, `prot_tot`, `alb`, `hto`, `plates`, `ferritin`, `fesat`, `inr`, `chol`, `hdl`, `ldl`, `tg`, `ghb`, `wcc`, `hbs_ag`, `hcv`.
 
-- **Primary Key:** (`liveraim_id`, `cohort_id`, `variable`)
+- **Primary Key:** (`liveraim_id`, `variable`)
 - **Relations:** Relates to the `population` table via `liveraim_id` and `cohort_id`.
 
 #### Actions and specification tables
 
-| **Liveraim name** | **Liverscreen name** | **Alcofib name**        | **Glucofib name** | **Decide name** | **Data type** | **Rule/Notes**                                                                                                                                                                                               |
-| ----------------- | -------------------- | ----------------------- | ----------------- | --------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| liveraim_id       | -                    | -                       | -                 | -               | VARCHAR(255)  | Created dynamically after merging cohorts.                                                                                                                                                                   |
-| cohort_id         | id                   | Codigo_deidentificacion | id                | id              | VARCHAR(255)  |                                                                                                                                                                                                              |
-| date_0            | date_0               | Fecha_V1                | date_0            | date_0          | DATETIME      |                                                                                                                                                                                                              |
-| variable          | -                    | -                       | -                 | -               | VARCHAR(255)  | Obtained from melting the variables `crea`, `crp`, `glc`, `ast`, `alt`, `ggt`, `bili`, `cb`, `alk`, `prot_tot`, `alb`, `hto`, `plates`, `ferritin`, `fesat`, `inr`, `chol`, `hdl`, `ldl`, `tg`, `ghb`, `wcc` |
-| value             | -                    | -                       | -                 | -               | FLOAT         | Obtained from melting the variables `crea`, `crp`, `glc`, `ast`, `alt`, `ggt`, `bili`, `cb`, `alk`, `prot_tot`, `alb`, `hto`, `plates`, `ferritin`, `fesat`, `inr`, `chol`, `hdl`, `ldl`, `tg`, `ghb`, `wcc` |
-| final_units       | -                    | -                       | -                 | -               | VARCHAR(255)  |                                                                                                                                                                                                              |
-| lower_bound       | -                    | -                       | -                 | -               | FLOAT         |                                                                                                                                                                                                              |
-| upper_bound       | -                    | -                       | -                 | -               | FLOAT         |                                                                                                                                                                                                              |
+| **Liveraim name** | **Data type** | **Secondary** | **Rule/Notes**                                                                                                                                                                                                                |
+| ----------------- | ------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| liveraim_id       | VARCHAR(255)  | FALSE         | Created dynamically after merging cohorts.                                                                                                                                                                                    |
+| inclusion_date    | DATETIME      | FALSE         |                                                                                                                                                                                                                               |
+| variable          | VARCHAR(255)  | TRUE          | Obtained from melting the variables `crea`, `crp`, `glc`, `ast`, `alt`, `ggt`, `bili`, `cb`, `alk`, `prot_tot`, `alb`, `hto`, `plates`, `ferritin`, `fesat`, `inr`, `chol`, `hdl`, `ldl`, `tg`, `ghb`, `wcc`, `hbs_ag`, `hcv` |
+| value             | FLOAT         | TRUE          | Obtained from melting the variables `crea`, `crp`, `glc`, `ast`, `alt`, `ggt`, `bili`, `cb`, `alk`, `prot_tot`, `alb`, `hto`, `plates`, `ferritin`, `fesat`, `inr`, `chol`, `hdl`, `ldl`, `tg`, `ghb`, `wcc`, `hbs_ag`, `hcv` |
+| value_clipped     | FLOAT         | TRUE          | Obtained from clipping the value column with the lower and upper bounts, if provided.                                                                                                                                         |
+| limit_detect      | VARCHAR(255)  | -             | IF value is above upper_bound THEN `<` ELIF value is below lower_bound THEN `>` ELSE `<NA>`.                                                                                                                                  |
+| final_units       | VARCHAR(255)  | -             |                                                                                                                                                                                                                               |
+| lower_bound       | FLOAT         | -             |                                                                                                                                                                                                                               |
+| upper_bound       | FLOAT         | -             |                                                                                                                                                                                                                               |
+| upper_bound       | FLOAT         | -             |                                                                                                                                                                                                                               |
 
 
-##### Melted variables metadata
+##### Variable names per cohort (and melted variables)
 
-| **Liveraim name** | **Liverscreen name** | **Alcofib name** | **Glucofib name** | **Decide name** | **Data type** | **Rule/Notes**                                    |
-| ----------------- | -------------------- | ---------------- | ----------------- | --------------- | ------------- | ------------------------------------------------- |
-| crea              | crea_mg_dl           | Crea_V1          | crea_mg_dl        | crea_mg_dl      | float         | Data type modification<br>Apply conversion factor |
-| crp               | crp                  | CRP_V1           | crp               | crp             | float         | Data type modification<br>Apply conversion factor |
-| glc               | glc_mg_dl            | Glu_V1           | glc_mg_dl         | glc_mg_dl       | float         | Data type modification<br>Apply conversion factor |
-| ast               | ast                  | ASAT_V1          | ast               | ast             | float         | Data type modification<br>Apply conversion factor |
-| alt               | alt                  | ALAT_V1          | alt               | alt             | float         | Data type modification<br>Apply conversion factor |
-| ggt               | ggt                  | GGT_V1           | ggt               | ggt             | float         | Data type modification<br>Apply conversion factor |
-| bili              | bili_mgdl            | Bili_V1          | bili_mgdl         | bili_mgdl       | float         | Data type modification<br>Apply conversion factor |
-| cb                | cb_mg_dl             | Bili_directa_v1  | cb_mg_dl          | cb_mg_dl        | float         | Data type modification<br>Apply conversion factor |
-| alk               | alk                  | FA_V1            | alk               | alk             | float         | Data type modification<br>Apply conversion factor |
-| prot_tot          | prot_g_l             | Prot_Tot_V1      | prot_g_l          | prot_g_l        | float         | Data type modification<br>Apply conversion factor |
-| alb               | alb                  | Albumina_V1      | alb               | alb             | float         | Data type modification<br>Apply conversion factor |
-| hto               | hto                  | HTO_V1           | hto               | hto             | float         | Data type modification<br>Apply conversion factor |
-| plates            | plates               | Plaq_V1          | plates            | plates          | float         | Data type modification<br>Apply conversion factor |
-| ferritin          | ferritin             | Ferr_V1          | ferritin          | ferritin        | float         | Data type modification<br>Apply conversion factor |
-| fesat             | fesat                | IS_V1            | fesat             | fesat           | float         | Data type modification<br>Apply conversion factor |
-| inr               | inr                  | INR_V1           | inr               | inr             | float         | Data type modification<br>Apply conversion factor |
-| chol              | chol_mg_dl           | CT_V1            | chol_mg_dl        | chol_mg_dl      | float         | Data type modification<br>Apply conversion factor |
-| hdl               | hdl_mg_dl            | HDL_V1           | hdl_mg_dl         | hdl_mg_dl       | float         | Data type modification<br>Apply conversion factor |
-| ldl               | ldl_mg_dl            | LDL_V1           | ldl_mg_dl         | ldl_mg_dl       | float         | Data type modification<br>Apply conversion factor |
-| tg                | tg                   | TG_V1            | tg                | tg              | float         | Data type modification<br>Apply conversion factor |
-| ghb               | ghb                  | HbA1c_V1         | ghb               | ghb             | float         | Data type modification<br>Apply conversion factor |
-| wcc               | wcc                  | LEU_V1           | wcc               | wcc             | float         | Data type modification<br>Apply conversion factor |
+| **Liveraim** | **Liverscreen** | **Glucofib** | **Alcofib**     | **Decide** | **Marina**          | **Metronord** | **Rules/Notes**                                   |
+| ------------ | --------------- | ------------ | --------------- | ---------- | ------------------- | ------------- | ------------------------------------------------- |
+| crea         | crea_mg_dl      | crea_mg_dl   | Crea_V1         | crea       | CREATININA          | creat         | Data type modification<br>Apply conversion factor |
+| crp          | crp             | crp          | CRP_V1          | crp        | -                   | -             | Data type modification<br>Apply conversion factor |
+| glc          | glc_mg_dl       | glc_mg_dl    | Glu_V1          | glc        | GLUCOSA             | gluc          | Data type modification<br>Apply conversion factor |
+| ast          | ast             | ast          | ASAT_V1         | ast        | GOT_80avisar        | asat          | Data type modification<br>Apply conversion factor |
+| alt          | alt             | alt          | ALAT_V1         | alt        | GPT_80avisar        | alat          | Data type modification<br>Apply conversion factor |
+| ggt          | ggt             | ggt          | GGT_V1          | ggt        | GGT_80avisar        | ggt           | Data type modification<br>Apply conversion factor |
+| bili         | bili_mgdl       | bili_mgdl    | Bili_V1         | bili       | BILIRRUBINA         | bil           | Data type modification<br>Apply conversion factor |
+| cb           | cb_mg_dl        | cb_mg_dl     | Bili_directa_v1 | -          | -                   | -             | Data type modification<br>Apply conversion factor |
+| alk          | alk             | alk          | FA_V1           | alk        | FOSFATASA_ALCALINA  | fa            | Data type modification<br>Apply conversion factor |
+| prot_tot     | prot_g_l        | prot_g_l     | Prot_Tot_V1     | -          | PROTEÏNES_TOTALS    | prot          | Data type modification<br>Apply conversion factor |
+| alb          | alb             | alb          | Albumina_V1     | alb        | ALBUMINA            | alb           | Data type modification<br>Apply conversion factor |
+| hto          | hto             | hto          | HTO_V1          | hct        | HEMATOCRITx100      | -             | Data type modification<br>Apply conversion factor |
+| plates       | plates          | plates       | Plaq_V1         | trc        | RECOMPTE_PLAQUETES  | plaquetes     | Data type modification<br>Apply conversion factor |
+| ferritin     | ferritin        | ferritin     | Ferr_V1         | ferri      | FERRITINA           | ferri         | Data type modification<br>Apply conversion factor |
+| fesat        | fesat           | fesat        | IS_V1           | fesat      | SAT_TRANSFERRINA    | Btransf       | Data type modification<br>Apply conversion factor |
+| inr          | inr             | inr          | INR_V1          | inr        | INR                 | Binr          | Data type modification<br>Apply conversion factor |
+| chol         | chol_mg_dl      | chol_mg_dl   | CT_V1           | chol       | COL_T               | col           | Data type modification<br>Apply conversion factor |
+| hdl          | hdl_mg_dl       | hdl_mg_dl    | HDL_V1          | hdl        | HDL                 | hdl           | Data type modification<br>Apply conversion factor |
+| ldl          | ldl_mg_dl       | ldl_mg_dl    | LDL_V1          | ldl        | LDL                 | ldl           | Data type modification<br>Apply conversion factor |
+| tg           | tg              | tg           | TG_V1           | trigly     | TG                  | trig          | Data type modification<br>Apply conversion factor |
+| ghb          | ghb             | ghb          | HbA1c_V1        | hba1c      | HEMOGLOBINA_GLICADA | hba           | Data type modification<br>Apply conversion factor |
+| wcc          | wcc             | wcc          | LEU_V1          | leu        | LEUCOCITS           | leuco         | Data type modification<br>Apply conversion factor |
+| hbs_ag       | hbs_ag          | hbs_ag       | HBsAg_V1        | hbsag_b    | HBsAG               | Bvhb          | Data type modification<br>recodification          |
+| hcv          | hcv             | hcv          | HCVAb_V1        | hcvab_b    | IgG_VHC             | Bvhc          | Data type modification<br>recodification          |
 
 
-### Table: `blood_test_categorical`
-- **Description:** Stores categorical blood test results.
-- **Fields:**
-    - `date_0` (DATETIME): Date of patient inclusion in the cohort.
+### Table: `biomarkers`
+
+- **Description:** Stores biomarkers results, both from external providers (Nordic, Roche and Hospital Clínic) and calculated using the data warehouse data.
     - `liveraim_id` (VARCHAR(255)): Common liveraim identifier for the patient. Unique within the data warehouse. 
-    - `cohort_id` (VARCHAR(255)): Cohort-specific identifier for each patient in a cohort. Unique within the cohort. 
-    - `variable` (VARCHAR(255)): Name of the variable to which the corresponding value in the `value` column refers. 
-    - `value` (VARCHAR(255)): Categorical result of the blood test.
-    - `final_units` (VARCHAR(255)): Final units of the value.
-    - `lower_bound` (FLOAT): Lower acceptable limit for the value (if applicable).
-    - `upper_bound` (FLOAT): Upper acceptable limit for the value (if applicable).
+    - `variable` (VARCHAR(255)): Unblinded using a map from biomarker names to upper case letters. Codified/blinded name of the biomarker
+    - `numeric_value` (FLOAT):value/result of the e of biomarker analysis or calculation (in `variable` column)
+    - `scaled_value` (FLOAT): numeric value scaled to [0, 1] range.
+    - `z_score` (FLOAT): z_score of numeric_value
+    - `quintiles` (FLOAT): quintiles of numeric_value (from 1 to 5)
+    - `limit_detect` (VARCHAR(255)): Character indicating if the value in numeric_value is below (`<`) or above (`>`). Missing if it is in range. 
+    - `validation_date` (DATETIME): validation date of `numeric_value` results. For calculated biomarkers the `inclusion_date` is used as validation date
+    - `comments` (FLOAT): comments (see table of comments)
 - **Format**: long.
-- **Variables in `varible` column**: `hbs_ag`, `hcv`.
-- **Primary Key:** (`liveraim_id`, `cohort_id`, `variable`)
-- **Relations:** Relates to the `population` table via `liveraim_id` and `cohort_id`.
+- **Variables in `varible` column**: biomarker blinded codes (from `A` to `K`).
+- **Primary Key:** (`liveraim_id`, `variable`)
+- **Relations:** Relates to the `population` table via `liveraim_id`.
 
-#### Actions and specification tables
+| **Column name**   | **SQL data type** | **Data type** | **Description**                                                     | **Rule/Notes**                                                                                          |
+| ----------------- | ----------------- | ------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `liveraim_id`     | VARCHAR(255)      | str           | Intra-cohort identification code.                                   | Created dynamically after merging cohorts.                                                              |
+| `variable`        | VARCHAR(255)      | category      | Unblinded name of the biomarker.                                    | Blinded using a map from biomarker names to uppercase letters.                                          |
+| `numeric_value`   | FLOAT             | float         | Value of biomarker (in `variable` column).                          | Different transformations depending on data origin. Values clipped using detection limits.              |
+| `scaled_value`    | FLOAT             | float         | Numeric value scaled to [0, 1] range.                               | Computed from `numeric_value` using the min-max scaling method.                                         |
+| `z_score`         | FLOAT             | float         | Z-score of `numeric_value`.                                         | Computed from `numeric_value`.                                                                          |
+| `quintiles`       | FLOAT             | float         | Quintiles of `numeric_value` (from 1 to 5).                         | Computed from `numeric_value`.                                                                          |
+| `limit_detect`    | VARCHAR(255)      | str           | String indicating if `numeric_value` is below (`<`) or above (`>`). | Computed using detection ranges. Missing if value is within range. No limits for calculated biomarkers. |
+| `validation_date` | DATETIME          | datetime      | Validation date of `numeric_value` results.                         | Date when result was validated. For calculated biomarkers, `inclusion_date` is used.                    |
+| `comments`        | VARCHAR(255)      | str           | Comments (see table of comments).                                   | Mapped from their description to an integer. Concatenated if multiple per record.                       |
 
-| **Liveraim name** | **Liverscreen name** | **Alcofib name**        | **Glucofib name** | **Decide name** | **SQL data type** | **Data type** | **Rule/Notes**                                       |
-| ----------------- | -------------------- | ----------------------- | ----------------- | --------------- | ----------------- | ------------- | ---------------------------------------------------- |
-| liveraim_id       | -                    | -                       | -                 | -               | VARCHAR(255)      | str           | Created dynamically after merging cohorts.           |
-| cohort_id         | id                   | Codigo_deidentificacion | id                | id              | VARCHAR(255)      | str           |                                                      |
-| date_0            | date_0               | Fecha_V1                | date_0            | date_0          | DATETIME          | datetime      |                                                      |
-| variable          | -                    | -                       | -                 | -               | VARCHAR(255)      |               | Obtained from melting the variables `hbs_ag`, `hcv`. |
-| value             | -                    | -                       | -                 | -               | VARCHAR(255)      | category      | Obtained from melting the variables `hbs_ag`, `hcv`. |
-| final_units       | -                    | -                       | -                 | -               | VARCHAR(255)      | str           |                                                      |
-| lower_bound       | -                    | -                       | -                 | -               | FLOAT             | float         |                                                      |
-| upper_bound       | -                    | -                       | -                 | -               | FLOAT             | float         |                                                      |
+#### Comments description
+
+| **Comment**                             | **Provider**    | **Map Code** | **Note**                         |
+| --------------------------------------- | --------------- | -----------: | -------------------------------- |
+| Muestra insuficiente                    | Hospital Clínic |            6 | The associated value is missing. |
+| No calculable                           | Hospital Clínic |            8 | The associated value is missing. |
+| Below Lower Limit of Quantification     | Nordic          |            1 |                                  |
+| Hemolysis                               | Nordic          |            3 |                                  |
+| Insufficient sample amount              | Nordic          |            6 | The associated value is missing. |
+| Lipemic                                 | Nordic          |            5 |                                  |
+| Missing sample                          | Nordic          |            8 | The associated value is missing. |
+| Severe hemolysis                        | Nordic          |            4 | The associated value is missing. |
+| Unreliable test result and not reported | Nordic          |            7 | The associated value is missing. |
+| below LLOQ                              | Roche           |            1 |                                  |
+| above ULOQ                              | Roche           |            2 |                                  |
+| Hemolysis                               | Roche           |            3 |                                  |
+| insufficient sample amount              | Roche           |            6 |                                  |
+| Lipemic                                 | Roche           |            5 |                                  |
+| Missing sample                          | Roche           |            8 | The associated value is missing. |
+| Severe hemolysis                        | Roche           |            4 | The associated value is missing. |
+| unreliable result                       | Roche           |            7 | The associated value is missing. |
 
 
-##### Melted variables metadata
-
-| **Liveraim name** | **Liverscreen name** | **Alcofib name** | **Glucofib name** | **Decide name** | **SQL data type** | **Data type** | **Rule/Notes**                                                               |
-| ----------------- | -------------------- | ---------------- | ----------------- | --------------- | ----------------- | ------------- | ---------------------------------------------------------------------------- |
-| hbs_ag            | hbs_ag               | HBsAg_V1         | hbs_ag            | hbs_ag          | VARCHAR(255)      | category      | applied a mapping (to homogenize level codification) defined in `level_data` |
-| hcv               | hcv                  | HCVAb_V1         | hcv               | hcv             | VARCHAR(255)      | category      | applied a mapping (to homogenize level codification) defined in `level_data` |
-
+> **Note**: In the current version, missings in `numeric_value` are dropped. Accordingly, code messages **4, 6, 7, 8** should not be found in the database.
 
 ## Varibles description
 
-| liveraim_name       | data_type       | Units/levels                           | panels                  | Description                                                                                                                |
-|---------------------|-----------------|----------------------------------------|-------------------------|----------------------------------------------------------------------------------------------------------------------------|
-| liveraim_id         | string          | -                                      | all panels              | Intra-cohort identification code.                                                                                          |
-| cohort_id           | string          | -                                      | population              | Identifier for each cohort.                                                                                                |
-| inclusion_date      | datetime64[ns]  | date                                   | all cohort-related tables | Date of visit 0.                                                                                                           |
-| status              | category        | 0: Finished<br>1: Ongoing<br>2: Withdrawn | population              | Status of the patients in the cohort. Finished if recruitment is complete, ongoing if still recruiting, withdrawn otherwise.|
-| birth_date          | datetime64[ns]  | date                                   | population              | Date of birth of the patients (calculated using variables age and inclusion_date).                                         |
-| cohort              | category        | -                                      | population              | Cohort from which the patient originates.                                                                                  |
-| exit_date           | datetime64[ns]  | date                                   | population              | Date when recruitment finished or last version date for withdrawn patients.                                                |
-| age                 | float64         | years                                  | demographics, population | Age at inclusion.                                                                                                          |
-| ethnicity           | category        | 0: Caucasian<br>1: Latin-American<br>2: African<br>3: Asian<br>4: Mix<br>5: Other | demographics            | Ethnicity or continent of origin.                                                                                          |
-| gender              | category        | 0: Female<br>1: Male                   | demographics, population | Gender of the patient.                                                                                                     |
-| hypertension        | category        | 0: No<br>1: Yes                        | medical_history         | High blood pressure status.                                                                                                |
-| centralobesity      | category        | 0: No<br>1: Yes                        | medical_history         | Abdominal obesity status.                                                                                                  |
-| hightrigly          | category        | 0: No<br>1: Yes                        | medical_history         | High triglycerides status.                                                                                                |
-| COPD                | category        | 0: No<br>1: Yes                        | medical_history         | COPD comorbidity.                                                                                                         |
-| smoke               | category        | 1: Current smoker<br>2: Prior smoking<br>3: Non-smoker | medical_history         | Smoking history of the patient.                                                                                           |
-| weight              | float64         | kg                                     | physical_exam           | Weight of the patient.                                                                                                     |
-| height              | float64         | cm                                     | physical_exam           | Height of the patient.                                                                                                     |
-| bmi                 | float64         | kg/m²                                  | physical_exam           | Body mass index.                                                                                                          |
-| hip                 | float64         | cm                                     | physical_exam           | Hip circumference.                                                                                                        |
-| probe               | category        | 0: M<br>1: XL                          | fibroscan               | Probe type used in FibroScan.                                                                                              |
-| te                  | float64         | kPa                                    | fibroscan               | Median liver stiffness (kPa).                                                                                              |
-| cap                 | float64         | dB/m                                   | fibroscan               | CAP median.                                                                                                               |
-| crea                | float64         | mg/dL                                  | blood_test              | Creatinine (mg/dL).                                                                                                       |
-| crp                 | float64         | mg/dL                                  | blood_test              | C-reactive protein (CRP, mg/dL).                                                                                          |
-| glc                 | float64         | mg/dL                                  | blood_test              | Glucose (mg/dL).                                                                                                         |
-| ast                 | float64         | U/L                                    | blood_test              | Aspartate aminotransferase (AST).                                                                                         |
-| alt                 | float64         | U/L                                    | blood_test              | Alanine aminotransferase (ALT).                                                                                           |
-| ggt                 | float64         | U/L                                    | blood_test              | Gamma-glutamyl transferase (GGT).                                                                                        |
-| bili                | float64         | mg/dL                                  | blood_test              | Bilirubin (mg/dL).                                                                                                       |
-| cb                  | float64         | mg/dL                                  | blood_test              | Conjugated bilirubin (mg/dL).                                                                                            |
-| alk                 | float64         | U/L                                    | blood_test              | Alkaline phosphatase (U/L).                                                                                               |
-| prot_tot            | float64         | g/L                                    | blood_test              | Total proteins (g/L).                                                                                                    |
-| alb                 | float64         | g/L                                    | blood_test              | Albumin (g/L).                                                                                                           |
-| hto                 | float64         | %                                      | blood_test              | Hematocrit.                                                                                                              |
-| plates              | float64         | 10^9/L                                 | blood_test              | Platelet count.                                                                                                          |
-| ferritin            | float64         | ng/mL                                  | blood_test              | Ferritin (ng/mL).                                                                                                        |
-| fesat               | float64         | %                                      | blood_test              | Transferrin saturation (%).                                                                                               |
-| inr                 | float64         | -                                      | blood_test              | INR (International Normalized Ratio).                                                                                    |
-| chol                | float64         | mg/dL                                  | blood_test              | Total cholesterol (mg/dL).                                                                                               |
-| hdl                 | float64         | mg/dL                                  | blood_test              | HDL-cholesterol (mg/dL).                                                                                                 |
-| ldl                 | float64         | mg/dL                                  | blood_test              | LDL-cholesterol (mg/dL).                                                                                                 |
-| tg                  | float64         | mg/dL                                  | blood_test              | Triglycerides (mg/dL).                                                                                                   |
-| hcv                 | category        | 0: Negative<br>1: Positive             | blood_test              | HCV antibody status.                                                                                                     |
-| hbs_ag              | category        | 0: Negative<br>1: Positive             | blood_test              | HBs antigen status.                                                                                                      |
-| alcohol_treat       | category        | 0: No<br>1: Yes                        | medical_history         | Medication for alcoholism treatment.                                                                                      |
-| ghb                 | float64         | %                                      | blood_test              | Glycated hemoglobin (%).                                                                                                 |
-| wcc                 | float64         | 10^9/L                                 | blood_test              | White cell count.                                                                                                        |
-| variable (biomarker)| category        | -                                      | biomarkers              | Biomarker identification code (blinded).                                                                                 |
-| value (biomarkers)  | float64         | Unknown units                          | biomarkers              | Biomarker analysis value, may include '<' or '>' for values outside detection range.                                      |
-| register_date       | datetime64[ns]  | date                                   | biomarkers              | Date when the sample was registered in the laboratory.                                                                   |
+| liveraim_name        | data_type      | Units/levels                                                                      | panels                    | Description                                                                                                                  |
+| -------------------- | -------------- | --------------------------------------------------------------------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| liveraim_id          | string         | -                                                                                 | all panels                | Intra-cohort identification code.                                                                                            |
+| cohort_id            | string         | -                                                                                 | population                | Identifier for each cohort.                                                                                                  |
+| inclusion_date       | datetime64[ns] | date                                                                              | all cohort-related tables | Date of visit 0.                                                                                                             |
+| status               | category       | 0: Finished<br>1: Ongoing<br>2: Withdrawn                                         | population                | Status of the patients in the cohort. Finished if recruitment is complete, ongoing if still recruiting, withdrawn otherwise. |
+| birth_date           | datetime64[ns] | date                                                                              | population                | Date of birth of the patients (calculated using variables age and inclusion_date).                                           |
+| cohort               | category       | -                                                                                 | population                | Cohort from which the patient originates.                                                                                    |
+| exit_date            | datetime64[ns] | date                                                                              | population                | Date when recruitment finished or last version date for withdrawn patients.                                                  |
+| age                  | float64        | years                                                                             | demographics, population  | Age at inclusion.                                                                                                            |
+| ethnicity            | category       | 0: Caucasian<br>1: Latin-American<br>2: African<br>3: Asian<br>4: Mix<br>5: Other | demographics              | Ethnicity or continent of origin.                                                                                            |
+| gender               | category       | 0: Female<br>1: Male                                                              | demographics, population  | Gender of the patient.                                                                                                       |
+| hypertension         | category       | 0: No<br>1: Yes                                                                   | medical_history           | High blood pressure status.                                                                                                  |
+| centralobesity       | category       | 0: No<br>1: Yes                                                                   | medical_history           | Abdominal obesity status.                                                                                                    |
+| hightrigly           | category       | 0: No<br>1: Yes                                                                   | medical_history           | High triglycerides status.                                                                                                   |
+| COPD                 | category       | 0: No<br>1: Yes                                                                   | medical_history           | COPD comorbidity.                                                                                                            |
+| smoke                | category       | 1: Current smoker<br>2: Prior smoking<br>3: Non-smoker                            | medical_history           | Smoking history of the patient.                                                                                              |
+| weight               | float64        | kg                                                                                | physical_exam             | Weight of the patient.                                                                                                       |
+| height               | float64        | cm                                                                                | physical_exam             | Height of the patient.                                                                                                       |
+| bmi                  | float64        | kg/m²                                                                             | physical_exam             | Body mass index.                                                                                                             |
+| hip                  | float64        | cm                                                                                | physical_exam             | Hip circumference.                                                                                                           |
+| probe                | category       | 0: M<br>1: XL                                                                     | fibroscan                 | Probe type used in FibroScan.                                                                                                |
+| te                   | float64        | kPa                                                                               | fibroscan                 | Median liver stiffness (kPa).                                                                                                |
+| cap                  | float64        | dB/m                                                                              | fibroscan                 | CAP median.                                                                                                                  |
+| crea                 | float64        | mg/dL                                                                             | blood_test                | Creatinine (mg/dL).                                                                                                          |
+| crp                  | float64        | mg/dL                                                                             | blood_test                | C-reactive protein (CRP, mg/dL).                                                                                             |
+| glc                  | float64        | mg/dL                                                                             | blood_test                | Glucose (mg/dL).                                                                                                             |
+| ast                  | float64        | U/L                                                                               | blood_test                | Aspartate aminotransferase (AST).                                                                                            |
+| alt                  | float64        | U/L                                                                               | blood_test                | Alanine aminotransferase (ALT).                                                                                              |
+| ggt                  | float64        | U/L                                                                               | blood_test                | Gamma-glutamyl transferase (GGT).                                                                                            |
+| bili                 | float64        | mg/dL                                                                             | blood_test                | Bilirubin (mg/dL).                                                                                                           |
+| cb                   | float64        | mg/dL                                                                             | blood_test                | Conjugated bilirubin (mg/dL).                                                                                                |
+| alk                  | float64        | U/L                                                                               | blood_test                | Alkaline phosphatase (U/L).                                                                                                  |
+| prot_tot             | float64        | g/L                                                                               | blood_test                | Total proteins (g/L).                                                                                                        |
+| alb                  | float64        | g/L                                                                               | blood_test                | Albumin (g/L).                                                                                                               |
+| hto                  | float64        | %                                                                                 | blood_test                | Hematocrit.                                                                                                                  |
+| plates               | float64        | 10^9/L                                                                            | blood_test                | Platelet count.                                                                                                              |
+| ferritin             | float64        | ng/mL                                                                             | blood_test                | Ferritin (ng/mL).                                                                                                            |
+| fesat                | float64        | %                                                                                 | blood_test                | Transferrin saturation (%).                                                                                                  |
+| inr                  | float64        | -                                                                                 | blood_test                | INR (International Normalized Ratio).                                                                                        |
+| chol                 | float64        | mg/dL                                                                             | blood_test                | Total cholesterol (mg/dL).                                                                                                   |
+| hdl                  | float64        | mg/dL                                                                             | blood_test                | HDL-cholesterol (mg/dL).                                                                                                     |
+| ldl                  | float64        | mg/dL                                                                             | blood_test                | LDL-cholesterol (mg/dL).                                                                                                     |
+| tg                   | float64        | mg/dL                                                                             | blood_test                | Triglycerides (mg/dL).                                                                                                       |
+| hcv                  | category       | 0: Negative<br>1: Positive                                                        | blood_test                | HCV antibody status.                                                                                                         |
+| hbs_ag               | category       | 0: Negative<br>1: Positive                                                        | blood_test                | HBs antigen status.                                                                                                          |
+| alcohol_treat        | category       | 0: No<br>1: Yes                                                                   | medical_history           | Medication for alcoholism treatment.                                                                                         |
+| ghb                  | float64        | %                                                                                 | blood_test                | Glycated hemoglobin (%).                                                                                                     |
+| wcc                  | float64        | 10^9/L                                                                            | blood_test                | White cell count.                                                                                                            |
+| variable (biomarker) | category       | -                                                                                 | biomarkers                | Biomarker identification code (blinded).                                                                                     |
+| value (biomarkers)   | float64        | Unknown units                                                                     | biomarkers                | Biomarker analysis value, may include '<' or '>' for values outside detection range.                                         |
+| register_date        | datetime64[ns] | date                                                                              | biomarkers                | Date when the sample was registered in the laboratory.                                                                       |
 
 
 ## b. Configuration Tables Description
