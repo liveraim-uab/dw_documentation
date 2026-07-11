@@ -21,32 +21,27 @@ The data warehouse contains two types of tables in terms of format: **long** for
 
 - **Wide**: These are the "usual" tables. Each variable is stored as a separate column in the table. Each row corresponds to the information of a single patient. In these tables, there cannot be duplicates in the identifier columns: all information for a patient is stored in a single row.
 
-- **Long**: These tables contain at least one patient identifier column (in this case, `liveraim_id` and `cohort_id`) along with the `variable` and `value` columns. The `variable` column contains the names of the variables, while the `value` column contains the value of the variable specified in the `variable` column. Tables in long format will have repeated entries in the patient identifier columns. In addition to the columns mentioned, these tables may include other columns that provide additional context for each entry: annotations for variable values (`lower_bound`, `upper_bound`), the date of each observation (`date_0`), and the units of the variable (`final_units`).
+- **Long**: These tables contain at least one patient identifier column (in this case, `liveraim_id` and `cohort_id`) along with the `variable` and `value` columns. The `variable` column contains the names of the variables, while the `value` column contains the value of the variable specified in the `variable` column. Tables in long format will have repeated entries in the patient identifier columns. In addition to the columns mentioned, these tables may include other columns that provide additional context for each entry: annotations for variable values (`lower_bound`, `upper_bound`), the date of each observation (`inclusion_date`), and the units of the variable (`final_units`).
 Transforming a wide table into a long table is a straightforward process (if the necessary data is available) and is referred to in this documentation as `melting`. Similarly, it is possible to transform a **long** format table into a **wide** format table with the same ease. An example of this format is shown below:
 
-    | date_0              | liveraim_id | cohort_id | variable | value | final_units | lower_bound | upper_bound |
-    | ------------------- | ----------- | --------- | -------- | ----- | ----------- | ----------- | ----------- |
-    | 2023-01-19 00:00:00 | LA---       | -----     | alb      | 43    | g/L         | 10          | 55          |
-    | 2023-01-19 00:00:00 | LA---       | -----     | alk      | 41    | U/L         | 20          | 150         |
-    | 2023-01-19 00:00:00 | LA---       | -----     | alt      | 21    | UI/L        | 5 0         | 500         |
-    | 2023-01-19 00:00:00 | LA---       | -----     | ast      | 20    | U/L         | 5.0         | 1000.0      |
-    | 2023-01-19 00:00:00 | LA---       | -----     | bili     | 0.6   | mg/dL       | 0.2         | 9.99        |
-    | 2023-01-19 00:00:00 | LA---       | -----     | cb       | 8.7   | mg/dL       | 0.2         | 9.99        |
-    | 2023-01-19 00:00:00 | LA---       | -----     | chol     | 236   | mg/dL       | 100         | 700         |
-    | 2023-01-19 00:00:00 | LA---       | -----     | crea     | 1.1   | mg/dL       | 0.3         | 9.99        |
-    | 2023-01-19 00:00:00 | LA---       | -----     | crp      | NaN   | mg/dL       | 0.0         | 9.99        |
-    | 2023-01-19 00:00:00 | LA---       | -----     | ferritin | 146   | ng/mL       | 10          | 999         |
-    | ...                 |             |           |          |       |             |             |             |
-
+| inclusion_date      | liveraim_id | cohort_id | variable | value | value_clipped | final_units | lower_bound | upper_bound | limit_detect |
+| ------------------- | ----------- | --------- | -------- | ----- | ------------- | ----------- | ----------- | ----------- | ------------ |
+| 2023-01-19 00:00:00 | LA---       | -----     | alb      | 43    | 43            | g/L         | 10          | 55          | NA           |
+| 2023-01-19 00:00:00 | LA---       | -----     | alk      | 3     | 20            | U/L         | 20          | 150         | <            |
+| 2023-01-19 00:00:00 | LA---       | -----     | alt      | 21    | 21            | UI/L        | 5 0         | 500         | NA           |
+| 2023-01-19 00:00:00 | LA---       | -----     | ast      | 20    | 20            | U/L         | 5.0         | 1000.0      | NA           |
+| 2023-01-19 00:00:00 | LA---       | -----     | bili     | 0.6   | 0.6           | mg/dL       | 0.2         | 9.99        | NA           |
+| 2023-01-19 00:00:00 | LA---       | -----     | cb       | 8.7   | 8.7           | mg/dL       | 0.2         | 9.99        | NA           |
+| 2023-01-19 00:00:00 | LA---       | -----     | chol     | 236   | 236           | mg/dL       | 100         | 700         | NA           |
+| 2023-01-19 00:00:00 | LA---       | -----     | crea     | 1.1   | 1.1           | mg/dL       | 0.3         | 9.99        | NA           |
+| 2023-01-19 00:00:00 | LA---       | -----     | crp      | NaN   | NaN           | mg/dL       | 0.0         | 9.99        | NA           |
+| 2023-01-19 00:00:00 | LA---       | -----     | ferritin | 146   | 146           | ng/mL       | 10          | 999         | NA           |
+| ...                 |             |           |          |       |               |             |             |             | NA           |
 
 
 For `long` tables, since there can (and should) be repetitions in the ID columns (one repetition for each variable in long format at least), composite primary keys are used. In general, this database uses the columns `liveraim_id`, `cohort_id`, and `variable` as composite primary keys: the database does not allow any repetitions of the combination of these three variables.
 
-> **Note**: Using both `liveraim_id` and `cohort_id` within the composite keys is redundant, as there is a bijective correspondence between these two identifiers. However, it has been configured this way to maintain identifier consistency.
-
 It is important to clarify the difference between `cohort_id` and `liveraim_id`. `cohort_id` is the patient-specific identifier within each cohort. The encoding of these identifiers is heterogeneous, varies between cohorts, and originates from the original data. `liveraim_id` is a new variable generated during the execution of `main.py`, which assigns a unique identifier to each patient across all cohorts at the data warehouse level, following a common format. There is a bijective correspondence between these two variables.
-
-> **Note**: The variables in the `variable` column (the "melted" variables) of each `long` table must be of the same data type. This is because SQL does not allow values with different data types in the same column. This adds robustness to the database at the cost of having to create additional tables. For example, in the case of blood test data, categorical variables have been transformed to numeric (as they are encoded with integers).
 
 # Initial data and configuration data 
 
@@ -86,8 +81,6 @@ This file, along with level_data, is essential for the creation of the data ware
 
 Before running the code, you must verify that these files are in the correct directories, can be read correctly, have the structure defined above, and that the information they contain is correct. Any variation in structure/content may result in an error in execution or the creation of an erroneous data warehouse. The correct functioning of the program is highly dependent on these files.
 
-These files are tracked in GitHub like the rest of the scripts, so there is no need to create them from scratch, and they should work fine if the repository is cloned. 
-
 When this file is read, it is loaded into the code as a `pandas.DataFrame` object. Throughout all the documentation, we will refer to this DataFrame also as `var_data`.
 
 > **Note**: If needed, addition of other columns is possible and should not create incompatibilities (but the management of those new columns should be implemented).
@@ -105,8 +98,6 @@ This file, along with `var_data`, is essential for the creation of the data ware
 
 Before running the code, you must verify that these files are in the correct directories, can be read correctly, have the structure defined above, and that the information they contain is correct. Any variation in structure/content may result in an error in execution or the creation of an erroneous data warehouse. The correct functioning of the program is highly dependent on these files.
 
-These files are tracked in GitHub like the rest of the scripts, so there is no need to create them from scratch, and they should work fine if the repository is cloned.
-
 When this file is read, it is loaded into the code as a `pandas.DataFrame` object. Throughout all the documentation, we will refer to this DataFrame also as `level_data`.
 
 > **Note**: There must be certain coherence between the `level_data` files from each cohort: In this case, the number of rows in each file does not need to match, as in some cohorts two or more different levels might coincide in the same final level. However, the `original_name`, `liveraim_name`, and `liveraim_level_value` columns should be consistent between files. Although this is checked in the code, it is recommended to ensure there are no errors.
@@ -116,8 +107,6 @@ When this file is read, it is loaded into the code as a `pandas.DataFrame` objec
 This is a `json` file that will be loaded into the code as a dictionary. It contains the necessary information to obtain a final variable by combining original variables present in the database. For more information about this process, see the section [`data_processing_utils`](modules_documentation/data_processing_utils_doc.md), subsection [`class VarCombiner`](modules_documentation/data_processing_utils_doc.md#class-varcombiner). This section describes the class responsible for combining the variables listed in `comb_var_data` according to the specified configuration.
 
 The primary goal of this dictionary is to combine variables that refer to the same magnitude but use different units. Combining these variables helps reduce the number of missing values. For example, in the LIVERSCREEN cohort, for the magnitude blood glucose (in visit 1), there are the variables `glc` (expressed in mmol/L) and `glc_mg_dl` (expressed in mg/dL). Both will be combined to fill missing at least one of the variables have a proper value.
-
-> **Note**: Currently, only the functionality described above has been implemented. However, it can be extended (by modifying this dictionary and the `VarCombiner` class) to combine categorical variables, generate secondary or calculated variables, and more.
 
 The structure of the `comb_var_data` dictionary is as follows:
 
@@ -174,10 +163,9 @@ It is important to maintain the structure of this file (and the previously descr
 
 For more information about the structure of the final data, check the next section [LIVERAIM DATA WAREHOUSE STRUCTURE](#liveraim-data-warehouse-structure).
 
-
 # Liveraim Data Warehouse Structure
 
-The **LIVERAIM DATA WAREHOUSE v2** is composed by the following tables:
+The **LIVERAIM DATA WAREHOUSE** is composed by the following tables:
 
 a. **Database**
 
@@ -188,6 +176,7 @@ a. **Database**
   - `physical_exam`
   - `medical_history`
   - `biomarkers`
+  - `fibrosis_etiology`
 
 b. **Configuration Data**
 
@@ -208,16 +197,15 @@ A summary of the data sources is presented below:
 
 | **Cohort**  | **Number of versions used** | **File type**       | **Reading method**    |
 | ----------- | --------------------------- | ------------------- | --------------------- |
-| liverscreen | 8                           | stata file (`.dta`) | `pd.read_stata`       |
+| liverscreen | 8                           | stata file (`.dta`) | `pandas.read_stata`   |
 | alcofib     | 3                           | sav file (`.sav`)   | `pyreadstat.read_sav` |
-| glucofib    | 1                           | csv (`.csv`)        | `pd.read_csv`         |
-| decide      | 1                           | stata file (`.dta`) | `pd.read_stata`       |
-| galaald     | 1                           | stata file (`.dta`) | `pd.read_stata`       |
+| glucofib    | 1                           | csv (`.csv`)        | `pandas.read_csv`     |
+| decide      | 1                           | stata file (`.dta`) | `pandas.read_stata`   |
+| galaald     | 1                           | stata file (`.dta`) | `pandas.read_stata`   |
 | marina      | 1                           | sav file (`.sav`)   | `pyreadstat.read_sav` |
+| metronord   | 1                           | sav file (`.dta`)   | `pyreadstat.read_dta` |
 
 > **Note 1**: Some of the information below may be redundant, as certain variables appear in many or all panels. However, redundancies have been intentionally kept for the sake of clarity and readability.
-
-> **Note 2**: As four of the six used cohorts have been previously managed isnod RedCap, many RedCap names in the final database have been kept as standard (sometimes with few changes). 
 
 ### Table: `population`
 - **Description:** Defines the population of patients within different cohorts.
@@ -469,6 +457,11 @@ A summary of the data sources is presented below:
 | fibrosis_etiology_by_CAP | -               | -              | -                         | -                   | -             | -             |
 | metabolic_syndrome       | -               | -              | -                         | -                   | -             | -             |
 
+##### `medical_history` algorithms
+
+###### Metabolic syndrome determination
+
+![metabolic_syndrome_schema](images/met_syndr_diag_1.png){ width="70%" }
 
 
 ### Table: `blood_test`
@@ -589,60 +582,100 @@ A summary of the data sources is presented below:
 
 > **Note**: In the current version, missings in `numeric_value` are dropped. Accordingly, code messages **4, 6, 7, 8** should not be found in the database.
 
+### Table: `fibrosis_etiology`
+
+#### Derived variables specifications:
+##### Risk factor calculations
+
+| Liver disease risk factor                | Variable name              | Calculation details                                                                                                                                                                                                                                                                                      |
+| ---------------------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Pre-type 2 diabetes mellitus risk factor | `pre_dm2_rf`               | `TRUE` if **any** of the following criteria are met:<br>- Glycated haemoglobin (`ghb`) is in the open interval `(6, 6.5)`<br>- Glucose (`glc`) is in the open interval `(110, 125)`                                                                                                                      |
+| Type 2 diabetes mellitus risk factor     | `dm2_rf`                   | `TRUE` if **any** of the following criteria are met:<br>- Type 2 diabetes diagnosis: `dm2 == 1`<br>- Glycated haemoglobin (`ghb`) ≥ 6.5<br>- Glucose (`glc`) ≥ 200                                                                                                                                       |
+| Overweight risk factor                   | `overweight_rf`            | `TRUE` if BMI is in the interval `(25, 29.9]`                                                                                                                                                                                                                                                            |
+| Obesity risk factor                      | `obesity_rf`               | `TRUE` if **any** of the following criteria are met:<br>- Obesity diagnosis: `obesity == 1`<br>- BMI ≥ 30                                                                                                                                                                                                |
+| Abdominal obesity risk factor            | `abdominal_obesity_rf`     | `TRUE` if **any** of the following criteria are met:<br>- Central obesity diagnosis: `centralobesity == 1`<br>- Waist circumference > 88 cm for females<br>- Waist circumference > 102 cm for males                                                                                                      |
+| Dyslipidemia risk factor                 | `dyslipidemia_rf`          | `TRUE` if **any** of the following criteria are met:<br>- Triglycerides (`tg`) ≥ 150<br>- HDL cholesterol (`hdl`) < 40 for males<br>- HDL cholesterol (`hdl`) < 50 for females<br>- LDL cholesterol (`ldl`) ≥ 160<br>- Total cholesterol (`chol`) ≥ 240<br>- Dyslipidemia diagnosis: `dyslipidemia == 1` |
+| Arterial hypertension risk factor        | `arterial_hypertension_rf` | `TRUE` if **any** of the following criteria are met:<br>- Hypertension diagnosis: `hypertension == 1`<br>- Systolic blood pressure (`sbp`) ≥ 180<br>- Diastolic blood pressure (`dbp`) ≥ 110                                                                                                             |
+| Alcohol consumption risk factor          | `oh_consumption_rf`        | `TRUE` if weekly alcohol consumption in standard drink units (`alc_consumption`) is:<br>- ≥ 14 UBEs for females<br>- ≥ 21 UBEs for males                                                                                                                                                                 |
+
+##### Metabolic syndrome
+
+The binary variable `metabolic_syndrome` was calculated according to the NCEP ATP III criteria. A patient was classified as having metabolic syndrome if they met **at least 3 of the following criteria**:
+
+| Criterion                     | Variable(s)                  | Calculation details                                                                                                                                                                                   |
+| ----------------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Waist circumference criterion | `waist`, `sex`               | `TRUE` if waist circumference is ≥ 94 cm for males or ≥ 80 cm for females                                                                                                                             |
+| HDL cholesterol criterion     | `hdl`, `sex`                 | `TRUE` if HDL cholesterol is < 40 mg/dL for males or < 50 mg/dL for females                                                                                                                           |
+| Triglyceride criterion        | `tg`                         | `TRUE` if triglycerides are ≥ 150 mg/dL                                                                                                                                                               |
+| Hypertension criterion        | `sbp`, `dbp`, `hypertension` | `TRUE` if **any** of the following criteria are met:<br>- Systolic blood pressure (`sbp`) ≥ 130 mmHg<br>- Diastolic blood pressure (`dbp`) ≥ 85 mmHg<br>- Hypertension diagnosis: `hypertension == 1` |
+| Glucose criterion             | `glc`                        | `TRUE` if glucose is ≥ 100 mg/dL                                                                                                                                                                      |
+
+
+
+
 ## Varibles description
 
-| liveraim_name        | data_type      | Units/levels                                                                      | panels                    | Description                                                                                                                  |
-| -------------------- | -------------- | --------------------------------------------------------------------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| liveraim_id          | string         | -                                                                                 | all panels                | Intra-cohort identification code.                                                                                            |
-| cohort_id            | string         | -                                                                                 | population                | Identifier for each cohort.                                                                                                  |
-| inclusion_date       | datetime64[ns] | date                                                                              | all cohort-related tables | Date of visit 0.                                                                                                             |
-| status               | category       | 0: Finished<br>1: Ongoing<br>2: Withdrawn                                         | population                | Status of the patients in the cohort. Finished if recruitment is complete, ongoing if still recruiting, withdrawn otherwise. |
-| birth_date           | datetime64[ns] | date                                                                              | population                | Date of birth of the patients (calculated using variables age and inclusion_date).                                           |
-| cohort               | category       | -                                                                                 | population                | Cohort from which the patient originates.                                                                                    |
-| exit_date            | datetime64[ns] | date                                                                              | population                | Date when recruitment finished or last version date for withdrawn patients.                                                  |
-| age                  | float64        | years                                                                             | demographics, population  | Age at inclusion.                                                                                                            |
-| ethnicity            | category       | 0: Caucasian<br>1: Latin-American<br>2: African<br>3: Asian<br>4: Mix<br>5: Other | demographics              | Ethnicity or continent of origin.                                                                                            |
-| gender               | category       | 0: Female<br>1: Male                                                              | demographics, population  | Gender of the patient.                                                                                                       |
-| hypertension         | category       | 0: No<br>1: Yes                                                                   | medical_history           | High blood pressure status.                                                                                                  |
-| centralobesity       | category       | 0: No<br>1: Yes                                                                   | medical_history           | Abdominal obesity status.                                                                                                    |
-| hightrigly           | category       | 0: No<br>1: Yes                                                                   | medical_history           | High triglycerides status.                                                                                                   |
-| COPD                 | category       | 0: No<br>1: Yes                                                                   | medical_history           | COPD comorbidity.                                                                                                            |
-| smoke                | category       | 1: Current smoker<br>2: Prior smoking<br>3: Non-smoker                            | medical_history           | Smoking history of the patient.                                                                                              |
-| weight               | float64        | kg                                                                                | physical_exam             | Weight of the patient.                                                                                                       |
-| height               | float64        | cm                                                                                | physical_exam             | Height of the patient.                                                                                                       |
-| bmi                  | float64        | kg/m²                                                                             | physical_exam             | Body mass index.                                                                                                             |
-| hip                  | float64        | cm                                                                                | physical_exam             | Hip circumference.                                                                                                           |
-| probe                | category       | 0: M<br>1: XL                                                                     | fibroscan                 | Probe type used in FibroScan.                                                                                                |
-| te                   | float64        | kPa                                                                               | fibroscan                 | Median liver stiffness (kPa).                                                                                                |
-| cap                  | float64        | dB/m                                                                              | fibroscan                 | CAP median.                                                                                                                  |
-| crea                 | float64        | mg/dL                                                                             | blood_test                | Creatinine (mg/dL).                                                                                                          |
-| crp                  | float64        | mg/dL                                                                             | blood_test                | C-reactive protein (CRP, mg/dL).                                                                                             |
-| glc                  | float64        | mg/dL                                                                             | blood_test                | Glucose (mg/dL).                                                                                                             |
-| ast                  | float64        | U/L                                                                               | blood_test                | Aspartate aminotransferase (AST).                                                                                            |
-| alt                  | float64        | U/L                                                                               | blood_test                | Alanine aminotransferase (ALT).                                                                                              |
-| ggt                  | float64        | U/L                                                                               | blood_test                | Gamma-glutamyl transferase (GGT).                                                                                            |
-| bili                 | float64        | mg/dL                                                                             | blood_test                | Bilirubin (mg/dL).                                                                                                           |
-| cb                   | float64        | mg/dL                                                                             | blood_test                | Conjugated bilirubin (mg/dL).                                                                                                |
-| alk                  | float64        | U/L                                                                               | blood_test                | Alkaline phosphatase (U/L).                                                                                                  |
-| prot_tot             | float64        | g/L                                                                               | blood_test                | Total proteins (g/L).                                                                                                        |
-| alb                  | float64        | g/L                                                                               | blood_test                | Albumin (g/L).                                                                                                               |
-| hto                  | float64        | %                                                                                 | blood_test                | Hematocrit.                                                                                                                  |
-| plates               | float64        | 10^9/L                                                                            | blood_test                | Platelet count.                                                                                                              |
-| ferritin             | float64        | ng/mL                                                                             | blood_test                | Ferritin (ng/mL).                                                                                                            |
-| fesat                | float64        | %                                                                                 | blood_test                | Transferrin saturation (%).                                                                                                  |
-| inr                  | float64        | -                                                                                 | blood_test                | INR (International Normalized Ratio).                                                                                        |
-| chol                 | float64        | mg/dL                                                                             | blood_test                | Total cholesterol (mg/dL).                                                                                                   |
-| hdl                  | float64        | mg/dL                                                                             | blood_test                | HDL-cholesterol (mg/dL).                                                                                                     |
-| ldl                  | float64        | mg/dL                                                                             | blood_test                | LDL-cholesterol (mg/dL).                                                                                                     |
-| tg                   | float64        | mg/dL                                                                             | blood_test                | Triglycerides (mg/dL).                                                                                                       |
-| hcv                  | category       | 0: Negative<br>1: Positive                                                        | blood_test                | HCV antibody status.                                                                                                         |
-| hbs_ag               | category       | 0: Negative<br>1: Positive                                                        | blood_test                | HBs antigen status.                                                                                                          |
-| alcohol_treat        | category       | 0: No<br>1: Yes                                                                   | medical_history           | Medication for alcoholism treatment.                                                                                         |
-| ghb                  | float64        | %                                                                                 | blood_test                | Glycated hemoglobin (%).                                                                                                     |
-| wcc                  | float64        | 10^9/L                                                                            | blood_test                | White cell count.                                                                                                            |
-| variable (biomarker) | category       | -                                                                                 | biomarkers                | Biomarker identification code (blinded).                                                                                     |
-| value (biomarkers)   | float64        | Unknown units                                                                     | biomarkers                | Biomarker analysis value, may include '<' or '>' for values outside detection range.                                         |
-| register_date        | datetime64[ns] | date                                                                              | biomarkers                | Date when the sample was registered in the laboratory.                                                                       |
+| liveraim_name            | data_type      | Units/levels                                                                      | panels                    | Description                                                                                                                  |
+| ------------------------ | -------------- | --------------------------------------------------------------------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| inclusion_date           | datetime64[ns] | date                                                                              | all cohort-related tables | Date of visit 0.                                                                                                             |
+| liveraim_id              | string         | -                                                                                 | all panels                | Intra-cohort identification code.                                                                                            |
+| crea                     | float64        | mg/dL                                                                             | blood_test                | Creatinine (mg/dL).                                                                                                          |
+| crp                      | float64        | mg/dL                                                                             | blood_test                | C-reactive protein (CRP, mg/dL).                                                                                             |
+| glc                      | float64        | mg/dL                                                                             | blood_test                | Glucose (mg/dL).                                                                                                             |
+| ast                      | float64        | U/L                                                                               | blood_test                | Aspartate aminotransferase (AST).                                                                                            |
+| alt                      | float64        | U/L                                                                               | blood_test                | Alanine aminotransferase (ALT).                                                                                              |
+| ggt                      | float64        | U/L                                                                               | blood_test                | Gamma-glutamyl transferase (GGT).                                                                                            |
+| bili                     | float64        | mg/dL                                                                             | blood_test                | Bilirubin (mg/dL).                                                                                                           |
+| cb                       | float64        | mg/dL                                                                             | blood_test                | Conjugated bilirubin (mg/dL).                                                                                                |
+| alk                      | float64        | U/L                                                                               | blood_test                | Alkaline phosphatase (U/L).                                                                                                  |
+| prot_tot                 | float64        | g/L                                                                               | blood_test                | Total proteins (g/L).                                                                                                        |
+| alb                      | float64        | g/L                                                                               | blood_test                | Albumin (g/L).                                                                                                               |
+| hto                      | float64        | %                                                                                 | blood_test                | Hematocrit.                                                                                                                  |
+| plates                   | float64        | 10^9/L                                                                            | blood_test                | Platelet count.                                                                                                              |
+| ferritin                 | float64        | ng/mL                                                                             | blood_test                | Ferritin (ng/mL).                                                                                                            |
+| fesat                    | float64        | %                                                                                 | blood_test                | Transferrin saturation (%).                                                                                                  |
+| inr                      | float64        | -                                                                                 | blood_test                | INR (International Normalized Ratio).                                                                                        |
+| chol                     | float64        | mg/dL                                                                             | blood_test                | Total cholesterol (mg/dL).                                                                                                   |
+| hdl                      | float64        | mg/dL                                                                             | blood_test                | HDL-cholesterol (mg/dL).                                                                                                     |
+| ldl                      | float64        | mg/dL                                                                             | blood_test                | LDL-cholesterol (mg/dL).                                                                                                     |
+| tg                       | float64        | mg/dL                                                                             | blood_test                | Triglycerides (mg/dL).                                                                                                       |
+| hcv                      | category       | 0: Negative<br>1: Positive                                                        | blood_test                | HCV antibody status.                                                                                                         |
+| hbs_ag                   | category       | 0: Negative<br>1: Positive<br>2: Not Performed                                    | blood_test                | HBs antigen status.                                                                                                          |
+| ghb                      | float64        | %                                                                                 | blood_test                | Glycated hemoglobin (%).                                                                                                     |
+| wcc                      | float64        | 10^9/L                                                                            | blood_test                | White cell count.                                                                                                            |
+| ethnicity                | category       | 0: Caucasian<br>1: Latin-American<br>2: African<br>3: Asian<br>4: Mix<br>5: Other | demographics              | Ethnicity or continent of origin.                                                                                            |
+| age                      | float64        | years                                                                             | demographics, population  | Age at inclusion.                                                                                                            |
+| gender                   | category       | 0: Female<br>1: Male                                                              | demographics, population  | Gender of the patient.                                                                                                       |
+| probe                    | category       | 0: M<br>1: XL                                                                     | fibroscan                 | Probe type used in FibroScan.                                                                                                |
+| te                       | float64        | kPa                                                                               | fibroscan                 | Median liver stiffness (kPa).                                                                                                |
+| cap                      | float64        | dB/m                                                                              | fibroscan                 | CAP median.                                                                                                                  |
+| hypertension             | category       | 0: No<br>1: Yes                                                                   | medical_history           | High blood pressure status.                                                                                                  |
+| centralobesity           | category       | 0: No<br>1: Yes                                                                   | medical_history           | Abdominal obesity status.                                                                                                    |
+| hightrigly               | category       | 0: No<br>1: Yes                                                                   | medical_history           | High triglycerides status.                                                                                                   |
+| COPD                     | category       | 0: No<br>1: Yes                                                                   | medical_history           | COPD comorbidity.                                                                                                            |
+| smoke                    | category       | 1: Current smoker<br>2: Prior smoking<br>3: Non-smoker                            | medical_history           | Smoking history of the patient.                                                                                              |
+| alcohol_treat            | category       | 0: No<br>1: Yes                                                                   | medical_history           | Medication for alcoholism treatment.                                                                                         |
+| fibrosis_etiology        | category       |                                                                                   | medical_history           | Fibrosis etiology                                                                                                            |
+| metabolic_syndrome       | category       |                                                                                   | medical_history           | Metabolic syndrome                                                                                                           |
+| alc_consumption          | float64        | UBE/week                                                                          | medical_history           | UBE per week                                                                                                                 |
+| dm2                      | category       | 0: No<br>1: Yes                                                                   | medical_history           | Diabetes Mellitus type 2                                                                                                     |
+| overuse                  | category       | 0: No<br>1: Yes<br>2: Previous                                                    | medical_history           | Alcohol overuse                                                                                                              |
+| fibrosis_etiology_by_CAP | category       |                                                                                   | medical_history           | Fibrosis etiology including CAP criteria                                                                                     |
+| weight                   | float64        | kg                                                                                | physical_exam             | Weight of the patient.                                                                                                       |
+| height                   | float64        | cm                                                                                | physical_exam             | Height of the patient.                                                                                                       |
+| bmi                      | float64        | kg/m²                                                                             | physical_exam             | Body mass index.                                                                                                             |
+| hip                      | float64        | cm                                                                                | physical_exam             | Hip circumference.                                                                                                           |
+| waist                    | float64        | cm                                                                                | physical_exam             | waist circumference                                                                                                          |
+| whr                      | float64        | -                                                                                 | physical_exam             | waist hip ratio                                                                                                              |
+| sbp                      | float64        | mmHg                                                                              | physical_exam             | Systolic blood pressure                                                                                                      |
+| dbp                      | float64        | mmHg                                                                              | physical_exam             | Diastolic blood pressure                                                                                                     |
+| cohort_id                | string         | -                                                                                 | population                | Identifier for each cohort.                                                                                                  |
+| status                   | category       | 0: Finished<br>1: Ongoing<br>2: Withdrawn                                         | population                | Status of the patients in the cohort. Finished if recruitment is complete, ongoing if still recruiting, withdrawn otherwise. |
+| birth_date               | datetime64[ns] | date                                                                              | population                | Date of birth of the patients (calculated using variables age and inclusion_date).                                           |
+| cohort                   | category       | -                                                                                 | population                | Cohort from which the patient originates.                                                                                    |
+| exit_date                | datetime64[ns] | date                                                                              | population                | Date when recruitment finished or last version date for withdrawn patients.                                                  |
+| at_risk                  | category       | 0: No<br>1: Yes                                                                   | population                | Whether a patient belongs to a cohort classified as at-risk or general population.                                           |
+| work_package             | category       |                                                                                   | population                |                                                                                                                              |
 
 
 ## b. Configuration Tables Description

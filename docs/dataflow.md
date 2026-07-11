@@ -52,9 +52,8 @@ all_data:
 
 This process is carried out for the data of each WP. In particular, each WP will contain not only the various data related to the cohort databases and configuration files but will also have its own panel configuration document, which may differ from those of other WPs. Therefore, when using the `DataReader` class, one must specify both the list of cohort names to be read and the WP they belong to (currently, only `WP1` and `WP2` can be specified).
 
-> **Note 1**: Currently, only data from the same WP1 can be read at once due to the structure of the code. In future versions, reading all cohorts at once will be possible (probably if no WP is provided).
 
-> **Note 2**: The data warehouse will be created using all versions of the cohort databases, up to the most recent one. This allows for more detailed tracking of patients who have entered and exited in each version. How the different versions are managed is explained in the next section, [Data Preprocessing](#data-preprocessing).
+> **Note**: The data warehouse will be created using all versions of the cohort databases, up to the most recent one. This allows for more detailed tracking of patients who have entered and exited in each version. How the different versions are managed is explained in the next section, [Data Preprocessing](#data-preprocessing).
 
 These files described above are essential for the correct processing of the data. To see the structure of these files, refer to the section [initial_data_configuration](liveraim_data_warehouse_specifications.md#initial-data-and-configuration-data).
 
@@ -64,7 +63,7 @@ Refer to [`data_reading_utils`](modules_documentation/file_reading_utils_doc.md)
 
 ## Data Preprocessing
 
-Once the initial data is loaded, an instance of the `DataPreprocessor` class is created for each cohort. This instance takes as parameters all the elements from `all_data[cohort_name]`, as well as the name of the respective cohort. This data is stored in the atributes `cohort_databases`, `vara_data`, `level_data`, `var_comb_data` and `cohort_name` respectively. 
+Once the initial data is loaded, an instance of the `DataPreprocessor` class is created for each cohort. This instance takes as parameters all the elements from `all_data[<cohort_name>]`, as well as the name of the respective cohort. This data is stored in the atributes `cohort_databases`, `vara_data`, `level_data`, `var_comb_data` and `cohort_name` respectively. 
 
 `DataPreprocessor` performs the following actions:
 
@@ -99,7 +98,7 @@ Additionally, the variable `status` is added. This categorical variable can take
 
 The variable `date_version (str)` is also added, indicating the version from which each patient's data is extracted.
 
-> **Note**: During this process, it is required that the variables in the databases (and their names) do not change between versions. Checks are performed to ensure compatibility between versions, and if they are not compatible, only the DataFrame form the latest version will be used, and the previous ones will be ignored.
+> **Note**: During this process, it is required that the variables in the databases (and their names) do not change between versions. Checks are performed to ensure compatibility between versions, and if they are not compatible, only the DataFrame FROM the latest version will be used, and the previous ones will be ignored.
 
 To obtain this **single dataframe**, the following steps are followed:
 
